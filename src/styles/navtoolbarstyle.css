@@ -20,11 +20,11 @@
 }
 
 .nav-item {
-  flex-grow: 1; /* Ensure items grow to take up available space */
+  flex-grow: 1;
   position: relative;
   text-align: center;
-  padding-top: 2px; /* 2px gap from top border */
-  padding-bottom: 2px; /* 2px gap from bottom border */
+  padding-top: 2px;
+  padding-bottom: 2px;
 }
 
 /* Remove divider before the first item */
@@ -37,8 +37,8 @@
   content: '';
   position: absolute;
   right: 0;
-  top: 20%; /* Adjust to center the divider */
-  height: 60%; /* Set divider height to 60% of the toolbar height */
+  top: 20%;
+  height: 60%;
   width: 2px;
   background-color: #999;
 }
@@ -47,21 +47,17 @@
   content: none; /* Remove the divider after the last item */
 }
 
-/* Style for links */
 .nav-link {
   text-decoration: none;
   font-family: "Sana Sans Alt W00 Regular", sans-serif;
   font-weight: 600;
   font-size: 1rem;
   color: #03969b;
-  padding: 5px 0; /* Padding around text to center it vertically */
   white-space: nowrap;
   display: inline-block;
   position: relative;
-  line-height: 1; /* Tighten line-height to prevent extra vertical space */
 }
 
-/* Hover effect */
 .nav-link:hover {
   color: #d27a14;
 }
@@ -92,12 +88,11 @@
 }
 
 /* Dropdown styles */
-/* Dropdown styles */
 .dropdown-content {
   position: absolute;
-  top: 100%;
+  top: calc(100% + 2px); /* Start dropdown right below toolbar */
   left: 0;
-  width: 100%; /* Set to 100% to match the parent width */
+  width: 100%;
   background-color: #f8f9fa;
   box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
   padding: 0;
@@ -109,6 +104,7 @@
   list-style: none;
 }
 
+/* Show dropdown content on hover */
 .nav-item:hover .dropdown-content {
   opacity: 1;
   visibility: visible;
@@ -122,29 +118,14 @@
 }
 
 .dropdown-content li::before {
-  content: '';
-  position: absolute;
   top: 0;
-  left: 20%; /* Center the 60% width border */
-  width: 60%;
-  height: 1px;
-  background-color: #999;
 }
 
 .dropdown-content li::after {
-  content: '';
-  position: absolute;
   bottom: 0;
-  left: 20%; /* Center the 60% width border */
-  width: 60%;
-  height: 1px;
-  background-color: #999;
 }
 
-.dropdown-content li:first-child::before {
-  content: none;
-}
-
+.dropdown-content li:first-child::before,
 .dropdown-content li:last-child::after {
   content: none;
 }
