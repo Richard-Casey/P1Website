@@ -1,7 +1,9 @@
 {
-  "name": "parents1st-website",
-  "version": "0.1.0",
+  "name": "The Other-Half Hub - Parents 1st ",
+  "version": "1.0.0",
   "private": true,
+  "description": "Support for Father & Partners",
+  "homepage": "https://RCaseyP1st.github.io/Website",
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
@@ -16,7 +18,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
@@ -35,5 +39,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "gh-pages": "^6.2.0"
   }
 }
