@@ -1,0 +1,272 @@
+@font-face {
+    font-family: "Sana Sans Alt W00 Regular";
+    src: url("https://db.onlinewebfonts.com/t/d676911db6699aa6748801b8ef3cd8b9.eot");
+    src: url("https://db.onlinewebfonts.com/t/d676911db6699aa6748801b8ef3cd8b9.eot?#iefix") format("embedded-opentype"),
+    url("https://db.onlinewebfonts.com/t/d676911db6699aa6748801b8ef3cd8b9.woff2") format("woff2"),
+    url("https://db.onlinewebfonts.com/t/d676911db6699aa6748801b8ef3cd8b9.woff") format("woff"),
+    url("https://db.onlinewebfonts.com/t/d676911db6699aa6748801b8ef3cd8b9.ttf") format("truetype"),
+    url("https://db.onlinewebfonts.com/t/d676911db6699aa6748801b8ef3cd8b9.svg#Sana Sans Alt W00 Regular") format("svg");
+}
+
+.header {
+    -webkit-text-size-adjust: 100%;
+    font-family: "Sana Sans Alt W00 Regular", sans-serif;
+    font-style: normal;
+    font-weight: 600;
+    color: #3e3e3e;
+    font-size: 1em;
+    box-sizing: border-box;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1004;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0;
+    background: #ffffff;
+    border-bottom: 2px solid #e6e6e6;
+    height: 55px; /* Adjustable height for larger screens */
+}
+
+/* Dynamic header height for different screen sizes */
+@media (max-width: 1024px) {
+    .header {
+        height: 50px; /* Adjust for medium screens */
+    }
+}
+
+@media (max-width: 768px) {
+    .header {
+        height: 45px; /* Adjust for smaller screens */
+    }
+}
+
+.left-toolbar, .right-toolbar {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.right-toolbar {
+    margin-right: 15px;
+}
+
+.header-logo {
+    height: 55%; /* The logo will be 55% of the header height */
+    width: auto; /* Maintains the aspect ratio of the logo */
+    max-height: 55px; /* Ensure it does not exceed 55px on larger screens */
+    margin-right: 10px;
+    border: 2px solid #e6e6e6; /* Added grey border */
+    transition: height 0.3s ease;
+}
+
+.toolbar-numbers {
+    color: #0093a2 !important;
+    align-items: center;
+    justify-content: center;
+    margin-right: 5px;
+}
+
+.activities, .members {
+    margin-right: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #333;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+}
+
+.activities a, .members a {
+    color: #333;
+    text-decoration: none;
+}
+
+.activities a:hover, .members a:hover {
+    color: #0093a2 !important;
+}
+
+.activities a:visited, .members a:visited {
+    color: #333;
+}
+
+.help-link {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #333;
+    text-decoration: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.help-link:hover {
+    color: #0093a2;
+}
+
+/* Center the search bar in the toolbar */
+.center-toolbar {
+    position: absolute;
+    align-items: center;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: width 0.3s ease;
+}
+
+.search-icon {
+    width: 20px; /* Adjust size as needed */
+    height: 20px;
+    stroke: #333; /* Adjust color as needed */
+  }
+  
+
+.search-input {
+    padding: 5px 10px;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+    font-size: 15px;
+    width: 250px;
+    align-items: center;
+    margin-left: 10px;
+    transition: width 0.3s ease;
+}
+
+.search-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    align-items: center;
+    padding: 0;
+}
+
+.search-button img {
+    width: 20px;
+    height: 20px;
+    position: relative;
+    top: 3px;
+    padding-left: 20%;
+}
+
+/* Add margin between exclamation mark and text in "In Crisis" button */
+.crisis-button .exclamation-triangle {
+    margin-right: 8px;
+}
+
+.crisis-button {
+    background-color: #df0000;
+    border: 2px solid #df0000;
+    color: white;
+    font-family: 'Hind', sans-serif;
+    font-size: 0.8rem;
+    padding: 10px 15px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 300;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.5s, color 0.3s, stroke 0.3s, width 0.3s ease;
+}
+
+.crisis-button span {
+    align-items: center;
+    transition: color 0.3s ease;
+}
+
+.exclamation-triangle svg {
+    width: 20px;
+    height: 20px;
+    align-items: center;
+    transition: stroke 0.3s ease;
+}
+
+.crisis-button:hover {
+    background-color: white;
+    color: #df0000;
+}
+
+.crisis-button:hover .exclamation-triangle svg {
+    stroke: #df0000;
+}
+
+.crisis-button:not(:hover) span {
+    color: white;
+    transition: color 0.3s ease;
+}
+
+/* Media Queries for Mobile Responsiveness */
+@media (max-width: 1024px) {
+    .help-link {
+        display: none;
+    }
+
+    .center-toolbar .search-input {
+        width: 200px;
+    }
+
+    .header-logo {
+        height: 50%; /* Adjusts logo scaling for mid-size screens */
+        max-height: 50px;
+    }
+}
+
+@media (max-width: 768px) {
+    .activities, .members {
+        display: none;
+    }
+
+    .center-toolbar {
+        position: relative;
+        left: 0;
+        transform: none;
+        margin-left: 10px;
+        flex-grow: 1;
+        flex-shrink: 1;
+    }
+
+    .right-toolbar {
+        margin-right: 10px;
+        flex-shrink: 1;
+        flex-grow: 1;
+        justify-content: flex-end;
+    }
+
+    .search-input {
+        width: 150px;
+    }
+
+    .crisis-button {
+        padding: 5px 12px;
+        font-size: 12px;
+    }
+
+    .header-logo {
+        height: 45%; /* Further reduce the logo size for small screens */
+        max-height: 45px;
+    }
+}
+
+@media (max-width: 480px) {
+    .header-logo {
+        height: 40%; /* Scale down even further on extra-small screens */
+        max-height: 40px;
+    }
+
+    /* Additional adjustments for small screens */
+    .center-toolbar .search-input {
+        width: 70%; /* Dynamically shrink the search input */
+    }
+
+    .search-button img {
+        position: static; /* Ensure the magnifying glass is properly aligned */
+        margin-left: 5px; /* Add slight margin to separate the icon */
+    }
+
+    /* Further reduce the size of the "In Crisis" button for small screens */
+    .crisis-button {
+        padding: 5px 8px; /* Reduce padding more */
+        font-size: 0.7rem; /* Smaller font size */
+        border-radius: 25px; /* Slightly smaller radius */
+    }
+}
