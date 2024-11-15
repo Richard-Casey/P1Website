@@ -1,0 +1,41 @@
+/* src/styles/formstyle.css */
+.wellbeing-form-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .wellbeing-form-container h1 {
+    color: #03969b;
+  }
+  
+  .wellbeing-form-container label {
+    display: block;
+    margin: 10px 0;
+    font-weight: bold;
+  }
+  
+  .wellbeing-form-container input,
+  .wellbeing-form-container textarea {
+    width: 100%;
+    padding: 8px;
+    margin: 5px 0 20px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+  }
+  
+  .wellbeing-form-container button {
+    background-color: #03969b;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  .success-message {
+    padding: 20px;
+  }
+  
