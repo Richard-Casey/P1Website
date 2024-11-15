@@ -166,7 +166,7 @@
   display: inline-block;
   padding: 0; /* Remove extra padding, height is controlled by line-height */
   position: relative;
-  line-height: ;
+  line-height: 40px;
 }
 
 
