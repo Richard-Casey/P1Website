@@ -105,13 +105,20 @@
     color: #0093a2;
 }
 
-/* Center the search bar in the toolbar */
+/* Center the toolbar with the search bar and icon horizontally aligned */
 .center-toolbar {
+    display: flex;
+    align-items: center; /* Vertically centers both input and icon */
+    justify-content: center;
     position: absolute;
-    align-items: center;
     left: 50%;
     transform: translateX(-50%);
-    transition: width 0.3s ease;
+}
+
+.center-toolbar form {
+    display: flex;
+    align-items: center; /* Ensures input and button are on the same line */
+    gap: 5px; /* Adds space between input and button */
 }
 
 .search-icon {
@@ -119,25 +126,43 @@
     height: 20px;
     stroke: #333; /* Adjust color as needed */
   }
-  
 
+  .search-icon-svg {
+    transform: scaleX(-1); /* Mirror horizontally */
+    transition: transform 0.2s ease; /* For wobble animation */
+}
+
+.search-button:hover .search-icon-svg {
+    animation: wobble 0.5s ease-in-out forwards;
+}
+
+@keyframes wobble {
+    0% { transform: scaleX(-1) rotate(0deg); }
+    25% { transform: scaleX(-1) rotate(-15deg); }
+    50% { transform: scaleX(-1) rotate(15deg); }
+    75% { transform: scaleX(-1) rotate(-10deg); }
+    100% { transform: scaleX(-1) rotate(0deg); }
+}
+
+  
+/* Style adjustments for the search input and button */
 .search-input {
     padding: 5px 10px;
     border-radius: 20px;
     border: 1px solid #ccc;
     font-size: 15px;
     width: 250px;
-    align-items: center;
-    margin-left: 10px;
+    margin: 0; /* Reset margin to avoid accidental spacing */
     transition: width 0.3s ease;
 }
 
 .search-button {
+    display: flex;
+    align-items: center; /* Ensures icon is centered within button */
     background-color: transparent;
     border: none;
     cursor: pointer;
-    align-items: center;
-    padding: 0;
+    padding: 0; /* Remove any padding to avoid stacking */
 }
 
 .search-button img {
@@ -145,7 +170,7 @@
     height: 20px;
     position: relative;
     top: 3px;
-    padding-left: 20%;
+    padding-left: 30%;
 }
 
 /* Add margin between exclamation mark and text in "In Crisis" button */
@@ -269,4 +294,5 @@
         font-size: 0.7rem; /* Smaller font size */
         border-radius: 25px; /* Slightly smaller radius */
     }
+      
 }

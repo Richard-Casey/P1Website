@@ -14,14 +14,14 @@ function Header() {
         </a>
         <span className="activities">
           <span className="toolbar-numbers">
-            <NumberTicker value={123} /> 
-          </span> 
+            <NumberTicker value={123} />
+          </span>
           <a href="https://parents1st.org.uk/activities">Activities</a>
         </span>
         <span className="members">
           <span className="toolbar-numbers">
-            <NumberTicker value={843} /> 
-          </span> 
+            <NumberTicker value={843} />
+          </span>
           <a href="https://parents1st.org.uk/members">Members</a>
         </span>
         <a href="https://parents1st.org.uk/help" className="help-link">Help</a>
@@ -32,7 +32,46 @@ function Header() {
         <form action="" method="get">
           <input type="text" name="query" className="search-input" placeholder="Search this site..." />
           <button type="submit" className="search-button">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/5/55/Magnifying_glass_icon.svg" alt="Search" />
+            {/* Inline SVG for the animated search icon */}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="search-icon-svg"
+              width="34"
+              height="34"
+              viewBox="0 0 24 24"
+            >
+              <g
+                fill="none"
+                stroke="black"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                transform="scaleX(-1)" /* Mirror the icon horizontally */
+              >
+                {/* Glass Element with blue color and animation */}
+                <path
+                  className="glass"
+                  fill="#64b5f6"
+                  fill-opacity="0"
+                  stroke-dasharray="40"
+                  stroke-dashoffset="40"
+                  d="M10.76 13.24c-2.34 -2.34 -2.34 -6.14 0 -8.49c2.34 -2.34 6.14 -2.34 8.49 0c2.34 2.34 2.34 6.14 0 8.49c-2.34 2.34 -6.14 2.34 -8.49 0Z"
+                >
+                  <animate fill="freeze" attributeName="fill-opacity" begin="0.7s" dur="0.15s" values="0;0.3" />
+                  <animate fill="freeze" attributeName="stroke-dashoffset" dur="0.5s" values="40;0" />
+                </path>
+                {/* Handle Element */}
+                <path
+                  className="handle"
+                  stroke-dasharray="12"
+                  stroke-dashoffset="12"
+                  d="M10.5 13.5l-7.5 7.5"
+                >
+                  <animate fill="freeze" attributeName="stroke-dashoffset" begin="0.5s" dur="0.2s" values="12;0" />
+                </path>
+              </g>
+            </svg>
+
           </button>
         </form>
       </div>
