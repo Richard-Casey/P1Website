@@ -69,7 +69,7 @@
 .nav-link::after {
   content: '';
   position: absolute;
-  bottom: 0;
+  bottom: 0px;
   height: 2px;
   background-color: #d27a14;
   transition: width 0.3s ease;
@@ -118,9 +118,11 @@
 .dropdown-content li {
   position: relative;
   text-align: center;
-  height: 40px; /* Set to match the toolbar height */
-  line-height: 40px; /* Center text vertically */
+  min-height: 0.5em; /* Ensure minimum height is 40px */
+  padding: 0.03em 0.03em; /* Add padding to allow for flexible height */
+  white-space: normal; /* Allow line wrapping */
 }
+
 
 /* Add dividers with before and after pseudo-elements */
 .dropdown-content li::before,
@@ -166,7 +168,9 @@
   display: inline-block;
   padding: 0; /* Remove extra padding, height is controlled by line-height */
   position: relative;
-  line-height: 40px;
+  line-height: 1.8em;
+  white-space: normal; /* This allows wrapping */
+  word-break: break-word; /*This allows words to break in necessary */
 }
 
 
@@ -179,7 +183,7 @@
 .dropdown-content li a::after {
   content: '';
   position: absolute;
-  bottom: 8px;
+  bottom: 2px;
   height: 2px;
   background-color: #d27a14;
   transition: width 0.3s ease;

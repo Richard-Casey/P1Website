@@ -21,9 +21,9 @@ const NavBar = () => {
             <a href="#" className="nav-link">About Us</a>
             {activeDropdown === 0 && (
               <ul className="dropdown-content">
-                <li><a href="#">Our Team</a></li>
-                <li><a href="#">Our History</a></li>
-                <li><a href="#">Contact Us</a></li>
+                <li><a href="#">What We Do</a></li>
+                <li><a href="#">Staff</a></li>
+                <li><a href="#">What is Peer Support?</a></li>
               </ul>
             )}
           </div>
