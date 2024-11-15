@@ -56,6 +56,8 @@
   white-space: nowrap;
   display: inline-block;
   position: relative;
+  padding: 5px 0; /* Match the vertical padding of toolbar items */
+  line-height: 1; /* Tight line-height for uniformity */
 }
 
 .nav-link:hover {
@@ -67,7 +69,7 @@
 .nav-link::after {
   content: '';
   position: absolute;
-  bottom: 0; /* Position underline at the very bottom of the link */
+  bottom: 0;
   height: 2px;
   background-color: #d27a14;
   transition: width 0.3s ease;
@@ -87,10 +89,10 @@
   width: 50%;
 }
 
-/* Dropdown styles */
+/* Dropdown Styles */
 .dropdown-content {
   position: absolute;
-  top: calc(100% + 2px); /* Start dropdown right below toolbar */
+  top: calc(100% + 0.03em); /* Tiny gap to align closely under toolbar */
   left: 0;
   width: 100%;
   background-color: #f8f9fa;
@@ -98,11 +100,12 @@
   padding: 0;
   opacity: 0;
   visibility: hidden;
-  transform: translateY(10px);
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition: opacity 0.3s ease;
   z-index: 10;
   list-style: none;
 }
+
+
 
 /* Show dropdown content on hover */
 .nav-item:hover .dropdown-content {
@@ -115,17 +118,32 @@
 .dropdown-content li {
   position: relative;
   text-align: center;
+  height: 40px; /* Set to match the toolbar height */
+  line-height: 40px; /* Center text vertically */
 }
 
-.dropdown-content li::before {
-  top: 0;
-}
-
+/* Add dividers with before and after pseudo-elements */
+.dropdown-content li::before,
 .dropdown-content li::after {
-  bottom: 0;
+  content: '';
+  position: absolute;
+  left: 20%; /* Center the 60% width */
+  width: 60%; /* Set divider to 60% width */
+  height: 1px;
+  background-color: #999;
 }
 
-.dropdown-content li:first-child::before,
+/* Divider for first dropdown item - matches toolbar's bottom border */
+.dropdown-content li:first-child::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px; /* Match toolbar bottom border thickness */
+  background-color: #999; /* Match toolbar bottom border color */
+}
+
 .dropdown-content li:last-child::after {
   content: none;
 }
@@ -145,15 +163,40 @@
   font-weight: 600;
   font-size: 1rem;
   color: #03969b;
-  display: block;
-  padding: 10px 15px;
-  text-align: center;
+  display: inline-block;
+  padding: 0; /* Remove extra padding, height is controlled by line-height */
+  position: relative;
+  line-height: ;
 }
 
 
+/* Hover effect with orange underline for dropdown links */
 .dropdown-content li a:hover {
   color: #d27a14;
-  background-color: #f0f0f0;
+}
+
+.dropdown-content li a::before,
+.dropdown-content li a::after {
+  content: '';
+  position: absolute;
+  bottom: 8px;
+  height: 2px;
+  background-color: #d27a14;
+  transition: width 0.3s ease;
+  width: 0;
+}
+
+.dropdown-content li a::before {
+  left: 50%;
+}
+
+.dropdown-content li a::after {
+  right: 50%;
+}
+
+.dropdown-content li a:hover::before,
+.dropdown-content li a:hover::after {
+  width: 50%;
 }
 
 /* Hamburger menu for small screens */
