@@ -4,14 +4,27 @@ import '../styles/navtoolbarstyle.css';
 
 const NavBar = () => {
   const [activeDropdown, setActiveDropdown] = useState(null);
+  const [menuOpen, setMenuOpen] = useState(false); // State for hamburger menu toggle
 
   const handleDropdown = (index) => {
     setActiveDropdown(activeDropdown === index ? null : index);
   };
 
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen); // Toggle the menu visibility
+  };
+
   return (
     <nav className="navigation-toolbar">
-      <ul className="nav-list">
+      {/* Hamburger menu icon for mobile view */}
+      <div className="hamburger-menu" onClick={toggleMenu}>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+
+      {/* Navigation links, toggled by menuOpen */}
+      <ul className={`nav-list ${menuOpen ? 'open' : ''}`}>
         <li
           className="nav-item"
           onMouseEnter={() => handleDropdown(0)}
