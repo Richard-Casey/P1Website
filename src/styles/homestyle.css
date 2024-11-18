@@ -1,4 +1,4 @@
-/* src/styles/maincontentstyle.css */
+/* src/styles/homestyle.css */
 
 .main-content {
     padding: 20px;
@@ -68,7 +68,7 @@ button {
     align-content: center;
     text-decoration: none;
     background: transparent;
-    padding: 0;
+    padding-bottom: 20px;
     font-size: inherit;
     font-family: inherit;
    }
@@ -154,7 +154,7 @@ button.learn-more:hover .button-text {
     color: #fff;
 }
   
-/* src/styles/maincontentstyle.css */
+/* src/styles/homestyle.css */
 
 .learn-more-link {
     text-decoration: none; /* Remove underline */
@@ -164,7 +164,7 @@ button.learn-more:hover .button-text {
     color: #fff; /* Ensure hover effect works correctly */
   }
   
-  /* src/styles/maincontentstyle.css */
+  /* src/styles/homestyle.css */
 
 .iframe-container {
     margin-top: 20px;

@@ -1,8 +1,7 @@
-// src/components/Header.js
+// src/components/Header.js 
 import React from 'react';
 import '../styles/headerstyle.css';
 import NumberTicker from './NumberTicker';
-import { ReactComponent as MagnifyingGlassIcon } from '../assets/icons/magglassp1st.svg';
 
 function Header() {
   return (
@@ -43,35 +42,33 @@ function Header() {
               <g
                 fill="none"
                 stroke="black"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                transform="scaleX(-1)" /* Mirror the icon horizontally */
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
               >
                 {/* Glass Element with blue color and animation */}
                 <path
                   className="glass"
                   fill="#64b5f6"
-                  fill-opacity="0"
-                  stroke-dasharray="40"
-                  stroke-dashoffset="40"
+                  fillOpacity="0.3"
+                  strokeDasharray="40"
+                  strokeDashoffset="40"
                   d="M10.76 13.24c-2.34 -2.34 -2.34 -6.14 0 -8.49c2.34 -2.34 6.14 -2.34 8.49 0c2.34 2.34 2.34 6.14 0 8.49c-2.34 2.34 -6.14 2.34 -8.49 0Z"
                 >
-                  <animate fill="freeze" attributeName="fill-opacity" begin="0.7s" dur="0.15s" values="0;0.3" />
+                  <animate fill="freeze" attributeName="fillOpacity" begin="0.7s" dur="0.15s" values="0;0.3" />
                   <animate fill="freeze" attributeName="stroke-dashoffset" dur="0.5s" values="40;0" />
                 </path>
                 {/* Handle Element */}
                 <path
                   className="handle"
-                  stroke-dasharray="12"
-                  stroke-dashoffset="12"
+                  strokeDasharray="12"
+                  strokeDashoffset="12"
                   d="M10.5 13.5l-7.5 7.5"
                 >
                   <animate fill="freeze" attributeName="stroke-dashoffset" begin="0.5s" dur="0.2s" values="12;0" />
                 </path>
               </g>
             </svg>
-
           </button>
         </form>
       </div>

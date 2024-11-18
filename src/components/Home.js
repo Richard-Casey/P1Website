@@ -1,20 +1,18 @@
-// src/components/MainContent.js
-import React, { useState } from 'react';
-import '../styles/maincontentstyle.css';
+// src/components/Home.js
+import React from "react";
+import "../styles/homestyle.css";
 
-const MainContent = () => {
-  const [showIframe, setShowIframe] = useState(false); // State to control iframe visibility
-
-  const handleButtonClick = () => {
-    setShowIframe(true); // Show iframe when button is clicked
-  };
-
+const Home = ({ onNavigate }) => {
   return (
     <main className="main-content">
       <div className="landing-container">
         {/* Image section */}
         <div className="landing-image-container">
-          <img src={`${process.env.PUBLIC_URL}/images/landingsplash.png`} alt="The Other-Half Hub" className="landing-image" />
+          <img
+            src={`${process.env.PUBLIC_URL}/images/landingsplash.png`}
+            alt="The Other-Half Hub"
+            className="landing-image"
+          />
         </div>
 
         {/* Text content section */}
@@ -46,32 +44,19 @@ const MainContent = () => {
             <em>The Other-Half Hub is funded by the NHS Integrated Care Boards covering Essex, Southend, and Thurrock.</em>
           </p>
 
-          {/* Centered clickable button */}
+          {/* Button to navigate to the Wellbeing Form */}
           <div className="button-container">
-            <button onClick={handleButtonClick} className="learn-more">
+            <button onClick={() => onNavigate("wellbeingForm")} className="learn-more">
               <span className="circle" aria-hidden="true">
                 <span className="icon arrow"></span>
               </span>
-              <span className="button-text">Learn More</span>
+              <span className="button-text">Wellbeing Review Form</span>
             </button>
           </div>
         </div>
       </div>
-
-      {/* Conditionally render the iframe */}
-      {showIframe && (
-        <div className="iframe-container">
-          <iframe
-            src="https://rcaseyp1st.github.io/Wellbeing-Review-Form/"
-            title="Wellbeing Review Form"
-            frameBorder="0"
-            width="100%"
-            height="600px"
-          />
-        </div>
-      )}
     </main>
   );
 };
 
-export default MainContent;
+export default Home;

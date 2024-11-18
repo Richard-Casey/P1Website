@@ -4,13 +4,16 @@
   border-top: 2px solid #999;
   border-bottom: 2px solid #999;
   padding: 0;
-  position: relative;
+  position: sticky; /* Make NavBar sticky */
+  top: 53px; /* Adjust based on Header's height */
+  z-index: 10; /* Ensure it's above the content */
   width: 100%;
   display: flex;
   justify-content: center;
+  transition: top 0.3s ease; /* Smooth adjustment */
 }
 
-.nav-list {
+.navigation-toolbar .nav-list {
   list-style: none;
   display: flex;
   justify-content: space-between;
@@ -19,35 +22,30 @@
   padding: 0;
 }
 
-.nav-item {
+.navigation-toolbar .nav-item {
   flex-grow: 1;
   position: relative;
   text-align: center;
-  padding-top: 2px;
-  padding-bottom: 2px;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
-/* Remove divider before the first item */
-.nav-item:first-child::before {
-  display: none;
-}
-
-/* Divider between navigation items */
-.nav-item::after {
+/* Divider between navigation items in the main NavBar */
+.navigation-toolbar .nav-item::after {
   content: '';
   position: absolute;
   right: 0;
-  top: 20%;
-  height: 60%;
-  width: 2px;
+  top: 20%; /* Centered vertically */
+  height: 60%; /* Divider height (30% above and 30% below centerline) */
+  width: 2px; /* Divider thickness */
   background-color: #999;
 }
 
-.nav-item:last-child::after {
-  content: none; /* Remove the divider after the last item */
+.navigation-toolbar .nav-item:last-child::after {
+  content: none; /* No divider after the last NavBar item */
 }
 
-.nav-link {
+.navigation-toolbar .nav-link {
   text-decoration: none;
   font-family: "Sana Sans Alt W00 Regular", sans-serif;
   font-weight: 600;
@@ -56,154 +54,147 @@
   white-space: nowrap;
   display: inline-block;
   position: relative;
-  padding: 5px 0; /* Match the vertical padding of toolbar items */
-  line-height: 1; /* Tight line-height for uniformity */
+  padding: 0.4em 0;
+  line-height: 1;
 }
 
-.nav-link:hover {
+.navigation-toolbar .nav-link:hover {
   color: #d27a14;
 }
 
-/* Orange underline effect */
-.nav-link::before,
-.nav-link::after {
+/* Orange underline effect for main NavBar links */
+.navigation-toolbar .nav-link::before,
+.navigation-toolbar .nav-link::after {
   content: '';
   position: absolute;
-  bottom: 0px;
+  bottom: 0.18em; /* Position underline slightly below the text */
   height: 2px;
   background-color: #d27a14;
   transition: width 0.3s ease;
   width: 0;
 }
 
-.nav-link::before {
+.navigation-toolbar .nav-link::before {
   left: 50%;
 }
 
-.nav-link::after {
+.navigation-toolbar .nav-link::after {
   right: 50%;
 }
 
-.nav-link:hover::before,
-.nav-link:hover::after {
+.navigation-toolbar .nav-link:hover::before,
+.navigation-toolbar .nav-link:hover::after {
   width: 50%;
 }
 
 /* Dropdown Styles */
-.dropdown-content {
+.navigation-toolbar .dropdown-content {
   position: absolute;
-  top: calc(100% + 0.03em); /* Tiny gap to align closely under toolbar */
+  top: calc(100%);
   left: 0;
   width: 100%;
   background-color: #f8f9fa;
   box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-  padding: 0px;
+  padding: 0;
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.3s ease;
   z-index: 10;
   list-style: none;
+  overflow: hidden;
 }
 
-
-
-/* Show dropdown content on hover */
-.nav-item:hover .dropdown-content {
+.navigation-toolbar .nav-item:hover .dropdown-content {
   opacity: 1;
   visibility: visible;
-  transform: translateY(0);
 }
 
-/* Style dropdown items */
-.dropdown-content li {
+/* Dropdown items */
+.navigation-toolbar .dropdown-content li {
   position: relative;
   text-align: center;
-  min-height: 0.5em; /* Ensure minimum height is 40px */
-  padding: 0.03em 0.03em; /* Add padding to allow for flexible height */
-  white-space: normal; /* Allow line wrapping */
+  padding: 0.3em 0;
+  margin: 0;
+  white-space: normal;
+  word-break: break-word;
 }
 
-
-/* Add dividers with before and after pseudo-elements */
-.dropdown-content li::before,
-.dropdown-content li::after {
-  content: '';
-  position: absolute;
-  left: 20%; /* Center the 60% width */
-  width: 60%; /* Set divider to 60% width */
-  height: 1px;
-  background-color: #999;
-}
-
-/* Divider for first dropdown item - matches toolbar's bottom border */
-.dropdown-content li:first-child::before {
+.navigation-toolbar .dropdown-content li:first-child::before {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
-  height: 2px; /* Match toolbar bottom border thickness */
-  background-color: #999; /* Match toolbar bottom border color */
+  height: 2px;
+  background-color: #999;
 }
 
-.dropdown-content li:last-child::after {
+.navigation-toolbar .dropdown-content li::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 20%;
+  width: 60%;
+  height: 1px;
+  background-color: #999;
+}
+
+.navigation-toolbar .dropdown-content li:last-child::after {
   content: none;
 }
 
-
-.dropdown-content li:first-child {
-  border-top: none;
-}
-
-.dropdown-content li:last-child {
-  border-bottom: none;
-}
-
-.dropdown-content li a {
-  text-decoration: none;
+/* Dropdown buttons */
+.navigation-toolbar .dropdown-content li button {
+  display: inline-block;
+  background: none;
+  border: none;
   font-family: "Sana Sans Alt W00 Regular", sans-serif;
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 0.9rem;
   color: #03969b;
-  display: inline-block;
-  padding: 0; /* Remove extra padding, height is controlled by line-height */
+  line-height: 1.3;
+  padding: 0;
+  cursor: pointer;
+  text-align: center;
+  transition: color 0.3s ease;
+}
+
+/* Hover state for dropdown buttons */
+.navigation-toolbar .dropdown-content li button:hover {
+  color: #d27a14; /* Match NavBar hover color */
+}
+
+/* Orange underline effect for dropdown text (span inside button) */
+.navigation-toolbar .dropdown-content li button span {
   position: relative;
-  line-height: 1.8em;
-  white-space: normal; /* This allows wrapping */
-  word-break: break-word; /*This allows words to break in necessary */
+  display: inline-block;
 }
 
-
-/* Hover effect with orange underline for dropdown links */
-.dropdown-content li a:hover {
-  color: #d27a14;
-}
-
-.dropdown-content li a::before,
-.dropdown-content li a::after {
+.navigation-toolbar .dropdown-content li button span::before,
+.navigation-toolbar .dropdown-content li button span::after {
   content: '';
   position: absolute;
-  bottom: 2px;
+  bottom: 0em; /* Match the gap from the main NavBar */
   height: 2px;
   background-color: #d27a14;
   transition: width 0.3s ease;
   width: 0;
 }
 
-.dropdown-content li a::before {
+.navigation-toolbar .dropdown-content li button span::before {
   left: 50%;
 }
 
-.dropdown-content li a::after {
+.navigation-toolbar .dropdown-content li button span::after {
   right: 50%;
 }
 
-.dropdown-content li a:hover::before,
-.dropdown-content li a:hover::after {
-  width: 50%;
+.navigation-toolbar .dropdown-content li button:hover span::before,
+.navigation-toolbar .dropdown-content li button:hover span::after {
+  width: 50%; /* Expand underline on hover */
 }
 
-/* Hamburger menu for small screens */
+/* Hamburger menu */
 .hamburger-menu {
   display: none;
   flex-direction: column;
@@ -220,27 +211,11 @@
 
 /* Mobile responsive styles */
 @media (max-width: 768px) {
-  /* Hide the nav-list initially on small screens */
-  .nav-list {
-    display: none;
-    flex-direction: column;
-    background-color: #f8f9fa;
-    position: absolute;
-    top: 50px;
-    width: 100%;
-    left: 0;
-    border-top: 2px solid #999;
-    border-bottom: 2px solid #999;
-    z-index: 10;
+  .navigation-toolbar .nav-link {
+    font-size: 0.9rem;
   }
 
-  /* Show the hamburger menu on small screens */
-  .hamburger-menu {
-    display: flex;
-  }
-
-  /* Show nav-list when hamburger is toggled */
-  .nav-list.open {
-    display: flex;
+  .navigation-toolbar .dropdown-content li button {
+    font-size: 0.8rem;
   }
 }

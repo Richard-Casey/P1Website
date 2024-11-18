@@ -1,160 +1,180 @@
-// src/components/WellbeingForm.js
-import React, { useState } from 'react';
-import '../styles/formstyle.css';
+import React, { useState } from "react";
+import "../styles/formstyle.css"; // Import your CSS file
 
-const WellbeingForm = ({ onReturn }) => {
-  // Form state
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    postcode: '',
-    phone: '',
-    consent: false,
-    eligibility: false,
-    contactMethod: [],
-    otherContact: '',
-  });
+const WellbeingForm = () => {
+  const [showForm, setShowForm] = useState(false);
+  const [selectedMethods, setSelectedMethods] = useState([]);
+  const [otherContact, setOtherContact] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const [errors, setErrors] = useState({});
-  const [submissionStatus, setSubmissionStatus] = useState(null);
-
-  // Handle input change
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: type === 'checkbox' ? checked : value,
-    }));
-  };
-
-  const handleContactMethodChange = (method) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      contactMethod: prevData.contactMethod.includes(method)
-        ? prevData.contactMethod.filter((m) => m !== method)
-        : [...prevData.contactMethod, method],
-    }));
-  };
-
-  const validateForm = () => {
-    const newErrors = {};
-
-    if (!formData.eligibility) newErrors.eligibility = 'Eligibility confirmation is required.';
-    if (!formData.name) newErrors.name = 'Name is required.';
-    if (!formData.postcode) newErrors.postcode = 'Postcode is required.';
-    if (!formData.consent) newErrors.consent = 'Consent is required.';
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (!validateForm()) return;
-
-    try {
-      const response = await fetch('https://api.airtable.com/v0/appESMQNwIowYCCld/Wellbeing%20Review%20request%20form', {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer YOUR_AIRTABLE_TOKEN`, // Use actual token here
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          records: [
-            {
-              fields: {
-                Name: formData.name,
-                Email: formData.email,
-                Postcode: formData.postcode,
-                Phone: formData.phone,
-                Consent: formData.consent,
-                Eligibility: formData.eligibility,
-                "Preferred Method of Contact": formData.contactMethod,
-                "Other Contact": formData.otherContact,
-              },
-            },
-          ],
-        }),
-      });
-
-      if (!response.ok) throw new Error('Failed to submit data');
-
-      setSubmissionStatus('success');
-    } catch (error) {
-      console.error('Submission error:', error);
-      setSubmissionStatus('error');
+  const handleContinue = () => {
+    const eligibility = document.getElementById("eligibility").checked;
+    if (eligibility) {
+      setShowForm(true);
+      setErrorMessage("");
+    } else {
+      setErrorMessage(
+        "Please confirm that your partner is currently pregnant and under the care of EPUT."
+      );
     }
+  };
+
+  const handleCheckboxChange = (event) => {
+    const { value, checked } = event.target;
+    if (value === "Other") {
+      setOtherContact("");
+    }
+    if (checked) {
+      setSelectedMethods([...selectedMethods, value]);
+    } else {
+      setSelectedMethods(selectedMethods.filter((method) => method !== value));
+    }
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    const name = document.getElementById("name").value;
+    const email = document.getElementById("email").value;
+    const postcode = document.getElementById("postcode").value;
+    const phone = document.getElementById("phone").value;
+    const consent = document.getElementById("consent").checked;
+
+    if (!name || !postcode || !consent) {
+      setErrorMessage("Please fill in all required fields.");
+      return;
+    }
+
+    if (selectedMethods.includes("Other") && !otherContact) {
+      setErrorMessage("Please specify your preferred contact method under 'Other'.");
+      return;
+    }
+
+    setErrorMessage(""); // Clear error message
+
+    console.log({
+      name,
+      email,
+      postcode,
+      phone,
+      contactMethods: selectedMethods,
+      otherContact,
+      consent,
+    });
+
+    alert("Form submitted successfully!");
   };
 
   return (
     <div className="wellbeing-form-container">
-      {submissionStatus === 'success' ? (
-        <div className="success-message">
-          <h1>Thank You!</h1>
-          <p>Your form has been submitted successfully.</p>
-          <button onClick={onReturn}>Return to The Other Half-Hub</button>
+      {!showForm ? (
+        <div id="prescreening">
+          <h2>Eligibility Confirmation</h2>
+          <p>Please confirm that your partner is currently pregnant and under the care of EPUT.</p>
+          <label>
+            <input type="checkbox" id="eligibility" required /> Confirm
+          </label>
+          <p></p>
+          <button type="button" onClick={handleContinue} aria-label="Confirm eligibility and continue">
+            Continue
+          </button>
+          {errorMessage && <div className="error">{errorMessage}</div>}
         </div>
       ) : (
-        <>
+        <div id="form-container">
+          <div className="logo-container">
+            <img
+              src="https://raw.githubusercontent.com/RCaseyP1st/Wellbeing-Review-Form/master/0ZpzuRHRXvVLxGe06x90smrbd7iaTr8sN7GzfW88.png"
+              alt="Parents 1st Essex Logo"
+              className="logo"
+            />
+            <img
+              src="https://raw.githubusercontent.com/RCaseyP1st/Wellbeing-Review-Form/master/OHHLogoHoizontal.png"
+              alt="Other Half Hub Logo"
+              className="logo"
+            />
+          </div>
           <h1>Wellbeing Review Request Form</h1>
-          <form onSubmit={handleSubmit}>
-            <label>
+          {errorMessage && <div className="error">{errorMessage}</div>}
+          <form id="wellbeingForm" onSubmit={handleSubmit}>
+            <label htmlFor="name">
               Name: <span className="required">*</span>
-              <input type="text" name="name" value={formData.name} onChange={handleChange} required />
-              {errors.name && <div className="error">{errors.name}</div>}
             </label>
+            <input type="text" id="name" name="name" placeholder="Your Name" required />
 
-            <label>
-              Email Address:
-              <input type="email" name="email" value={formData.email} onChange={handleChange} />
-            </label>
+            <label htmlFor="email">Email Address:</label>
+            <input type="email" id="email" name="email" placeholder="Your Email Address" />
 
-            <label>
+            <label htmlFor="postcode">
               Postcode: <span className="required">*</span>
-              <input type="text" name="postcode" value={formData.postcode} onChange={handleChange} required />
-              {errors.postcode && <div className="error">{errors.postcode}</div>}
             </label>
+            <input type="text" id="postcode" name="postcode" placeholder="Your Postcode" required />
 
-            <label>
-              Phone Number:
-              <input type="tel" name="phone" value={formData.phone} onChange={handleChange} />
-            </label>
+            <label htmlFor="phone">Phone Number:</label>
+            <input type="tel" id="phone" name="phone" placeholder="Your Phone Number" />
 
             <label>Preferred Method of Contact:</label>
+            <p>You can select more than 1 option</p>
             <div className="checkbox-group">
-              {['Phone Call', 'Microsoft Teams', 'Zoom', 'Other'].map((method) => (
-                <label key={method}>
-                  <input
-                    type="checkbox"
-                    name="contactMethod"
-                    checked={formData.contactMethod.includes(method)}
-                    onChange={() => handleContactMethodChange(method)}
-                  />
-                  {method}
-                </label>
-              ))}
+              <label>
+                <input
+                  type="checkbox"
+                  name="contactMethod"
+                  value="Phone Call"
+                  onChange={handleCheckboxChange}
+                />{" "}
+                Phone Call
+              </label>
+              <label>
+                <input
+                  type="checkbox"
+                  name="contactMethod"
+                  value="Microsoft Teams"
+                  onChange={handleCheckboxChange}
+                />{" "}
+                Microsoft Teams
+              </label>
+              <label>
+                <input
+                  type="checkbox"
+                  name="contactMethod"
+                  value="Zoom"
+                  onChange={handleCheckboxChange}
+                />{" "}
+                Zoom
+              </label>
+              <label>
+                <input
+                  type="checkbox"
+                  name="contactMethod"
+                  value="Other"
+                  onChange={handleCheckboxChange}
+                />{" "}
+                Other (Please specify)
+              </label>
             </div>
-
-            {formData.contactMethod.includes('Other') && (
+            {selectedMethods.includes("Other") && (
               <textarea
-                name="otherContact"
-                placeholder="Specify other contact method"
-                value={formData.otherContact}
-                onChange={handleChange}
+                id="otherContact"
+                value={otherContact}
+                onChange={(e) => setOtherContact(e.target.value)}
+                placeholder="e.g., Text Messages (SMS) or WhatsApp"
               />
             )}
 
-            <label className="consent">
-              <input type="checkbox" name="consent" checked={formData.consent} onChange={handleChange} />
-              I consent to the use of my information as stated above <span className="required">*</span>
-              {errors.consent && <div className="error">{errors.consent}</div>}
+            <p className="consent">
+              Please confirm that you understand how the information you have given us will be used, shared,
+              and stored by us and that you give your consent for this by checking the box below.
+            </p>
+            <label>
+              <input type="checkbox" id="consent" required /> Consent <span className="required">*</span>
             </label>
-
-            <button type="submit">Submit</button>
-            {submissionStatus === 'error' && <div className="error">Submission failed. Please try again.</div>}
+            <p></p>
+            <button type="submit" aria-label="Submit Wellbeing Review Request Form">
+              Submit
+            </button><p />
           </form>
-        </>
+        </div>
       )}
     </div>
   );
