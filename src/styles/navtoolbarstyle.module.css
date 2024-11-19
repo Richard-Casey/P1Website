@@ -1,5 +1,5 @@
 /* Navigation Toolbar Styles */
-.navigation-toolbar {
+.navigationToolbar {
   background-color: #f8f9fa;
   border-top: 2px solid #999;
   border-bottom: 2px solid #999;
@@ -13,7 +13,7 @@
   transition: top 0.3s ease; /* Smooth adjustment */
 }
 
-.navigation-toolbar .nav-list {
+.navigationToolbar .navList {
   list-style: none;
   display: flex;
   justify-content: space-between;
@@ -22,7 +22,7 @@
   padding: 0;
 }
 
-.navigation-toolbar .nav-item {
+.navigationToolbar .navItem {
   flex-grow: 1;
   position: relative;
   text-align: center;
@@ -31,7 +31,7 @@
 }
 
 /* Divider between navigation items in the main NavBar */
-.navigation-toolbar .nav-item::after {
+.navigationToolbar .navItem::after {
   content: '';
   position: absolute;
   right: 0;
@@ -41,11 +41,16 @@
   background-color: #999;
 }
 
-.navigation-toolbar .nav-item:last-child::after {
+.navigationToolbar .navItem:last-child::after {
   content: none; /* No divider after the last NavBar item */
 }
 
-.navigation-toolbar .nav-link {
+/* Ensure no default background/borders for navLink */
+.navigationToolbar .navLink {
+  background: none; /* Removes button background */
+  border: none; /* Removes button border */
+  box-shadow: none; /* Removes any box shadow */
+  outline: none; /* Removes focus outline */
   text-decoration: none;
   font-family: "Sana Sans Alt W00 Regular", sans-serif;
   font-weight: 600;
@@ -58,13 +63,13 @@
   line-height: 1;
 }
 
-.navigation-toolbar .nav-link:hover {
+.navigationToolbar .navLink:hover {
   color: #d27a14;
 }
 
 /* Orange underline effect for main NavBar links */
-.navigation-toolbar .nav-link::before,
-.navigation-toolbar .nav-link::after {
+.navigationToolbar .navLink::before,
+.navigationToolbar .navLink::after {
   content: '';
   position: absolute;
   bottom: 0.18em; /* Position underline slightly below the text */
@@ -74,21 +79,21 @@
   width: 0;
 }
 
-.navigation-toolbar .nav-link::before {
+.navigationToolbar .navLink::before {
   left: 50%;
 }
 
-.navigation-toolbar .nav-link::after {
+.navigationToolbar .navLink::after {
   right: 50%;
 }
 
-.navigation-toolbar .nav-link:hover::before,
-.navigation-toolbar .nav-link:hover::after {
+.navigationToolbar .navLink:hover::before,
+.navigationToolbar .navLink:hover::after {
   width: 50%;
 }
 
 /* Dropdown Styles */
-.navigation-toolbar .dropdown-content {
+.navigationToolbar .dropdownContent {
   position: absolute;
   top: calc(100%);
   left: 0;
@@ -104,50 +109,45 @@
   overflow: hidden;
 }
 
-.navigation-toolbar .nav-item:hover .dropdown-content {
+.navigationToolbar .navItem:hover .dropdownContent {
   opacity: 1;
   visibility: visible;
 }
 
-/* Dropdown items */
-.navigation-toolbar .dropdown-content li {
-  position: relative;
-  text-align: center;
-  padding: 0.3em 0;
-  margin: 0;
-  white-space: normal;
-  word-break: break-word;
+/* Dropdown children-specific divider styling */
+.navigationToolbar .dropdownContent li {
+  position: relative; /* Required for positioning the ::before and ::after dividers */
+  padding: 0.8rem 0; /* Adjust spacing between items */
 }
 
-.navigation-toolbar .dropdown-content li:first-child::before {
+.navigationToolbar .dropdownContent li:not(:first-child)::before {
+  /* Divider above each child, except the first one */
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  background-color: #999;
+  top: 0; /* Place it at the top of the item */
+  left: 20%; /* Center horizontally (starts 20% in) */
+  width: 60%; /* Divider spans 60% of the width */
+  height: 1px; /* Divider thickness */
+  background-color: #999; /* Divider color */
 }
 
-.navigation-toolbar .dropdown-content li::after {
+.navigationToolbar .dropdownContent li:not(:last-child)::after {
+  /* Divider below each child, except the last one */
   content: '';
   position: absolute;
-  bottom: 0;
-  left: 20%;
-  width: 60%;
-  height: 1px;
-  background-color: #999;
-}
-
-.navigation-toolbar .dropdown-content li:last-child::after {
-  content: none;
+  bottom: 0; /* Place it at the bottom of the item */
+  left: 20%; /* Center horizontally (starts 20% in) */
+  width: 60%; /* Divider spans 60% of the width */
+  height: 1px; /* Divider thickness */
+  background-color: #999; /* Divider color */
 }
 
 /* Dropdown buttons */
-.navigation-toolbar .dropdown-content li button {
+.navigationToolbar .dropdownContent li button {
   display: inline-block;
-  background: none;
-  border: none;
+  background: none; /* Removes button background */
+  border: none; /* Removes button border */
+  box-shadow: none; /* Removes any box shadow */
   font-family: "Sana Sans Alt W00 Regular", sans-serif;
   font-weight: 600;
   font-size: 0.9rem;
@@ -160,18 +160,18 @@
 }
 
 /* Hover state for dropdown buttons */
-.navigation-toolbar .dropdown-content li button:hover {
+.navigationToolbar .dropdownContent li button:hover {
   color: #d27a14; /* Match NavBar hover color */
 }
 
 /* Orange underline effect for dropdown text (span inside button) */
-.navigation-toolbar .dropdown-content li button span {
+.navigationToolbar .dropdownContent li button span {
   position: relative;
   display: inline-block;
 }
 
-.navigation-toolbar .dropdown-content li button span::before,
-.navigation-toolbar .dropdown-content li button span::after {
+.navigationToolbar .dropdownContent li button span::before,
+.navigationToolbar .dropdownContent li button span::after {
   content: '';
   position: absolute;
   bottom: 0em; /* Match the gap from the main NavBar */
@@ -181,27 +181,27 @@
   width: 0;
 }
 
-.navigation-toolbar .dropdown-content li button span::before {
+.navigationToolbar .dropdownContent li button span::before {
   left: 50%;
 }
 
-.navigation-toolbar .dropdown-content li button span::after {
+.navigationToolbar .dropdownContent li button span::after {
   right: 50%;
 }
 
-.navigation-toolbar .dropdown-content li button:hover span::before,
-.navigation-toolbar .dropdown-content li button:hover span::after {
+.navigationToolbar .dropdownContent li button:hover span::before,
+.navigationToolbar .dropdownContent li button:hover span::after {
   width: 50%; /* Expand underline on hover */
 }
 
 /* Hamburger menu */
-.hamburger-menu {
+.hamburgerMenu {
   display: none;
   flex-direction: column;
   cursor: pointer;
 }
 
-.hamburger-menu div {
+.hamburgerMenu div {
   width: 25px;
   height: 2px;
   background-color: #03969b;
@@ -211,11 +211,11 @@
 
 /* Mobile responsive styles */
 @media (max-width: 768px) {
-  .navigation-toolbar .nav-link {
+  .navigationToolbar .navLink {
     font-size: 0.9rem;
   }
 
-  .navigation-toolbar .dropdown-content li button {
+  .navigationToolbar .dropdownContent li button {
     font-size: 0.8rem;
   }
 }

@@ -1,6 +1,6 @@
 // src/components/NavBar.js
 import React, { useState } from "react";
-import "../styles/navtoolbarstyle.css";
+import styles from "../styles/navtoolbarstyle.module.css";
 
 const NavBar = ({ onNavigate }) => {
   const [activeDropdown, setActiveDropdown] = useState(null);
@@ -15,89 +15,103 @@ const NavBar = ({ onNavigate }) => {
   };
 
   return (
-    <nav className="navigation-toolbar">
+    <nav className={styles.navigationToolbar}>
       {/* Hamburger menu icon for mobile view */}
-      <div className="hamburger-menu" onClick={toggleMenu}>
+      <div className={styles.hamburgerMenu} onClick={toggleMenu}>
         <div></div>
         <div></div>
         <div></div>
       </div>
 
       {/* Navigation links */}
-      <ul className={`nav-list ${menuOpen ? "open" : ""}`}>
+      <ul className={`${styles.navList} ${menuOpen ? styles.open : ""}`}>
         <li
-          className="nav-item"
+          className={styles.navItem}
           onMouseEnter={() => handleDropdown(0)}
           onMouseLeave={() => handleDropdown(null)}
         >
-          <div className="nav-item-wrapper">
-            <button className="nav-link" onClick={() => onNavigate("aboutUs")}>
+          <div className={styles.navItemWrapper}>
+            <button
+              className={styles.navLink}
+              onClick={() => onNavigate("aboutUs")}
+            >
               About Us
             </button>
             {activeDropdown === 0 && (
-              <ul className="dropdown-content">
+              <ul className={styles.dropdownContent}>
                 <li>
                   <button onClick={() => onNavigate("whatWeDo")}>
                     <span>What We Do</span>
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => onNavigate("staff")}><span>Staff</span></button>
+                  <button onClick={() => onNavigate("staff")}>
+                    <span>Staff</span>
+                  </button>
                 </li>
                 <li>
                   <button onClick={() => onNavigate("peerSupport")}>
-                  <span>What is Peer Support?</span>
+                    <span>What is Peer Support?</span>
                   </button>
                 </li>
               </ul>
             )}
           </div>
         </li>
-        <li className="nav-item">
-          <div className="nav-item-wrapper">
+        <li className={styles.navItem}>
+          <div className={styles.navItemWrapper}>
             <button
-              className="nav-link"
+              className={styles.navLink}
               onClick={() => onNavigate("dadsPartnersGuide")}
             >
               Dads & Partners Guide
             </button>
           </div>
         </li>
-        <li className="nav-item">
-          <div className="nav-item-wrapper">
-            <button className="nav-link" onClick={() => onNavigate("lgbtqia")}>
+        <li className={styles.navItem}>
+          <div className={styles.navItemWrapper}>
+            <button
+              className={styles.navLink}
+              onClick={() => onNavigate("lgbtqia")}
+            >
               LGBTQIA+
             </button>
           </div>
         </li>
-        <li className="nav-item">
-          <div className="nav-item-wrapper">
-            <button className="nav-link" onClick={() => onNavigate("podcasts")}>
+        <li className={styles.navItem}>
+          <div className={styles.navItemWrapper}>
+            <button
+              className={styles.navLink}
+              onClick={() => onNavigate("podcasts")}
+            >
               Podcasts
             </button>
           </div>
         </li>
-        <li className="nav-item">
-          <div className="nav-item-wrapper">
+        <li className={styles.navItem}>
+          <div className={styles.navItemWrapper}>
             <button
-              className="nav-link"
+              className={styles.navLink}
               onClick={() => onNavigate("youtubeChannels")}
             >
-              Youtube Channels
+              YouTube Channels
             </button>
           </div>
         </li>
-        <li className="nav-item">
-          <div className="nav-item-wrapper">
-            <button className="nav-link" onClick={() => onNavigate("groups")}>
+        <li className={styles.navItem}>
+          <div className={styles.navItemWrapper}>
+            <button
+              className={styles.navLink}
+              onClick={() => onNavigate("groups")}
+            >
               Groups
             </button>
           </div>
         </li>
-        <li className="nav-item">
-          <div className="nav-item-wrapper">
+        <li className={styles.navItem}>
+          <div className={styles.navItemWrapper}>
             <button
-              className="nav-link"
+              className={styles.navLink}
               onClick={() => onNavigate("wellbeingForm")}
             >
               Wellbeing Review Form

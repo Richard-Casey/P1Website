@@ -1,0 +1,98 @@
+/* Footer Container */
+.footer {
+  background-color: #f8f9fa;
+  border-top: 2px solid #999;
+  padding: 20px;
+  text-align: center;
+  font-family: "Century Gothic", Arial, sans-serif;
+  color: #333;
+}
+
+/* Footer Logo */
+.footerLogo {
+  max-width: 150px;
+  height: auto;
+  margin-bottom: 15px;
+}
+
+/* Footer Text */
+.footerTitle {
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.footerAddress {
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 15px;
+}
+
+.footerLink {
+  color: #03969b;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.footerLink:hover {
+  text-decoration: underline;
+}
+
+/* Social Media Follow Section */
+.footerFollow {
+  font-weight: bold;
+  font-size: 1rem;
+  margin: 20px 0 10px;
+}
+
+.footerSocial {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 25px;
+}
+
+/* Social Icons */
+.animatedIcon {
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.animatedIcon:hover {
+  opacity: 0.8;
+  transform: scale(1.5);
+}
+
+/* Twitter Icon Animation */
+.twitterIcon:hover .twitterX {
+  animation: twitterSpin 0.8s ease-in-out forwards;
+}
+
+@keyframes twitterSpin {
+  0% { transform: rotate(0); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Facebook Icon Animation */
+.facebookIcon:hover .facebookF {
+  animation: facebookBounce 1s ease-in-out infinite alternate;
+}
+
+@keyframes facebookBounce {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+  100% { transform: translateY(0); }
+}
+
+/* LinkedIn Icon Animation */
+.linkedinIcon:hover img {
+  animation: linkedinWobble 0.8s ease-in-out forwards;
+}
+
+@keyframes linkedinWobble {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(10deg); }
+  75% { transform: rotate(-10deg); }
+}

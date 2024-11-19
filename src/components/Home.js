@@ -1,22 +1,23 @@
 // src/components/Home.js
 import React from "react";
-import "../styles/homestyle.css";
+import { Link } from "react-router-dom";
+import styles from "../styles/homestyle.module.css";
 
-const Home = ({ onNavigate }) => {
+const Home = () => {
   return (
-    <main className="main-content">
-      <div className="landing-container">
+    <main className={styles.mainContent}>
+      <div className={styles.landingContainer}>
         {/* Image section */}
-        <div className="landing-image-container">
+        <div className={styles.landingImageContainer}>
           <img
             src={`${process.env.PUBLIC_URL}/images/landingsplash.png`}
             alt="The Other-Half Hub"
-            className="landing-image"
+            className={styles.landingImage}
           />
         </div>
 
         {/* Text content section */}
-        <div className="content-text">
+        <div className={styles.contentText}>
           <h2>Welcome to The Other-Half Hub</h2>
           <p>
             At Parents 1st, we understand the necessity of providing help and support to all partners involved
@@ -40,18 +41,18 @@ const Home = ({ onNavigate }) => {
             from traditional family or friend relationships. Our aim is to help you prepare emotionally and
             practically for the transition to parenthood, no matter who you are or where you come from.
           </p>
-          <p className="funding-info">
+          <p className={styles.fundingInfo}>
             <em>The Other-Half Hub is funded by the NHS Integrated Care Boards covering Essex, Southend, and Thurrock.</em>
           </p>
 
           {/* Button to navigate to the Wellbeing Form */}
-          <div className="button-container">
-            <button onClick={() => onNavigate("wellbeingForm")} className="learn-more">
-              <span className="circle" aria-hidden="true">
-                <span className="icon arrow"></span>
+          <div className={styles.buttonContainer}>
+            <Link to="/wellbeing-review-form" className={styles.learnMore}>
+              <span className={styles.circle} aria-hidden="true">
+                <span className={styles.iconArrow}></span>
               </span>
-              <span className="button-text">Wellbeing Review Form</span>
-            </button>
+              <span className={styles.buttonText}>Wellbeing Review Form</span>
+            </Link>
           </div>
         </div>
       </div>

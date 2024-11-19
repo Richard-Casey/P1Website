@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import "../styles/formstyle.css"; // Import your CSS file
+import styles from "../styles/formstyle.module.css";
+
 
 const WellbeingForm = () => {
   const [showForm, setShowForm] = useState(false);
@@ -66,7 +67,7 @@ const WellbeingForm = () => {
   };
 
   return (
-    <div className="wellbeing-form-container">
+    <div className={styles.wellbeingFormContainer}>
       {!showForm ? (
         <div id="prescreening">
           <h2>Eligibility Confirmation</h2>
@@ -74,31 +75,37 @@ const WellbeingForm = () => {
           <label>
             <input type="checkbox" id="eligibility" required /> Confirm
           </label>
-          <p></p>
-          <button type="button" onClick={handleContinue} aria-label="Confirm eligibility and continue">
-            Continue
-          </button>
-          {errorMessage && <div className="error">{errorMessage}</div>}
+          <div className={styles.formButtonContainer}>
+            <button
+              className={styles.fancyButton}
+              type="button"
+              onClick={handleContinue}
+              aria-label="Confirm eligibility and continue"
+            >
+              Continue
+            </button>
+          </div>
+          {errorMessage && <div className={styles.error}>{errorMessage}</div>}
         </div>
       ) : (
         <div id="form-container">
-          <div className="logo-container">
+          <div className={styles.logoContainer}>
             <img
               src="https://raw.githubusercontent.com/RCaseyP1st/Wellbeing-Review-Form/master/0ZpzuRHRXvVLxGe06x90smrbd7iaTr8sN7GzfW88.png"
               alt="Parents 1st Essex Logo"
-              className="logo"
+              className={styles.logo}
             />
             <img
               src="https://raw.githubusercontent.com/RCaseyP1st/Wellbeing-Review-Form/master/OHHLogoHoizontal.png"
               alt="Other Half Hub Logo"
-              className="logo"
+              className={styles.logo}
             />
           </div>
           <h1>Wellbeing Review Request Form</h1>
-          {errorMessage && <div className="error">{errorMessage}</div>}
+          {errorMessage && <div className={styles.error}>{errorMessage}</div>}
           <form id="wellbeingForm" onSubmit={handleSubmit}>
             <label htmlFor="name">
-              Name: <span className="required">*</span>
+              Name: <span className={styles.required}>*</span>
             </label>
             <input type="text" id="name" name="name" placeholder="Your Name" required />
 
@@ -106,7 +113,7 @@ const WellbeingForm = () => {
             <input type="email" id="email" name="email" placeholder="Your Email Address" />
 
             <label htmlFor="postcode">
-              Postcode: <span className="required">*</span>
+              Postcode: <span className={styles.required}>*</span>
             </label>
             <input type="text" id="postcode" name="postcode" placeholder="Your Postcode" required />
 
@@ -115,14 +122,14 @@ const WellbeingForm = () => {
 
             <label>Preferred Method of Contact:</label>
             <p>You can select more than 1 option</p>
-            <div className="checkbox-group">
+            <div className={styles.checkboxGroup}>
               <label>
                 <input
                   type="checkbox"
                   name="contactMethod"
                   value="Phone Call"
                   onChange={handleCheckboxChange}
-                />{" "}
+                />
                 Phone Call
               </label>
               <label>
@@ -131,7 +138,7 @@ const WellbeingForm = () => {
                   name="contactMethod"
                   value="Microsoft Teams"
                   onChange={handleCheckboxChange}
-                />{" "}
+                />
                 Microsoft Teams
               </label>
               <label>
@@ -140,7 +147,7 @@ const WellbeingForm = () => {
                   name="contactMethod"
                   value="Zoom"
                   onChange={handleCheckboxChange}
-                />{" "}
+                />
                 Zoom
               </label>
               <label>
@@ -149,7 +156,7 @@ const WellbeingForm = () => {
                   name="contactMethod"
                   value="Other"
                   onChange={handleCheckboxChange}
-                />{" "}
+                />
                 Other (Please specify)
               </label>
             </div>
@@ -162,17 +169,22 @@ const WellbeingForm = () => {
               />
             )}
 
-            <p className="consent">
+            <p className={styles.consent}>
               Please confirm that you understand how the information you have given us will be used, shared,
               and stored by us and that you give your consent for this by checking the box below.
             </p>
             <label>
-              <input type="checkbox" id="consent" required /> Consent <span className="required">*</span>
+              <input type="checkbox" id="consent" required /> Consent <span className={styles.required}>*</span>
             </label>
-            <p></p>
-            <button type="submit" aria-label="Submit Wellbeing Review Request Form">
-              Submit
-            </button><p />
+            <div className={styles.formButtonContainer}>
+              <button
+                className={styles.fancyButton}
+                type="submit"
+                aria-label="Submit Wellbeing Review Request Form"
+              >
+                Submit
+              </button>
+            </div>
           </form>
         </div>
       )}
