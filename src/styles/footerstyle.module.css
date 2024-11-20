@@ -52,47 +52,129 @@
   gap: 25px;
 }
 
-/* Social Icons */
-.animatedIcon {
-  width: 32px;
-  height: 32px;
-  cursor: pointer;
-  transition: transform 0.3s ease, opacity 0.3s ease;
+/* General Icon Styling */
+.iconSvg {
+  width: 40px;
+  height: 40px;
+  transition: transform 0.4s ease, opacity 0.3s ease; /* Smooth scaling */
 }
 
-.animatedIcon:hover {
-  opacity: 0.8;
-  transform: scale(1.5);
+/* X (Twitter) Icon Styling */
+.twitterIcon {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  background-color: #000; /* Black background */
+  border-radius: 8px; /* Rounded corners */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden; /* Ensure animation stays within bounds */
+  transition: transform 0.4s ease; /* Smooth growth effect */
 }
 
-/* Twitter Icon Animation */
-.twitterIcon:hover .twitterX {
-  animation: twitterSpin 0.8s ease-in-out forwards;
+.twitterIcon:hover {
+  transform: scale(1.5); /* The entire icon grows */
 }
 
-@keyframes twitterSpin {
-  0% { transform: rotate(0); }
-  100% { transform: rotate(360deg); }
+.twitterIcon:hover .iconSvg {
+  animation: twitterWipe 1.5s ease-in-out forwards; /* Animation only on hover */
+  transform: scale(1.5); /* White element grows slightly more */
 }
 
-/* Facebook Icon Animation */
-.facebookIcon:hover .facebookF {
-  animation: facebookBounce 1s ease-in-out infinite alternate;
+@keyframes twitterWipe {
+  0% {
+    clip-path: inset(0 50% 0 50%); /* Hidden in the middle */
+  }
+  25% {
+    clip-path: inset(0 0 0 0); /* Fully visible */
+  }
+  50% {
+    transform: translateY(-2px); /* Subtle shake */
+  }
+  75% {
+    transform: translateY(2px);
+  }
+  100% {
+    transform: translateY(0); /* Back to center */
+  }
 }
 
-@keyframes facebookBounce {
-  0% { transform: translateY(0); }
-  50% { transform: translateY(-3px); }
-  100% { transform: translateY(0); }
+/* Facebook Icon Styling */
+.facebookIcon {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  background-color: #1877f2; /* Facebook blue */
+  border-radius: 50%; /* Circular background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden; /* Keep animation inside the circle */
+  transition: transform 0.4s ease; /* Smooth growth effect */
 }
 
-/* LinkedIn Icon Animation */
-.linkedinIcon:hover img {
-  animation: linkedinWobble 0.8s ease-in-out forwards;
+.facebookIcon:hover {
+  transform: scale(1.5); /* The entire icon grows */
 }
 
-@keyframes linkedinWobble {
-  0%, 100% { transform: rotate(0deg); }
-  25% { transform: rotate(10deg); }
-  75% { transform: rotate(-10deg); }
+.facebookIcon:hover .iconSvg {
+  animation: facebookErraticBounce 1.5s ease-in-out forwards; /* Animation only on hover */
+  transform: scale(1.5); /* White element grows slightly more */
+}
+
+@keyframes facebookErraticBounce {
+  0% {
+    transform: translate(0, 0) scale(1); /* Start at center */
+  }
+  25% {
+    transform: translate(5px, -5px) rotate(15deg) scale(1.1); /* Top-right */
+  }
+  50% {
+    transform: translate(-5px, -10px) rotate(-10deg) scale(1.2); /* Top-left */
+  }
+  75% {
+    transform: translate(0px, 10px) rotate(5deg) scale(1.1); /* Bottom-center */
+  }
+  100% {
+    transform: translate(0, 0) rotate(0deg) scale(1); /* Back to center */
+  }
+}
+
+/* LinkedIn Icon Styling */
+.linkedinIcon {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  background-color: #0a66c2; /* LinkedIn blue */
+  border-radius: 8px; /* Rounded square */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden; /* Keep animation inside bounds */
+  transition: transform 0.4s ease; /* Smooth growth effect */
+}
+
+.linkedinIcon:hover {
+  transform: scale(1.5); /* The entire icon grows */
+}
+
+.linkedinIcon:hover .iconSvg {
+  animation: linkedinShake 0.8s ease-in-out infinite alternate; /* Animation only on hover */
+  transform: scale(1.5); /* White element grows slightly more */
+}
+
+@keyframes linkedinShake {
+  0% {
+    transform: rotate(0deg) scale(1.2);
+  }
+  25% {
+    transform: rotate(5deg) scale(1.25);
+  }
+  50% {
+    transform: rotate(-5deg) scale(1.25);
+  }
+  100% {
+    transform: rotate(0deg) scale(1.2);
+  }
 }
