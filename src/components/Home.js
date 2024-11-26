@@ -1,7 +1,7 @@
 // src/components/Home.js
 import React from "react";
-import { Link } from "react-router-dom";
 import styles from "../styles/homestyle.module.css";
+import Button from "./Button"; // Import the Button component
 
 const Home = () => {
   return (
@@ -47,12 +47,7 @@ const Home = () => {
 
           {/* Button to navigate to the Wellbeing Form */}
           <div className={styles.buttonContainer}>
-            <Link to="/wellbeing-review-form" className={styles.learnMore}>
-              <span className={styles.circle} aria-hidden="true">
-                <span className={styles.iconArrow}></span>
-              </span>
-              <span className={styles.buttonText}>Wellbeing Review Form</span>
-            </Link>
+            <Button /> {/* Replacing Link and redundant button styles */}
           </div>
         </div>
       </div>
