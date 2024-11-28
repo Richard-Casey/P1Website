@@ -252,20 +252,25 @@ label {
 /* Row styling to contain two columns */
 .row {
   display: flex;
-  gap: 20px; /* Space between columns */
-  margin-bottom: 20px; /* Space below each row */
-  justify-content: space-between; /* Ensures both columns stretch evenly */
+  gap: 20px;
+  /* Space between columns */
+  margin-bottom: 20px;
+  /* Space below each row */
+  justify-content: space-between;
+  /* Ensures both columns stretch evenly */
 }
 
 /* Column styling for two fields */
 .column {
   flex: 1;
-  min-width: 45%; /* Prevent columns from being too small */
+  min-width: 45%;
+  /* Prevent columns from being too small */
 }
 
 /* Full-width column for single-field rows */
 .columnFull {
-  flex: 1; /* Take up the entire width */
+  flex: 1;
+  /* Take up the entire width */
 }
 
 
