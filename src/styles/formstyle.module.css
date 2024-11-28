@@ -21,10 +21,13 @@ body {
 
 /* Pre-screening container */
 .prescreening {
-  width: 60%; /* Use 60% width for the form container */
+  width: 60%;
+  /* Use 60% width for the form container */
   text-align: center;
-  max-width: 800px; /* Ensure it doesn't get too wide on large screens */
-  margin: 0 auto; /* Center the form horizontally */
+  max-width: 800px;
+  /* Ensure it doesn't get too wide on large screens */
+  margin: 0 auto;
+  /* Center the form horizontally */
   padding: 20px;
   background-color: #fff;
   border-radius: 8px;
@@ -32,9 +35,12 @@ body {
 }
 
 .consentandsubmit {
-  text-align: center; /* Centers the text and button horizontally */
-  margin-top: 20px; /* Adds spacing above the container */
-  line-height: 1.6; /* Adjusts the line spacing */
+  text-align: center;
+  /* Centers the text and button horizontally */
+  margin-top: 20px;
+  /* Adds spacing above the container */
+  line-height: 1.6;
+  /* Adjusts the line spacing */
 }
 
 
@@ -46,17 +52,43 @@ body {
 
 /* Main form container */
 .formContainer {
-  width: 60%; /* Use 60% width for the form container */
-  max-width: 800px; /* Ensure it doesn't get too wide on large screens */
-  margin: 0 auto; /* Center the form horizontally */
+  width: 60%;
+  /* Use 60% width for the form container */
+  max-width: 800px;
+  /* Ensure it doesn't get too wide on large screens */
+  margin: 0 auto;
+  /* Center the form horizontally */
   padding: 20px;
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+.formContainer label {
+  margin-top: 20px;
+  /* Add extra spacing above each label */
+}
+
+/* Radio button group styling */
+.radioGroup {
+  display: flex;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+.radioGroup label {
+  font-size: 16px;
+  font-weight: normal;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+}
+
+
 /* Form headers */
-h1, h2 {
+h1,
+h2 {
   font-size: 28px;
   font-weight: bold;
   color: #0392a2;
@@ -121,14 +153,18 @@ label {
 
 /* Textarea styling (for "Other" contact method) */
 .textarea {
-  width: calc(100% - 2px); /* Match input fields exactly */
+  width: calc(100% - 2px);
+  /* Match input fields exactly */
   height: 80px;
-  margin: 5px 0 20px; /* Same as input margins */
-  padding: 8px 12px; /* Same as input padding */
+  margin: 5px 0 20px;
+  /* Same as input margins */
+  padding: 8px 12px;
+  /* Same as input padding */
   border-radius: 4px;
   border: 1px solid #ccc;
   font-size: 16px;
-  box-sizing: border-box; /* Ensures padding and border fit within width */
+  box-sizing: border-box;
+  /* Ensures padding and border fit within width */
   resize: none;
 }
 
@@ -154,14 +190,52 @@ label {
 }
 
 /* Success message styling */
+/* Success message styling */
 .successMessage {
+  width: 60%;
+  /* Use 60% width like the prescreening section */
   text-align: center;
+  max-width: 800px;
+  /* Ensure it doesn't get too wide on large screens */
+  margin: 0 auto;
+  /* Center the message horizontally */
   padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .successMessage h1 {
+  font-size: 28px;
+  font-weight: bold;
   color: #0392a2;
+  text-align: center;
+  margin-bottom: 20px;
 }
+
+.successMessage p {
+  font-size: 18px;
+  line-height: 1.6;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.successMessage button {
+  padding: 15px 30px;
+  background-color: #d78223;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.successMessage button:hover {
+  background-color: #b06b1a;
+}
+
 
 .required {
   color: red;
@@ -175,19 +249,44 @@ label {
   margin-top: 10px;
 }
 
+/* Row styling to contain two columns */
+.row {
+  display: flex;
+  gap: 20px; /* Space between columns */
+  margin-bottom: 20px; /* Space below each row */
+  justify-content: space-between; /* Ensures both columns stretch evenly */
+}
+
+/* Column styling for two fields */
+.column {
+  flex: 1;
+  min-width: 45%; /* Prevent columns from being too small */
+}
+
+/* Full-width column for single-field rows */
+.columnFull {
+  flex: 1; /* Take up the entire width */
+}
+
+
 
 /* Responsive design for mobile */
 @media (max-width: 600px) {
-  .formContainer, .prescreening {
-    width: 90%; /* Fill most of the screen width with small gaps on either side */
+
+  .formContainer,
+  .prescreening {
+    width: 90%;
+    /* Fill most of the screen width with small gaps on either side */
     padding: 15px;
   }
 
-  h1, h2 {
+  h1,
+  h2 {
     font-size: 22px;
   }
 
-  .input, .textarea {
+  .input,
+  .textarea {
     font-size: 14px;
   }
 
@@ -199,4 +298,3 @@ label {
     font-size: 10px;
   }
 }
-

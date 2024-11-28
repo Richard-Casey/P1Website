@@ -5,7 +5,7 @@ import Header from "./components/Header";
 import NavBar from "./components/NavBar";
 import Hero from "./components/Hero";
 import Home from "./components/Home";
-import WellbeingForm from "./components/WellbeingForm";
+import WellbeingForm from './components/WellbeingForm';
 import Footer from "./components/Footer";
 import ScrollToTop from "./components/ScrollToTop";
 import styles from "./styles/formstyle.module.css";

@@ -1,22 +1,48 @@
 import React, { useState } from "react";
 import styles from "../styles/formstyle.module.css";
 
+
+const airtableFieldIDs = {
+  name: "fldGQWRH8i2CYAvB1", // Airtable field ID for "Name"
+  email: "fldOyQYkgJ8bjIAA8", // Airtable field ID for "Email Address"
+  phone: "fldu236HwQ59qj94D", // Airtable field ID for "Phone Number"
+  postcode: "fldQ6g39M366IJUM1", // Airtable field ID for "Postcode"
+  serviceAccessed: "fld0LF9nyNoOcvMOM", // Airtable field ID for "How was this service accessed"
+  ethnicity: "fld4cQInfFK3AGB99", // Airtable field ID for "Ethnicity"
+  gender: "fldx12jZJwIsHTj2O", // Airtable field ID for "Gender"
+  dob: "fldo3oBHv04ifJQdL", // Airtable field ID for "Date of Birth"
+  livingWithPregnantPerson: "fldWkGl9X4YwQR2dX", // Airtable field ID for "Living with Partner?"
+  gestation: "fldLjNR2V8fTYUD8L", // Airtable field ID for "Gestation Period"
+  preferredContactMethods: "fld1YO1uvizsAtPof", // Airtable field ID for "Preferred Method of Contact"
+  otherContactMethod: "fldr0byBLdNwY0kfv", // Airtable field ID for "Other Method of Contact"
+  consent: "fld6XWbmq0mfUrCKx", // Airtable field ID for "Consent"
+  confirmEligibility: "fldfla0da1qyZV7Kb", 
+};
+
+const airtableURL = "https://api.airtable.com/v0/appESMQNwIowYCCld/Wellbeing%20Review%20request%20form";
+
 const WellbeingForm = () => {
+  // State variables
+  const [eligibility, setEligibility] = useState(false); // Declare inside the component
   const [showForm, setShowForm] = useState(false);
   const [selectedMethods, setSelectedMethods] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
   const [otherContact, setOtherContact] = useState(""); // State for 'Other' contact input
-
-
+  const [success, setSuccess] = useState(false); // New state for success message
+  
   const handleContinue = () => {
-    const eligibility = document.getElementById("eligibility").checked;
-    if (eligibility) {
-      setShowForm(true);
-      setErrorMessage("");
+    const isEligible = document.getElementById("eligibility").checked; // Check the checkbox value
+  
+    if (isEligible) {
+      setEligibility(true); // Persist eligibility in state
+      setShowForm(true); // Show the main form
+      setErrorMessage(""); // Clear any error messages
     } else {
       setErrorMessage("Please confirm eligibility.");
+      document.getElementById("eligibility")?.focus(); // Focus on the checkbox
     }
   };
+  
 
   const handleCheckboxChange = (event) => {
     const { value, checked } = event.target;
@@ -29,119 +55,206 @@ const WellbeingForm = () => {
     }
   };
 
-
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const name = document.getElementById("name").value.trim();
-    const email = document.getElementById("email").value.trim();
-    const phone = document.getElementById("phone").value.trim();
-    const postcode = document.getElementById("postcode").value.trim();
-    const consent = document.getElementById("consent").checked;
-
-    if (!name || !postcode || !consent) {
-      setErrorMessage("Please fill in all required fields.");
+    if (!eligibility) {
+      setErrorMessage("Please confirm eligibility.");
+      return; // Stop submission
+    }
+  
+    // Retrieve other form values
+    const name = document.querySelector("#name")?.value.trim();
+    const email = document.querySelector("#email")?.value.trim();
+    const phone = document.querySelector("#phone")?.value.trim();
+    const postcode = document.querySelector("#postcode")?.value.trim();
+    const consent = document.querySelector("#consent")?.checked;
+    const serviceAccessed = document.querySelector("#serviceAccessed")?.value.trim();
+    const ethnicity = document.querySelector("#ethnicity")?.value.trim();
+    const gender = document.querySelector("#gender")?.value.trim();
+    const dob = document.querySelector("#dob")?.value.trim();
+    const livingWithPregnantPerson = document.querySelector(
+      'input[name="livingWithPregnantPerson"]:checked'
+    )?.value;
+    const gestation = document.querySelector("#gestation")?.value.trim();
+    const preferredContactMethods = selectedMethods; // From state
+    const otherContactMethod = otherContact.trim(); // From state
+  
+    // Validate required fields
+    if (!eligibility) {
+      setErrorMessage("Please confirm eligibility.");
+      document.querySelector("#eligibility")?.focus(); // Focus on eligibility checkbox
       return;
     }
-
-    // Conditional validation based on preferred contact methods
-    if (selectedMethods.includes("Microsoft Teams") || selectedMethods.includes("Zoom")) {
+  
+    if (!name) {
+      setErrorMessage("Name is required.");
+      document.querySelector("#name")?.focus(); // Safe call
+      return;
+    }
+  
+    if (!postcode) {
+      setErrorMessage("Postcode is required.");
+      document.querySelector("#postcode")?.focus(); // Safe call
+      return;
+    }
+  
+    if (!consent) {
+      setErrorMessage("Consent is required.");
+      document.querySelector("#consent")?.focus(); // Safe call
+      return;
+    }
+  
+    if (!ethnicity) {
+      setErrorMessage("Ethnicity is required.");
+      document.querySelector("#ethnicity")?.focus(); // Safe call
+      return;
+    }
+  
+    if (!gender) {
+      setErrorMessage("Gender is required.");
+      document.querySelector("#gender")?.focus(); // Safe call
+      return;
+    }
+  
+    if (!dob) {
+      setErrorMessage("Date of Birth is required.");
+      document.querySelector("#dob")?.focus(); // Safe call
+      return;
+    }
+  
+    if (!livingWithPregnantPerson) {
+      setErrorMessage("Living with pregnant person status is required.");
+      document.querySelector('input[name="livingWithPregnantPerson"]')?.focus(); // Safe call
+      return;
+    }
+  
+    if (!gestation) {
+      setErrorMessage("Gestation period is required.");
+      document.querySelector("#gestation")?.focus(); // Safe call
+      return;
+    }
+  
+    // Conditionally validate fields
+    if (preferredContactMethods.includes("Microsoft Teams") || preferredContactMethods.includes("Zoom")) {
       if (!email) {
         setErrorMessage("Email is required for Microsoft Teams or Zoom.");
-        document.getElementById("email").focus();
-        return;
-      }
-
-      if (selectedMethods.includes("Other") && !otherContact.trim()) {
-        setErrorMessage("Please specify your preferred contact method under 'Other'.");
-        return;
-      }
-
-
-      // Optional: Add regex validation for email
-      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailPattern.test(email)) {
-        setErrorMessage("Please provide a valid email address.");
-        document.getElementById("email").focus();
+        document.querySelector("#email")?.focus(); // Safe call
         return;
       }
     }
-
-    if (selectedMethods.includes("Phone Call")) {
+  
+    if (preferredContactMethods.includes("Other") && !otherContactMethod) {
+      setErrorMessage("Please specify your preferred contact method under 'Other'.");
+      document.querySelector("#otherContact")?.focus(); // Safe call
+      return;
+    }
+  
+    if (preferredContactMethods.includes("Phone Call")) {
       if (!phone) {
         setErrorMessage("Phone number is required for Phone Call.");
-        document.getElementById("phone").focus();
+        document.querySelector("#phone")?.focus(); // Safe call
         return;
       }
-
-      // Optional: Validate phone number format (UK example)
       const phonePattern = /^(\+44|0)7\d{9}$/;
       if (!phonePattern.test(phone)) {
         setErrorMessage("Please provide a valid UK phone number.");
-        document.getElementById("phone").focus();
+        document.querySelector("#phone")?.focus(); // Safe call
         return;
       }
     }
-
-    // Submit data to AirTable
-    const { area, hub } = determineHub(postcode);
-
-    const airtableData = {
-      records: [
-        {
-          fields: {
-            Name: name,
-            Email: email,
-            Postcode: postcode,
-            Phone: phone,
-            Area: area,
-            Hub: hub,
-            Consent: consent ? "Yes" : "No",
-            "Preferred Method of Contact": selectedMethods,
-          },
+  
+    // All validations passed
+    setErrorMessage(""); // Clear any previous error messages
+  
+    // Prepare data for submission
+  const airtableData = {
+    records: [
+      {
+        fields: {
+          [airtableFieldIDs.name]: name,
+          [airtableFieldIDs.email]: email,
+          [airtableFieldIDs.phone]: phone,
+          [airtableFieldIDs.postcode]: postcode,
+          [airtableFieldIDs.serviceAccessed]: serviceAccessed,
+          [airtableFieldIDs.ethnicity]: ethnicity,
+          [airtableFieldIDs.gender]: gender,
+          [airtableFieldIDs.dob]: dob,
+          [airtableFieldIDs.livingWithPregnantPerson]: livingWithPregnantPerson,
+          [airtableFieldIDs.gestation]: gestation,
+          [airtableFieldIDs.preferredContactMethods]: preferredContactMethods,
+          [airtableFieldIDs.otherContactMethod]: otherContactMethod || null,
+          [airtableFieldIDs.consent]: consent ? true : false,
+          [airtableFieldIDs.confirmEligibility]: eligibility, // Use the persisted state
         },
-      ],
-    };
+      },
+    ],
+  };
 
+    // Submit to Airtable
     try {
-      const response = await fetch(
-        "https://api.airtable.com/v0/appESMQNwIowYCCld/Wellbeing%20Review%20request%20form",
-        {
-          method: "POST",
-          headers: {
-            Authorization: "Bearer patSU10Pp0hh1NOgo.7554e4280a027e73e31574edeff1ad25a40803a6aabe8f111f34aa0721c48d80",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(airtableData),
-        }
-      );
-
+      const response = await fetch(airtableURL, {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer patSU10Pp0hh1NOgo.7554e4280a027e73e31574edeff1ad25a40803a6aabe8f111f34aa0721c48d80`,
+                    'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(airtableData),
+      });
+  
+      const responseData = await response.json();
+      console.log("Airtable API Response:", responseData); // Debugging log
+  
       if (!response.ok) {
-        const errorData = await response.json();
-        console.error("AirTable API Error:", errorData);
+        console.error("Error from Airtable API:", responseData);
         setErrorMessage("Failed to submit the form. Please try again.");
         return;
       }
 
-      const responseData = await response.json();
-      console.log("Successfully submitted to AirTable:", responseData);
-      alert("Form submitted successfully!");
-    } catch (error) {
-      console.error("Error submitting to AirTable:", error);
-      setErrorMessage("An error occurred while submitting the form. Please try again.");
-    }
-  };
-
-
+            // Set success state to true
+            setSuccess(true);
+          } catch (error) {
+            console.error("Error submitting to Airtable:", error);
+            setErrorMessage("An error occurred while submitting the form. Please try again.");
+          }
+        };
+  
+      // Function to render success message
+  const renderSuccessMessage = () => (
+    <div className={styles.successMessage}>
+      <h1>Thank You!</h1>
+      <p>Your form has been submitted successfully.</p>
+      <p>
+        If you provided an email address, you will receive a confirmation email
+        shortly. Otherwise, our Fathers & Partners Wellbeing coordinator will
+        contact you within 7 days via your selected preferred method of contact (if possible).
+      </p>
+      <button
+        onClick={() => (window.location.href = "https://parents1st.org.uk/the-other-half-hub")}
+        style={{
+          backgroundColor: "#D78223",
+          color: "white",
+          padding: "10px",
+          borderRadius: "4px",
+          cursor: "pointer",
+          fontSize: "18px",
+        }}
+      >
+        Return to The Other Half-Hub
+      </button>
+    </div>
+  );
+  
 
   return (
     <div className={styles.wellbeingFormContainer}>
-      {/* Eligibility Confirmation Section */}
-      {!showForm ? (
+    {success ? (
+      renderSuccessMessage() // Show success message if form submission was successful
+    ) : !showForm ? (
         <div className={styles.prescreening}>
           <h2>Eligibility Confirmation</h2>
           <p>
-            Please confirm that your partner is currently pregnant and under the care
+            Please confirm that your partner is currently under the care
             of EPUT (Essex Partnership University Trust).
           </p>
           <label>
@@ -150,17 +263,7 @@ const WellbeingForm = () => {
           </label>
           <button
             className={styles.fancyButton}
-            onClick={() => {
-              const eligibility = document.getElementById("eligibility").checked;
-              if (eligibility) {
-                setShowForm(true); // Show the main form
-                setErrorMessage(""); // Clear any previous error
-              } else {
-                setErrorMessage(
-                  "Please confirm that your partner is currently pregnant and under the care of EPUT."
-                );
-              }
-            }}
+            onClick={handleContinue}
             aria-label="Confirm eligibility and continue"
           >
             Continue
@@ -172,66 +275,168 @@ const WellbeingForm = () => {
           <h1>Wellbeing Review Request Form</h1>
           {errorMessage && <div className={styles.error}>{errorMessage}</div>}
           <form onSubmit={handleSubmit}>
-            <label htmlFor="name">
-              Name: <span className={styles.required}>*</span>
-            </label>
-            <input
-              className={styles.input}
-              id="name"
-              placeholder="Your Name"
-              required
-            />
+            {/* Name and Postcode (Row 1) */}
+            <div className={styles.row}>
+              <div className={styles.column}>
+                <label htmlFor="name">
+                  Name: <span className={styles.required}>*</span>
+                </label>
+                <input className={styles.input} id="name" placeholder="Your Name" required />
+              </div>
+              <div className={styles.column}>
+                <label htmlFor="postcode">
+                  Postcode: <span className={styles.required}>*</span>
+                </label>
+                <input className={styles.input} id="postcode" placeholder="Your Postcode" required />
+              </div>
+            </div>
 
-            <label htmlFor="email">
-              Email Address:{" "}
-              {selectedMethods.includes("Microsoft Teams") || selectedMethods.includes("Zoom") ? (
-                <span className={styles.required}>*</span>
-              ) : null}
-            </label>
-            <input
-              className={styles.input}
-              id="email"
-              placeholder="Your Email Address"
-            />
+            {/* Email Address and Phone Number (Row 2) */}
+            <div className={styles.row}>
+              <div className={styles.column}>
+                <label htmlFor="email">Email Address:</label>
+                <input className={styles.input} id="email" placeholder="Your Email Address" />
+              </div>
+              <div className={styles.column}>
+                <label htmlFor="phone">Phone Number:</label>
+                <input className={styles.input} id="phone" placeholder="Your Phone Number" />
+              </div>
+            </div>
 
-            <label htmlFor="phone">
-              Phone Number:{" "}
-              {selectedMethods.includes("Phone Call") ? (
-                <span className={styles.required}>*</span>
-              ) : null}
-            </label>
-            <input
-              className={styles.input}
-              id="phone"
-              placeholder="Your Phone Number"
-            />
+            {/* Date of Birth (Row 3 - Centered) */}
+            <div className={styles.rowCentered}>
+              <div className={styles.singleColumn}>
+                <label htmlFor="dob">
+                  Date of Birth: <span className={styles.required}>*</span>
+                </label>
+                <input type="date" className={styles.input} id="dob" required />
+              </div>
+            </div>
+
+            {/* Gender and Ethnicity (Row 4) */}
+            <div className={styles.row}>
+              <div className={styles.column}>
+                <label htmlFor="gender">
+                  Gender: <span className={styles.required}>*</span>
+                </label>
+                <select className={styles.input} id="gender" required>
+                  <option value="" disabled selected>
+                    Select an option
+                  </option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Non-Binary">Non-Binary</option>
+                  <option value="Other">Other</option>
+                  <option value="Prefer Not to Say">Prefer Not to Say</option>
+                </select>
+              </div>
+
+              <div className={styles.column}>
+                <label htmlFor="ethnicity">
+                  Ethnicity: <span className={styles.required}>*</span>
+                </label>
+                <select className={styles.input} id="ethnicity" required>
+                  <option value="" disabled selected>
+                    Select an option
+                  </option>
+                  <option value="White">White</option>
+                  <option value="Black or African">Black or African</option>
+                  <option value="Asian">Asian</option>
+                  <option value="Mixed">Mixed</option>
+                  <option value="Other">Other</option>
+                  <option value="Prefer Not to Say">Prefer Not to Say</option>
+                </select>
+              </div>
+            </div>
 
             {/* Preferred Method of Contact */}
-            <label>Preferred Method of Contact:</label>
-            <div className={styles.checkboxGroup}>
-              {["Phone Call", "Microsoft Teams", "Zoom", "Other"].map((method) => (
-                <label key={method}>
-                  <input
-                    type="checkbox"
-                    value={method}
-                    onChange={handleCheckboxChange}
-                  />
-                  {method}
-                </label>
-              ))}
-              {selectedMethods.includes("Other") && (
-                <textarea
-                  className={styles.textarea}
-                  id="otherContact"
-                  placeholder="e.g., Text Messages (SMS) or WhatsApp"
-                  value={otherContact}
-                  onChange={(e) => setOtherContact(e.target.value)}
-                />
-              )}
+            <div className={styles.row}>
+              <div className={styles.columnFull}>
+                <label>Preferred Method of Contact:</label>
+                <div className={styles.checkboxGroup}>
+                  {["Phone Call", "Microsoft Teams", "Zoom", "Other"].map((method) => (
+                    <label key={method}>
+                      <input
+                        type="checkbox"
+                        value={method}
+                        onChange={handleCheckboxChange}
+                      />
+                      {method}
+                    </label>
+                  ))}
+                  {selectedMethods.includes("Other") && (
+                    <textarea
+                      className={styles.textarea}
+                      id="otherContact"
+                      placeholder="e.g., Text Messages (SMS) or WhatsApp"
+                      value={otherContact}
+                      onChange={(e) => setOtherContact(e.target.value)}
+                    />
+                  )}
+                </div>
+              </div>
             </div>
-            <p>
-              <strong>Consent Statement:</strong>
-            </p>
+
+            {/* Gestation Period and How Service Was Accessed */}
+            <div className={styles.row}>
+              <div className={styles.column}>
+                <label htmlFor="gestation">
+                  Gestation Period: <span className={styles.required}>*</span>
+                </label>
+                <select className={styles.input} id="gestation" required>
+                  <option value="" disabled selected>
+                    Select an option
+                  </option>
+                  <option value="Prenatal">Prenatal (Before the baby is born)</option>
+                  <option value="Postnatal">Postnatal (Up to 6 weeks after birth)</option>
+                  <option value="Postpartum">
+                    Postpartum (Beyond 6 weeks after birth)
+                  </option>
+                  <option value="Prefer Not to Say">Prefer Not to Say</option>
+                </select>
+              </div>
+
+              <div className={styles.column}>
+                <label htmlFor="serviceAccessed">
+                  How was the service accessed?{" "}
+                  <span className={styles.required}>*</span>
+                </label>
+                <select className={styles.input} id="serviceAccessed" required>
+                  <option value="" disabled selected>
+                    Select an option
+                  </option>
+                  <option value="GP">GP</option>
+                  <option value="Midwife">Midwife</option>
+                  <option value="Self Referral">Self Referral</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Living with Pregnant Partner */}
+            <div className={styles.row}>
+              <div className={styles.columnFull}>
+                <label>
+                  Are you living with the pregnant woman or birthing person?{" "}
+                  <span className={styles.required}>*</span>
+                </label>
+                <div className={styles.radioGroup}>
+                  <label>
+                    <input
+                      type="radio"
+                      name="livingWithPregnantPerson"
+                      value="Yes"
+                      required
+                    />{" "}
+                    <strong>Yes</strong>
+                  </label>
+                  <label>
+                    <input type="radio" name="livingWithPregnantPerson" value="No" /> <strong>No</strong>
+                  </label>
+                </div>
+              </div>
+            </div>
+            <strong>Consent Statement:</strong>
             <p className={styles.consent}>
               Are you happy for us to store the information we may talk about? We will look after any personal information that is shared with us. This is central to our values as an organisation. We want everyone who interacts with us to feel confident about how any personal information they share will be looked after or used.
               <br />
@@ -274,41 +479,38 @@ const WellbeingForm = () => {
               Please confirm that you understand how the information you have given us will be used, shared, and stored by us and that you give your consent for this by checking the box below.
             </p>
             <div className={styles.consentandsubmit}>
-              <label>
-                <input type="checkbox" id="consent" required /> Consent{" "}
-                <span className={styles.required}>
-                  <font color="red">*</font>
-                </span>
-              </label>
-              <p></p>
-              <button className={styles.fancyButton} type="submit" aria-label="Submit Wellbeing Review Request Form">
-                Submit
-              </button>
-            </div>
-          </form>
-        </div>
-      )}
-    </div>
-  );
+            <label>
+              <input type="checkbox" id="consent" required /> Consent{" "}
+              <span className={styles.required}>
+                <font color="red">*</font>
+              </span>
+            </label>
+            <button className={styles.fancyButton} type="submit">
+              Submit
+            </button>
+          </div>
+        </form>
+      </div>
+    )}
+  </div>
+);
 };
 
 // Mapping of postcodes to hubs
 const postcodeToHubMap = {
   "North Essex": {
     "North West": ["CB10", "CB11", "CM16", "CM17", "CM19", "CM20", "CM22", "CM23", "CM24", "EN9", "IG10"],
-    "North East": ["CO1", "CO2", "CO3", "CO4", "CO5", "CO6", "CO7", "CO8", "CO9", "CO10", "CO11", "CO12", "CO13", "CO14", "CO15", "CO16"],
+    "North East": ["CO1", "CO2", "CO3", "CO4", "CO5", "CO6", "CO7", "CO8", "CO9", "CO10", "CO11"],
     "Mid Essex": ["CM0", "CM1", "CM2", "CM3", "CM4", "CM5", "CM6", "CM7", "CM8", "CM9"],
   },
   "South Essex": {
-    "South West": ["CM11", "CM12", "CM13", "CM14", "CM15", "RM14", "RM15", "RM16", "RM17", "RM18", "RM19", "RM20"],
-    "South East": ["SS0", "SS1", "SS2", "SS3", "SS4", "SS5", "SS6", "SS7", "SS8", "SS9", "SS11", "SS12", "SS13", "SS14", "SS15", "SS16", "SS17"],
+    "South West": ["CM11", "CM12", "CM13", "CM14", "CM15", "RM14"],
+    "South East": ["SS0", "SS1", "SS2", "SS3", "SS4", "SS5", "SS6", "SS7", "SS8", "SS9", "SS11"],
   },
 };
 
-// Function to determine the hub based on the postcode
 const determineHub = (postcode) => {
   const outwardCode = postcode.trim().split(" ")[0].toUpperCase();
-
   for (const [area, hubs] of Object.entries(postcodeToHubMap)) {
     for (const [hub, postcodes] of Object.entries(hubs)) {
       if (postcodes.includes(outwardCode)) {
@@ -316,9 +518,7 @@ const determineHub = (postcode) => {
       }
     }
   }
-
-  return { area: "Unknown", hub: "Unknown" }; // Default if no match is found
+  return { area: "Unknown", hub: "Unknown" };
 };
-
 
 export default WellbeingForm;
