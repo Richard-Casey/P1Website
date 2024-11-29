@@ -1,55 +1,43 @@
-// src/App.js
 import React from "react";
-import { Routes, Route, useLocation } from "react-router-dom"; // Import useLocation for route checking
+import { Routes, Route, useLocation } from "react-router-dom"; // Only import necessary hooks
 import Header from "./components/Header";
 import NavBar from "./components/NavBar";
 import Hero from "./components/Hero";
 import Home from "./components/Home";
-import WellbeingForm from './components/WellbeingForm';
+import WellbeingForm from "./components/WellbeingForm";
 import Footer from "./components/Footer";
 import ScrollToTop from "./components/ScrollToTop";
+import InCrisis from "./components/InCrisis";
 import styles from "./styles/formstyle.module.css";
+import WhatWeDo from "./components/WhatWeDo";
+import StaffPage from "./components/StaffPage";
+import PeerSupport from "./components/PeerSupport";
 import "./App.css";
 
 const App = () => {
-  const location = useLocation(); // Access the current route
+  const location = useLocation();
 
-  // Check if the current route is "/minimal-form"
   const isMinimalRoute = location.pathname === "/minimal-form";
+  const isHeroVisible = location.pathname === "/";
 
   return (
     <div className={styles.App}>
-
       <ScrollToTop />
-
-      {/* Render Header only if NOT on the minimal route */}
       {!isMinimalRoute && <Header />}
-
-      {/* Conditionally Render Hero (only for home route) */}
-      {!isMinimalRoute && location.pathname === "/" && <Hero />}
-
-      {/* Render NavBar only if NOT on the minimal route */}
+      {!isMinimalRoute && isHeroVisible && <Hero />}
       {!isMinimalRoute && <NavBar />}
-
-      {/* Routes */}
       <main>
         <Routes>
-
-          {/* Home Route */}
           <Route path="/" element={<Home />} />
-
-          {/* Wellbeing Form Route */}
           <Route path="/wellbeing-review-form" element={<WellbeingForm />} />
-
-          {/* Minimal Form Route for iframe */}
           <Route path="/minimal-form" element={<WellbeingForm />} />
-
-          {/* Catch-All Route */}
+          <Route path="/in-crisis" element={<InCrisis />} />
           <Route path="*" element={<div>Page Not Found</div>} />
+          <Route path="/what-we-do" element={<WhatWeDo />} />
+          <Route path="/staff" element={<StaffPage />} />
+          <Route path="/what-is-peer-support" element={<PeerSupport />} />
         </Routes>
       </main>
-
-      {/* Render Footer only if NOT on the minimal route */}
       {!isMinimalRoute && <Footer />}
     </div>
   );

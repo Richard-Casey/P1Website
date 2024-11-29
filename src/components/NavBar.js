@@ -25,6 +25,20 @@ const NavBar = ({ onNavigate }) => {
 
       {/* Navigation links */}
       <ul className={`${styles.navList} ${menuOpen ? styles.open : ""}`}>
+        {/* Home Button */}
+        <li className={styles.navItem}>
+          <div className={styles.navItemWrapper}>
+            <button
+              className={styles.navLink}
+              onClick={() => (window.location.href = "/Website/")}
+            >
+              Home
+            </button>
+          </div>
+        </li>
+
+
+        {/* About Us Section */}
         <li
           className={styles.navItem}
           onMouseEnter={() => handleDropdown(0)}
@@ -39,20 +53,36 @@ const NavBar = ({ onNavigate }) => {
             </button>
             {activeDropdown === 0 && (
               <ul className={styles.dropdownContent}>
-                <li>
-                  <button onClick={() => onNavigate("whatWeDo")}>
-                    <span>What We Do</span>
-                  </button>
+                <li className={styles.navItem}>
+                  <div className={styles.navItemWrapper}>
+                    <button
+                      className={styles.navLink}
+                      onClick={() => (window.location.href = "/Website/#/what-we-do")}
+                    >
+                      What We Do
+                    </button>
+                  </div>
                 </li>
-                <li>
-                  <button onClick={() => onNavigate("staff")}>
-                    <span>Staff</span>
-                  </button>
+
+                <li className={styles.navItem}>
+                  <div className={styles.navItemWrapper}>
+                    <button
+                      className={styles.navLink}
+                      onClick={() => (window.location.href = "/Website/#/staff")}
+                    >
+                      Staff
+                    </button>
+                  </div>
                 </li>
-                <li>
-                  <button onClick={() => onNavigate("peerSupport")}>
-                    <span>What is Peer Support?</span>
-                  </button>
+                <li className={styles.navItem}>
+                  <div className={styles.navItemWrapper}>
+                    <button
+                      className={styles.navLink}
+                      onClick={() => (window.location.href = "/Website/#/what-is-peer-support")}
+                    >
+                      What is Peer Support?
+                    </button>
+                  </div>
                 </li>
               </ul>
             )}

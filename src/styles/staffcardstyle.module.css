@@ -1,0 +1,78 @@
+/* Container for the staff card */
+.staffCard {
+    display: flex; /* Aligns the image and text side by side */
+    align-items: center; /* Vertically center-aligns the content */
+    background-color: #ffffff; /* White background for contrast */
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for aesthetics */
+    max-width: 600px; /* Adjust width to match other cards */
+    margin: 20px auto; /* Center the card within the page */
+  }
+  
+  /* Image styling */
+  .staffImage {
+    width: 80px; /* Image size */
+    height: 80px; /* Keep height equal for circular shape */
+    border-radius: 50%; /* Make it circular */
+    object-fit: cover; /* Prevent distortion */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional: Add a slight shadow */
+    margin-right: 20px; /* Space between image and text */
+  }
+  
+  /* Text container */
+  .staffText {
+    display: flex;
+    flex-direction: column; /* Stack name, title, and link */
+    justify-content: center; /* Vertically center-align the text */
+  }
+  
+  /* Name styling */
+  .staffName {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333; /* Standard text color */
+    margin: 0;
+  }
+  
+  /* Title styling */
+  .staffTitle {
+    font-size: 1rem;
+    color: #03969b; /* Match theme color */
+    margin: 5px 0;
+  }
+  
+  /* Link styling */
+  .staffLink {
+    font-size: 0.9rem;
+    color: #0073e6; /* Match link colors */
+    text-decoration: none;
+  }
+  
+  .staffLink:hover {
+    text-decoration: underline;
+  }
+  
+  
+  
+  .staffDetails h3 {
+    font-size: 1.2rem;
+    margin: 0;
+    color: #333;
+  }
+  
+  .staffDetails p {
+    margin: 5px 0;
+    font-size: 0.9rem;
+    color: #555;
+  }
+  
+  .profileLink {
+    color: #0073e6;
+    text-decoration: none;
+  }
+  
+  .profileLink:hover {
+    text-decoration: underline;
+  }
+  

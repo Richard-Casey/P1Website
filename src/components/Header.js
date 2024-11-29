@@ -69,7 +69,7 @@ function Header() {
 
       {/* Right Toolbar */}
       <div className={styles.rightToolbar}>
-        <a href="#" className={styles.crisisButton}>
+      <a href="#/in-crisis" className={styles.crisisButton}>
           <div className={styles.exclamationTriangle}>
             <svg
               width="15"
