@@ -16,7 +16,8 @@ const airtableFieldIDs = {
   preferredContactMethods: "fld1YO1uvizsAtPof", // Airtable field ID for "Preferred Method of Contact"
   otherContactMethod: "fldr0byBLdNwY0kfv", // Airtable field ID for "Other Method of Contact"
   consent: "fld6XWbmq0mfUrCKx", // Airtable field ID for "Consent"
-  confirmEligibility: "fldfla0da1qyZV7Kb", 
+  confirmEligibility: "fldfla0da1qyZV7Kb", // Airtable field ID for "Confirm Eligability"
+  localHub: "fldbIco8KuGrZ35cc"// Airtable field ID for "Local Hub"
 };
 
 const airtableURL = "https://api.airtable.com/v0/appESMQNwIowYCCld/Wellbeing%20Review%20request%20form";
@@ -28,11 +29,12 @@ const WellbeingForm = () => {
   const [selectedMethods, setSelectedMethods] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
   const [otherContact, setOtherContact] = useState(""); // State for 'Other' contact input
-  const [success, setSuccess] = useState(false); // New state for success message
-  
+  const [success, setSuccess] = useState(false); // State for success message
+  const [localHub, setLocalHub] = useState(""); // State for Local Hub
+
   const handleContinue = () => {
     const isEligible = document.getElementById("eligibility").checked; // Check the checkbox value
-  
+
     if (isEligible) {
       setEligibility(true); // Persist eligibility in state
       setShowForm(true); // Show the main form
@@ -41,6 +43,14 @@ const WellbeingForm = () => {
       setErrorMessage("Please confirm eligibility.");
       document.getElementById("eligibility")?.focus(); // Focus on the checkbox
     }
+  };
+
+  // Handle postcode changes
+  const handlePostcodeChange = (event) => {
+    const postcode = event.target.value.trim();
+    const hub = determineHub(postcode);
+    setLocalHub(hub);
+    console.log("Local Hub:", hub); // Debugging
   };
   
 
@@ -57,7 +67,23 @@ const WellbeingForm = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
+  
+    // Retrieve the postcode value first
+    const postcode = document.querySelector("#postcode")?.value.trim();
+  
+    // Validate localHub
+    if (!localHub) {
+      setErrorMessage("Postcode is required.");
+      document.querySelector("#postcode")?.focus();
+      return;
+    }
+    
+    // If postcode is not mapped, set localHub to "Not Recognised" and continue
+    if (localHub === "Not Recognised") {
+      console.warn(`Unmapped postcode (${postcode}) submitted with Local Hub set to "Not Recognised".`);
+    }
+    
+  
     if (!eligibility) {
       setErrorMessage("Please confirm eligibility.");
       return; // Stop submission
@@ -67,7 +93,6 @@ const WellbeingForm = () => {
     const name = document.querySelector("#name")?.value.trim();
     const email = document.querySelector("#email")?.value.trim();
     const phone = document.querySelector("#phone")?.value.trim();
-    const postcode = document.querySelector("#postcode")?.value.trim();
     const consent = document.querySelector("#consent")?.checked;
     const serviceAccessed = document.querySelector("#serviceAccessed")?.value.trim();
     const ethnicity = document.querySelector("#ethnicity")?.value.trim();
@@ -83,143 +108,145 @@ const WellbeingForm = () => {
     // Validate required fields
     if (!eligibility) {
       setErrorMessage("Please confirm eligibility.");
-      document.querySelector("#eligibility")?.focus(); // Focus on eligibility checkbox
+      document.querySelector("#eligibility")?.focus();
       return;
     }
   
     if (!name) {
       setErrorMessage("Name is required.");
-      document.querySelector("#name")?.focus(); // Safe call
+      document.querySelector("#name")?.focus();
       return;
     }
   
     if (!postcode) {
       setErrorMessage("Postcode is required.");
-      document.querySelector("#postcode")?.focus(); // Safe call
+      document.querySelector("#postcode")?.focus();
       return;
     }
   
     if (!consent) {
       setErrorMessage("Consent is required.");
-      document.querySelector("#consent")?.focus(); // Safe call
+      document.querySelector("#consent")?.focus();
       return;
     }
   
     if (!ethnicity) {
       setErrorMessage("Ethnicity is required.");
-      document.querySelector("#ethnicity")?.focus(); // Safe call
+      document.querySelector("#ethnicity")?.focus();
       return;
     }
   
     if (!gender) {
       setErrorMessage("Gender is required.");
-      document.querySelector("#gender")?.focus(); // Safe call
+      document.querySelector("#gender")?.focus();
       return;
     }
   
     if (!dob) {
       setErrorMessage("Date of Birth is required.");
-      document.querySelector("#dob")?.focus(); // Safe call
+      document.querySelector("#dob")?.focus();
       return;
     }
   
     if (!livingWithPregnantPerson) {
       setErrorMessage("Living with pregnant person status is required.");
-      document.querySelector('input[name="livingWithPregnantPerson"]')?.focus(); // Safe call
+      document.querySelector('input[name="livingWithPregnantPerson"]')?.focus();
       return;
     }
   
     if (!gestation) {
       setErrorMessage("Gestation period is required.");
-      document.querySelector("#gestation")?.focus(); // Safe call
+      document.querySelector("#gestation")?.focus();
       return;
     }
   
-    // Conditionally validate fields
     if (preferredContactMethods.includes("Microsoft Teams") || preferredContactMethods.includes("Zoom")) {
       if (!email) {
         setErrorMessage("Email is required for Microsoft Teams or Zoom.");
-        document.querySelector("#email")?.focus(); // Safe call
+        document.querySelector("#email")?.focus();
         return;
       }
     }
   
     if (preferredContactMethods.includes("Other") && !otherContactMethod) {
       setErrorMessage("Please specify your preferred contact method under 'Other'.");
-      document.querySelector("#otherContact")?.focus(); // Safe call
+      document.querySelector("#otherContact")?.focus();
       return;
     }
   
     if (preferredContactMethods.includes("Phone Call")) {
       if (!phone) {
         setErrorMessage("Phone number is required for Phone Call.");
-        document.querySelector("#phone")?.focus(); // Safe call
+        document.querySelector("#phone")?.focus();
         return;
       }
       const phonePattern = /^(\+44|0)7\d{9}$/;
       if (!phonePattern.test(phone)) {
         setErrorMessage("Please provide a valid UK phone number.");
-        document.querySelector("#phone")?.focus(); // Safe call
+        document.querySelector("#phone")?.focus();
         return;
       }
     }
+  
+    console.log("Submitting Local Hub:", localHub);
   
     // All validations passed
     setErrorMessage(""); // Clear any previous error messages
   
     // Prepare data for submission
-  const airtableData = {
-    records: [
-      {
-        fields: {
-          [airtableFieldIDs.name]: name,
-          [airtableFieldIDs.email]: email,
-          [airtableFieldIDs.phone]: phone,
-          [airtableFieldIDs.postcode]: postcode,
-          [airtableFieldIDs.serviceAccessed]: serviceAccessed,
-          [airtableFieldIDs.ethnicity]: ethnicity,
-          [airtableFieldIDs.gender]: gender,
-          [airtableFieldIDs.dob]: dob,
-          [airtableFieldIDs.livingWithPregnantPerson]: livingWithPregnantPerson,
-          [airtableFieldIDs.gestation]: gestation,
-          [airtableFieldIDs.preferredContactMethods]: preferredContactMethods,
-          [airtableFieldIDs.otherContactMethod]: otherContactMethod || null,
-          [airtableFieldIDs.consent]: consent ? true : false,
-          [airtableFieldIDs.confirmEligibility]: eligibility, // Use the persisted state
+    const airtableData = {
+      records: [
+        {
+          fields: {
+            [airtableFieldIDs.name]: name,
+            [airtableFieldIDs.email]: email,
+            [airtableFieldIDs.phone]: phone,
+            [airtableFieldIDs.postcode]: postcode,
+            [airtableFieldIDs.localHub]: localHub, // Add local hub to submission
+            [airtableFieldIDs.serviceAccessed]: serviceAccessed,
+            [airtableFieldIDs.ethnicity]: ethnicity,
+            [airtableFieldIDs.gender]: gender,
+            [airtableFieldIDs.dob]: dob,
+            [airtableFieldIDs.livingWithPregnantPerson]: livingWithPregnantPerson,
+            [airtableFieldIDs.gestation]: gestation,
+            [airtableFieldIDs.preferredContactMethods]: preferredContactMethods,
+            [airtableFieldIDs.otherContactMethod]: otherContactMethod || null,
+            [airtableFieldIDs.consent]: consent ? true : false,
+            [airtableFieldIDs.confirmEligibility]: eligibility, // Use the persisted state
+          },
         },
-      },
-    ],
-  };
+      ],
+    };
 
     // Submit to Airtable
-    try {
-      const response = await fetch(airtableURL, {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer patSU10Pp0hh1NOgo.7554e4280a027e73e31574edeff1ad25a40803a6aabe8f111f34aa0721c48d80`,
-                    'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(airtableData),
-      });
-  
-      const responseData = await response.json();
-      console.log("Airtable API Response:", responseData); // Debugging log
-  
-      if (!response.ok) {
-        console.error("Error from Airtable API:", responseData);
-        setErrorMessage("Failed to submit the form. Please try again.");
-        return;
-      }
+  try {
+    const response = await fetch(airtableURL, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer patSU10Pp0hh1NOgo.7554e4280a027e73e31574edeff1ad25a40803a6aabe8f111f34aa0721c48d80`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(airtableData),
+    });
 
-            // Set success state to true
-            setSuccess(true);
-          } catch (error) {
-            console.error("Error submitting to Airtable:", error);
-            setErrorMessage("An error occurred while submitting the form. Please try again.");
-          }
-        };
-  
-      // Function to render success message
+    const responseData = await response.json();
+    console.log("Airtable API Response:", responseData);
+
+    if (!response.ok) {
+      console.error("Error from Airtable API:", responseData);
+      setErrorMessage("Failed to submit the form. Please try again.");
+      return;
+    }
+
+    // Set success state to true
+    setSuccess(true);
+  } catch (error) {
+    console.error("Error submitting to Airtable:", error);
+    setErrorMessage("An error occurred while submitting the form. Please try again.");
+  }
+};
+
+  // Function to render success message
   const renderSuccessMessage = () => (
     <div className={styles.successMessage}>
       <h1>Thank You!</h1>
@@ -244,13 +271,13 @@ const WellbeingForm = () => {
       </button>
     </div>
   );
-  
+
 
   return (
     <div className={styles.wellbeingFormContainer}>
-    {success ? (
-      renderSuccessMessage() // Show success message if form submission was successful
-    ) : !showForm ? (
+      {success ? (
+        renderSuccessMessage() // Show success message if form submission was successful
+      ) : !showForm ? (
         <div className={styles.prescreening}>
           <h2>Eligibility Confirmation</h2>
           <p>
@@ -271,6 +298,7 @@ const WellbeingForm = () => {
           {errorMessage && <div className={styles.error}>{errorMessage}</div>}
         </div>
       ) : (
+
         <div className={styles.formContainer}>
           <h1>Wellbeing Review Request Form</h1>
           {errorMessage && <div className={styles.error}>{errorMessage}</div>}
@@ -287,7 +315,13 @@ const WellbeingForm = () => {
                 <label htmlFor="postcode">
                   Postcode: <span className={styles.required}>*</span>
                 </label>
-                <input className={styles.input} id="postcode" placeholder="Your Postcode" required />
+                <input className={styles.input} id="postcode" placeholder="Your Postcode" onChange={handlePostcodeChange} required />
+                {/* Local Hub Field (hidden from user) */}
+                <input
+                  type="hidden"
+                  id="localHub"
+                  value={localHub} // Store the calculated hub
+                />
               </div>
             </div>
 
@@ -479,46 +513,69 @@ const WellbeingForm = () => {
               Please confirm that you understand how the information you have given us will be used, shared, and stored by us and that you give your consent for this by checking the box below.
             </p>
             <div className={styles.consentandsubmit}>
-            <label>
-              <input type="checkbox" id="consent" required /> Consent{" "}
-              <span className={styles.required}>
-                <font color="red">*</font>
-              </span>
-            </label>
-            <button className={styles.fancyButton} type="submit">
-              Submit
-            </button>
-          </div>
-        </form>
-      </div>
-    )}
-  </div>
-);
+              <label>
+                <input type="checkbox" id="consent" required /> Consent{" "}
+                <span className={styles.required}>
+                  <font color="red">*</font>
+                </span>
+              </label>
+              <button className={styles.fancyButton} type="submit">
+                Submit
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+    </div>
+  );
 };
 
 // Mapping of postcodes to hubs
 const postcodeToHubMap = {
   "North Essex": {
-    "North West": ["CB10", "CB11", "CM16", "CM17", "CM19", "CM20", "CM22", "CM23", "CM24", "EN9", "IG10"],
-    "North East": ["CO1", "CO2", "CO3", "CO4", "CO5", "CO6", "CO7", "CO8", "CO9", "CO10", "CO11"],
-    "Mid Essex": ["CM0", "CM1", "CM2", "CM3", "CM4", "CM5", "CM6", "CM7", "CM8", "CM9"],
+    "North East": ["CO1", "CO2", "CO3", "CO4", "CO5", "CO6", "CO7", "CO8", "CO9", "CO10", "CO11"], // Colchester & Tendring
+    "North West": ["CM16", "CM17", "CM19", "CM20", "CM22", "CM23", "CM24", "CB10", "CB11", "EN9", "IG10"], // Harlow, Epping Forest, Uttlesford
   },
+  "Mid Essex": [
+    "CM0", "CM1", "CM2", "CM3", "CM4", "CM5", "CM6", "CM7", "CM8", "CM9" // Chelmsford, Maldon, Braintree
+  ],
   "South Essex": {
-    "South West": ["CM11", "CM12", "CM13", "CM14", "CM15", "RM14"],
-    "South East": ["SS0", "SS1", "SS2", "SS3", "SS4", "SS5", "SS6", "SS7", "SS8", "SS9", "SS11"],
-  },
+    "South West": ["CM11", "CM12", "CM13", "CM14", "CM15", "RM14"], // Basildon, Brentwood, Thurrock
+    "South East": ["SS0", "SS1", "SS2", "SS3", "SS4", "SS5", "SS6", "SS7", "SS8", "SS9", "SS11"] // Southend, Rochford, Castle Point
+  }
 };
 
+
+// Function to determine the hub based on postcode
 const determineHub = (postcode) => {
   const outwardCode = postcode.trim().split(" ")[0].toUpperCase();
-  for (const [area, hubs] of Object.entries(postcodeToHubMap)) {
-    for (const [hub, postcodes] of Object.entries(hubs)) {
-      if (postcodes.includes(outwardCode)) {
-        return { area, hub };
+  console.log("Outward Code:", outwardCode); // Debugging
+
+  // Check each main region and its sub-regions
+  for (const [region, hubs] of Object.entries(postcodeToHubMap)) {
+    if (Array.isArray(hubs)) {
+      // Handle regions without sub-regions (like Mid Essex)
+      if (hubs.includes(outwardCode)) {
+        console.log(`Mapped Hub: ${region}`);
+        return region;
+      }
+    } else {
+      // Handle regions with sub-regions (like North Essex, South Essex)
+      for (const [subRegion, postcodes] of Object.entries(hubs)) {
+        if (postcodes.includes(outwardCode)) {
+          console.log(`Mapped Hub: ${subRegion} (${region})`);
+          return `${subRegion} (${region})`;
+        }
       }
     }
   }
-  return { area: "Unknown", hub: "Unknown" };
+
+  // Fallback for unmapped postcodes
+  console.log("Unknown Hub for:", outwardCode);
+  return "Not Recognised"; // Default for Airtable's "Not Recognised" option
 };
+
+
+
 
 export default WellbeingForm;
