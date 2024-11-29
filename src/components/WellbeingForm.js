@@ -432,7 +432,7 @@ const WellbeingForm = () => {
 
               <div className={styles.column}>
                 <label htmlFor="serviceAccessed">
-                  How was the service accessed?{" "}
+                  How did you find us?{" "}
                   <span className={styles.required}>*</span>
                 </label>
                 <select className={styles.input} id="serviceAccessed" required>
@@ -441,7 +441,7 @@ const WellbeingForm = () => {
                   </option>
                   <option value="GP">GP</option>
                   <option value="Midwife">Midwife</option>
-                  <option value="Self Referral">Self Referral</option>
+                  <option value="QR Code">QR Code</option>
                   <option value="Other">Other</option>
                 </select>
               </div>
@@ -451,7 +451,7 @@ const WellbeingForm = () => {
             <div className={styles.row}>
               <div className={styles.columnFull}>
                 <label>
-                  Are you living with the pregnant woman or birthing person?{" "}
+                  Are you living with your partner?{" "}
                   <span className={styles.required}>*</span>
                 </label>
                 <div className={styles.radioGroup}>
