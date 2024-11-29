@@ -257,7 +257,7 @@ const WellbeingForm = () => {
         contact you within 7 days via your selected preferred method of contact (if possible).
       </p>
       <button
-        onClick={() => (window.location.href = "https://parents1st.org.uk/the-other-half-hub")}
+        onClick={() => (window.top.location.href = "https://parents1st.org.uk/the-other-half-hub")}
         style={{
           backgroundColor: "#D78223",
           color: "white",
