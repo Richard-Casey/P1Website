@@ -1,6 +1,6 @@
 // src/components/PeerSupport.js
 import React from "react";
-import styles from "../styles/whatispeersupportstyle.module.css";
+import styles from "../../styles/whatispeersupportstyle.module.css";
 
 const PeerSupport = () => {
   return (

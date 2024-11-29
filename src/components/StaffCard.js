@@ -6,7 +6,7 @@ const StaffCard = () => {
   return (
     <div className={styles.staffCard}>
       <img
-        src={`${process.env.PUBLIC_URL}/images/StaffRCPic.png`}
+        src={`${process.env.PUBLIC_URL}/images/Staff/StaffRCPic.png`}
         alt="Richard Casey"
         className={styles.staffImage}
       />

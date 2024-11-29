@@ -1,17 +1,17 @@
 import React from "react";
 import { Routes, Route, useLocation } from "react-router-dom"; // Only import necessary hooks
-import Header from "./components/Header";
-import NavBar from "./components/NavBar";
-import Hero from "./components/Hero";
-import Home from "./components/Home";
-import WellbeingForm from "./components/WellbeingForm";
-import Footer from "./components/Footer";
+import Header from "./components/Formatting/Header";
+import NavBar from "./components/Formatting/NavBar";
+import Hero from "./components/Formatting/Hero";
+import Home from "./components/Pages/Home";
+import WellbeingForm from "./components/Pages/WellbeingForm";
+import Footer from "./components/Formatting/Footer";
 import ScrollToTop from "./components/ScrollToTop";
-import InCrisis from "./components/InCrisis";
+import InCrisis from "./components/Pages/InCrisis";
 import styles from "./styles/formstyle.module.css";
-import WhatWeDo from "./components/WhatWeDo";
-import StaffPage from "./components/StaffPage";
-import PeerSupport from "./components/PeerSupport";
+import WhatWeDo from "./components/Pages/WhatWeDo";
+import StaffPage from "./components/Pages/StaffPage";
+import PeerSupport from "./components/Pages/PeerSupport";
 import "./App.css";
 
 const App = () => {

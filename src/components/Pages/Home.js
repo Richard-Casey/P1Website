@@ -1,7 +1,7 @@
 // src/components/Home.js
 import React from "react";
-import styles from "../styles/homestyle.module.css";
-import Button from "./Button"; // Import the Button component
+import styles from "../../styles/homestyle.module.css";
+import Button from "../Button"; // Import the Button component
 
 const Home = () => {
   return (
@@ -10,7 +10,7 @@ const Home = () => {
         {/* Image section */}
         <div className={styles.landingImageContainer}>
           <img
-            src={`${process.env.PUBLIC_URL}/images/landingsplash.png`}
+            src={`${process.env.PUBLIC_URL}/images/Home/landingsplash.png`}
             alt="The Other-Half Hub"
             className={styles.landingImage}
           />

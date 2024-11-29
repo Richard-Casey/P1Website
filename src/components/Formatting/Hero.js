@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import styles from "../styles/herostyle.module.css";
+import styles from "../../styles/herostyle.module.css";
 
 function Hero() {
   useEffect(() => {
@@ -13,14 +13,14 @@ function Hero() {
     <div className={styles.heroSection}>
       {/* Hero Background Image */}
       <img
-        src={`${process.env.PUBLIC_URL}/images/Hero1.png`}
+        src={`${process.env.PUBLIC_URL}/images/Hero/Hero1.png`}
         alt="Background scene"
         className={styles.heroImage}
       />
 
       {/* Hero Logo */}
       <img
-        src={`${process.env.PUBLIC_URL}/images/TOHHLogo.png`}
+        src={`${process.env.PUBLIC_URL}/images/Logos/TOHHLogo.png`}
         alt="The Other-Half Hub logo"
         className={styles.heroLogo}
       />

@@ -1,6 +1,6 @@
 // src/components/WhatWeDo.js
 import React from "react";
-import styles from "../styles/whatwedostyle.module.css";
+import styles from "../../styles/whatwedostyle.module.css";
 
 const WhatWeDo = () => {
   return (

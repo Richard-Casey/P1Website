@@ -1,6 +1,6 @@
 // src/components/Footer.js
 import React from 'react';
-import styles from '../styles/footerstyle.module.css';
+import styles from '../../styles/footerstyle.module.css';
 
 const Footer = () => {
   return (
@@ -8,7 +8,7 @@ const Footer = () => {
       <div className={styles.footerContent}>
         {/* Logo */}
         <img
-          src="/Website/images/p1stlogofull.png"
+          src="/Website/images/Logos/p1stlogofull.png"
           alt="Parents 1st UK Logo"
           className={styles.footerLogo}
         />

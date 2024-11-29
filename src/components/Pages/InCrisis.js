@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "../styles/incrisisstyle.module.css";
+import styles from "../../styles/incrisisstyle.module.css";
 
 const InCrisis = () => {
   return (
@@ -10,7 +10,7 @@ const InCrisis = () => {
         </h1>
         <div className={styles.inCrisisText}>
           <img
-            src={`${process.env.PUBLIC_URL}/images/111-mental-health-crisis.png`}
+            src={`${process.env.PUBLIC_URL}/images/InCrisis/111-mental-health-crisis.png`}
             alt="Mental Health Crisis"
             className={styles.inCrisisImage}
           />
@@ -127,7 +127,7 @@ const InCrisis = () => {
             QR code below and complete a short survey before 15 July 2025.
           </p>
           <img
-            src={`${process.env.PUBLIC_URL}/images/111-survey-qr-code.png`}
+            src={`${process.env.PUBLIC_URL}/images/InCrisis/111-survey-qr-code.png`}
             alt="QR Code for survey"
             className={styles.inCrisisQRCode}
           />

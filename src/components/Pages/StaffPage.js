@@ -1,14 +1,14 @@
 // src/components/StaffPage.js
 import React from "react";
-import styles from "../styles/staffpagestyle.module.css";
-import StaffCard from "./StaffCard";
+import styles from "../../styles/staffpagestyle.module.css";
+import StaffCard from "../StaffCard";
 
 const StaffPage = () => {
   return (
     <div className={styles.staffContainer}>
       {/* Header Image */}
       <img
-        src={`${process.env.PUBLIC_URL}/images/staffRC.png`}
+        src={`${process.env.PUBLIC_URL}/images/Staff/staffRC.png`}
         alt="Richard Casey"
         className={styles.staffHeaderImage}
       />
@@ -54,7 +54,7 @@ const StaffPage = () => {
           .
         </p>
         <StaffCard />
-        
+
       </div>
     </div>
   );

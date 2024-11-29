@@ -1,6 +1,6 @@
 // src/components/NavBar.js
 import React, { useState } from "react";
-import styles from "../styles/navtoolbarstyle.module.css";
+import styles from "../../styles/navtoolbarstyle.module.css";
 
 const NavBar = ({ onNavigate }) => {
   const [activeDropdown, setActiveDropdown] = useState(null);
