@@ -14,18 +14,22 @@ import "./App.css";
 const App = () => {
   const location = useLocation(); // Access the current route
 
+  // Check if the current route is "/minimal-form"
+  const isMinimalRoute = location.pathname === "/minimal-form";
+
   return (
     <div className={styles.App}>
 
       <ScrollToTop />
-      {/* Header */}
-      <Header />
 
-      {/* Conditionally Render Hero */}
-      {location.pathname === "/" && <Hero />}
+      {/* Render Header only if NOT on the minimal route */}
+      {!isMinimalRoute && <Header />}
 
-      {/* NavBar */}
-      <NavBar />
+      {/* Conditionally Render Hero (only for home route) */}
+      {!isMinimalRoute && location.pathname === "/" && <Hero />}
+
+      {/* Render NavBar only if NOT on the minimal route */}
+      {!isMinimalRoute && <NavBar />}
 
       {/* Routes */}
       <main>
@@ -37,13 +41,16 @@ const App = () => {
           {/* Wellbeing Form Route */}
           <Route path="/wellbeing-review-form" element={<WellbeingForm />} />
 
+          {/* Minimal Form Route for iframe */}
+          <Route path="/minimal-form" element={<WellbeingForm />} />
+
           {/* Catch-All Route */}
           <Route path="*" element={<div>Page Not Found</div>} />
         </Routes>
       </main>
 
-      {/* Footer */}
-      <Footer />
+      {/* Render Footer only if NOT on the minimal route */}
+      {!isMinimalRoute && <Footer />}
     </div>
   );
 };
