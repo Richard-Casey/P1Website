@@ -4,14 +4,15 @@ import Header from "./components/Formatting/Header";
 import NavBar from "./components/Formatting/NavBar";
 import Hero from "./components/Formatting/Hero";
 import Home from "./components/Pages/Home";
-import WellbeingForm from "./components/Pages/WellbeingForm";
+import WellbeingForm from './components/Pages/WellbeingForm';
 import Footer from "./components/Formatting/Footer";
 import ScrollToTop from "./components/ScrollToTop";
 import InCrisis from "./components/Pages/InCrisis";
 import styles from "./styles/formstyle.module.css";
-import WhatWeDo from "./components/Pages/WhatWeDo";
+import WhatWeDo from './components/Pages/WhatWeDo';
 import StaffPage from "./components/Pages/StaffPage";
 import PeerSupport from "./components/Pages/PeerSupport";
+import LGBTQIA from './components/Pages/LGBTQIA';
 import "./App.css";
 
 const App = () => {
@@ -36,6 +37,7 @@ const App = () => {
           <Route path="/what-we-do" element={<WhatWeDo />} />
           <Route path="/staff" element={<StaffPage />} />
           <Route path="/what-is-peer-support" element={<PeerSupport />} />
+          <Route path="/lgbtqia" element={<LGBTQIA />} />
         </Routes>
       </main>
       {!isMinimalRoute && <Footer />}

@@ -102,7 +102,7 @@ const NavBar = ({ onNavigate }) => {
           <div className={styles.navItemWrapper}>
             <button
               className={styles.navLink}
-              onClick={() => onNavigate("lgbtqia")}
+              onClick={() => (window.location.href = "/Website/#/lgbtqia")}
             >
               LGBTQIA+
             </button>
