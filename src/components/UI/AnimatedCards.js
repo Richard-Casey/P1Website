@@ -14,6 +14,7 @@ const resources = [
     },
     {
         title: "DadPad",
+        // eslint-disable-next-line
         description: `The article \"Ask DadPad: Trans and Non-Binary Parents\" offers guidance and support for trans and non-binary parents navigating parenthood. It discusses 
         the importance of creating inclusive environments, addresses common concerns, and provides practical advice on pregnancy, birth, and parenting. The article also 
         highlights the need for open communication with healthcare providers to ensure respectful and appropriate care. It aims to empower trans and non-binary individuals 
