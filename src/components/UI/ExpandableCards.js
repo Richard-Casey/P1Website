@@ -8,19 +8,22 @@ const resources = [
     description: "Short description about Pink Parents.",
     content: "Full details about Pink Parents and their mission...",
     imgSrc: `${process.env.PUBLIC_URL}/images/tileimages/pink-parents.png`,
-    link: "https://www.acacia.org.uk/dads-partners/lgbtq/"
+    link: "https://www.acacia.org.uk/dads-partners/lgbtq/",
   },
   {
     title: "DadPad",
     description: "Short description about DadPad.",
-    content: "Full details about DadPad, including resources for trans parents...",
+    content:
+      "Full details about DadPad, including resources for trans parents...",
     imgSrc: `${process.env.PUBLIC_URL}/images/tileimages/dadpad.png`,
-    link: "https://www.acacia.org.uk/dads-partners/lgbtq/"
+    link: "https://www.acacia.org.uk/dads-partners/lgbtq/",
   },
   {
     title: "Acacia Family Support",
-    description: "Support for LGBTQ+ parents facing perinatal mental health issues.",
-    content: "Full details about DadPad, including resources for trans parents...",
+    description:
+      "Support for LGBTQ+ parents facing perinatal mental health issues.",
+    content:
+      "Full details about DadPad, including resources for trans parents...",
     imgSrc: `${process.env.PUBLIC_URL}/images/tileimages/acacia-family.png`,
     link: "https://www.acacia.org.uk/dads-partners/lgbtq/",
   },
@@ -57,8 +60,8 @@ export const ExpandableCards = () => {
         )}
       </AnimatePresence>
 
-       {/* Cards */}
-       <div className="grid gap-6 mt-8 relative z-20">
+     {/* Cards */}
+     <div className="grid gap-6 mt-8 relative z-20">
         {resources.map((resource) => (
           <motion.div
             key={resource.title}
@@ -95,7 +98,7 @@ export const ExpandableCards = () => {
               href={resource.link}
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-blue-500 text-white text-sm font-semibold rounded-full px-4 py-2 hover:bg-blue-600"
+              className="bg-blue-500 text-white text-sm font-semibold rounded-full px-4 py-2 hover:bg-orange-500 transition-all duration-300"
             >
               Visit Website
             </motion.a>
@@ -115,7 +118,7 @@ export const ExpandableCards = () => {
             <motion.div
               ref={cardRef}
               layoutId={`card-${activeCard.title}`}
-              className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-xl max-w-lg w-full"
+              className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-xl max-w-lg w-full relative"
             >
               {/* Expanded Image */}
               <motion.img
@@ -136,24 +139,46 @@ export const ExpandableCards = () => {
               >
                 {activeCard.description}
               </motion.p>
-              <div className="mt-4 text-gray-700 dark:text-gray-300 text-sm">
+              <div className="mt-40 text-gray-700 dark:text-gray-300 text-sm">
                 {activeCard.content}
               </div>
-              <motion.a
-                layoutId={`button-${activeCard.title}`}
-                href={activeCard.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-4 inline-block bg-blue-500 text-white text-sm font-semibold rounded-full px-4 py-2 hover:bg-blue-600"
-              >
-                Visit Website
-              </motion.a>
-              <button
-                onClick={() => setActiveCard(null)}
-                className="mt-4 bg-red-500 text-white text-sm font-semibold rounded-full px-4 py-2 hover:bg-red-600"
-              >
-                Close
-              </button>
+
+              {/* Buttons Container */}
+              <div className="mt-6">
+                {/* Visit Website Button */}
+                <motion.a
+                  layoutId={`button-${activeCard.title}`}
+                  href={activeCard.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-blue-500 text-white text-sm font-semibold rounded-full px-4 py-2 hover:bg-orange-500 transition-all duration-300"
+                  style={{
+                    minWidth: "100px", // Matches width
+                    position: "absolute",
+                    bottom: "1rem",
+                    left: "1rem",
+                  }}
+                >
+                  Visit Website
+                </motion.a>
+
+                {/* Close Button */}
+                <motion.button
+                  onClick={() => setActiveCard(null)}
+                  className="mt-4 bg-blue-500 text-white text-sm font-semibold rounded-full px-4 py-2 hover:bg-black-500 transition-all duration-300"
+                  whileHover={{
+                    backgroundColor: "#0392a2", // Cyan on hover
+                  }}
+                  style={{
+                    backgroundColor: "#d27a14",
+                    position: "absolute",
+                    bottom: "1rem",
+                    right: "1rem",
+                  }}
+                >
+                  Close
+                </motion.button>
+              </div>
             </motion.div>
           </motion.div>
         )}
