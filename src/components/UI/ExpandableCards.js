@@ -13,17 +13,14 @@ const resources = [
   {
     title: "DadPad",
     description: "Short description about DadPad.",
-    content:
-      "Full details about DadPad, including resources for trans parents...",
+    content: "Full details about DadPad, including resources for trans parents...",
     imgSrc: `${process.env.PUBLIC_URL}/images/tileimages/dadpad.png`,
     link: "https://www.acacia.org.uk/dads-partners/lgbtq/",
   },
   {
     title: "Acacia Family Support",
-    description:
-      "Support for LGBTQ+ parents facing perinatal mental health issues.",
-    content:
-      "Full details about DadPad, including resources for trans parents...",
+    description: "Support for LGBTQ+ parents facing perinatal mental health issues.",
+    content: "Full details about Acacia Family Support...",
     imgSrc: `${process.env.PUBLIC_URL}/images/tileimages/acacia-family.png`,
     link: "https://www.acacia.org.uk/dads-partners/lgbtq/",
   },
@@ -60,8 +57,8 @@ export const ExpandableCards = () => {
         )}
       </AnimatePresence>
 
-     {/* Cards */}
-     <div className="grid gap-6 mt-8 relative z-20">
+      {/* Cards */}
+      <div className="grid gap-6 mt-8 relative z-20">
         {resources.map((resource) => (
           <motion.div
             key={resource.title}
@@ -93,15 +90,23 @@ export const ExpandableCards = () => {
                 {resource.description}
               </motion.p>
             </div>
-            <motion.a
-              layoutId={`button-${resource.title}`}
-              href={resource.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-blue-500 text-white text-sm font-semibold rounded-full px-4 py-2 hover:bg-orange-500 transition-all duration-300"
+            {/* Encapsulate the Button */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 10 }}
+              transition={{ duration: 0.3 }}
+              className="flex-shrink-0"
             >
-              Visit Website
-            </motion.a>
+              <a
+                href={resource.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-blue-500 text-white text-sm font-semibold rounded-full px-4 py-2 hover:bg-orange-500 transition-all duration-300"
+              >
+                Visit Website
+              </a>
+            </motion.div>
           </motion.div>
         ))}
       </div>
@@ -139,28 +144,34 @@ export const ExpandableCards = () => {
               >
                 {activeCard.description}
               </motion.p>
-              <div className="mt-40 text-gray-700 dark:text-gray-300 text-sm">
+              <div className="mt-4 text-gray-700 dark:text-gray-300 text-sm">
                 {activeCard.content}
               </div>
 
               {/* Buttons Container */}
               <div className="mt-6">
                 {/* Visit Website Button */}
-                <motion.a
-                  layoutId={`button-${activeCard.title}`}
-                  href={activeCard.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-blue-500 text-white text-sm font-semibold rounded-full px-4 py-2 hover:bg-orange-500 transition-all duration-300"
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 10 }}
+                  transition={{ duration: 0.3 }}
+                  className="flex-shrink-0"
                   style={{
-                    minWidth: "100px", // Matches width
                     position: "absolute",
                     bottom: "1rem",
                     left: "1rem",
                   }}
                 >
-                  Visit Website
-                </motion.a>
+                  <a
+                    href={activeCard.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-blue-500 text-white text-sm font-semibold rounded-full px-4 py-2 hover:bg-orange-500 transition-all duration-300"
+                  >
+                    Visit Website
+                  </a>
+                </motion.div>
 
                 {/* Close Button */}
                 <motion.button
