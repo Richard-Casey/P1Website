@@ -21,8 +21,7 @@ const resources = [
     title: "DadPad",
     description:
       "Ask Dadpad: Trans and non-binary parents - Ask Dadpad LGBTQI+ Parents Q&A",
-    // eslint-disable-next-line
-    content: `The article \"Ask DadPad: Trans and Non-Binary Parents\" offers guidance and support for trans and non-binary parents navigating parenthood. It discusses 
+    content: `The article "Ask DadPad: Trans and Non-Binary Parents" offers guidance and support for trans and non-binary parents navigating parenthood. It discusses 
         the importance of creating inclusive environments, addresses common concerns, and provides practical advice on pregnancy, birth, and parenting. The article also 
         highlights the need for open communication with healthcare providers to ensure respectful and appropriate care. It aims to empower trans and non-binary individuals 
         with knowledge and resources to confidently embrace their parenting.`,
@@ -107,6 +106,12 @@ const resources = [
 export const ExpandableCards = () => {
   const [activeCard, setActiveCard] = useState(null);
   const cardRef = useRef(null);
+  const scrollContainer = useRef(null);
+
+  // Check if scrollable
+  const isScrollable =
+    scrollContainer.current?.scrollHeight >
+    scrollContainer.current?.clientHeight;
 
   // Close on outside click
   useOutsideClick(cardRef, () => setActiveCard(null));
@@ -120,6 +125,29 @@ export const ExpandableCards = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
+  // Lock/Unlock Scroll
+  useEffect(() => {
+    const lockScroll = () => {
+      const scrollbarWidth =
+        window.innerWidth - document.documentElement.clientWidth;
+      document.body.style.overflow = "hidden";
+      document.body.style.paddingRight = `${scrollbarWidth}px`;
+    };
+
+    const unlockScroll = () => {
+      document.body.style.overflow = "";
+      document.body.style.paddingRight = "";
+    };
+
+    if (activeCard) {
+      lockScroll();
+    } else {
+      unlockScroll();
+    }
+
+    return () => unlockScroll();
+  }, [activeCard]);
+
   return (
     <div className="relative">
       {/* Backdrop */}
@@ -129,7 +157,7 @@ export const ExpandableCards = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 0.5 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black z-10"
+            className="fixed inset-0 bg-black z-40"
             onClick={() => setActiveCard(null)}
           />
         )}
@@ -178,6 +206,7 @@ export const ExpandableCards = () => {
                 {resource.description}
               </motion.p>
             </div>
+
             {/* Encapsulate the Button */}
             <motion.div
               initial={{ opacity: 0, y: 10 }}
@@ -204,13 +233,15 @@ export const ExpandableCards = () => {
       <AnimatePresence>
         {activeCard && (
           <motion.div
-            className="fixed inset-0 z-30 flex items-center justify-center p-4"
+            className="fixed inset-0 z-40 flex items-center justify-center p-4"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.9 }}
             transition={{
               duration: 0.1, // Reduce duration for quicker transitions
               ease: "linear",
+              top: "10vh", // Adds space from the top
+              paddingTop: "20px", // Optional additional spacing
             }}
           >
             <motion.div
@@ -218,10 +249,13 @@ export const ExpandableCards = () => {
               layoutId={`card-${activeCard.title}`}
               className="p-6 max-w-lg w-full relative"
               style={{
-                borderRadius: "36px", // Rounded corners
+                maxWidth: "40vw", // Restrict width for responsiveness
+                maxHeight: "75vh", // Prevent the card from exceeding the viewport height
+                borderRadius: "36px",
                 border: "4px solid rgb(255, 255, 255)",
-                boxShadow: "0 8px 20px rgba(0, 0, 0, 0.2)", // Stronger shadow
-                background: activeCard.gradientExpanded, // Use gradient instead of backgroundColor
+                boxShadow: "0 8px 20px rgba(0, 0, 0, 0.2)",
+                background: activeCard.gradientExpanded,
+                overflow: "hidden", // Prevent the main container from scrolling
               }}
             >
               {/* Expanded Image */}
@@ -250,6 +284,8 @@ export const ExpandableCards = () => {
                   display: "flex",
                   flexDirection: "column",
                   gap: "0.5rem", // Ensures uniform spacing between elements
+                  maxHeight: "200px", // Height constraint to ensure only content scrolls
+                  paddingRight: "8px", // Space for scrollbar
                 }}
               >
                 {/* Title */}
@@ -263,9 +299,10 @@ export const ExpandableCards = () => {
                   {activeCard.title}
                 </motion.h3>
 
+                {/* Description */}
                 <motion.p
                   layoutId={`description-${activeCard.description}`}
-                  className="text-sm text-gray-700 dark:text-darkgray-400"
+                  className="text-sm font-bold text-gray-700 dark:text-darkgray-400"
                   style={{
                     margin: 0, // Remove unwanted top/bottom margins
                   }}
@@ -273,15 +310,45 @@ export const ExpandableCards = () => {
                   {activeCard.description}
                 </motion.p>
 
-                {/* Full Content */}
+                {/* Scrollable Content */}
                 <div
-                  className="text-gray-700 dark:text-darkgray-300 text-sm"
+                  ref={scrollContainer}
+                  className="overflow-y-auto pr-4"
                   style={{
-                    margin: 0, // Remove unwanted top/bottom margins
+                    maxHeight: "200px", // Define height of scrollable area
+                    paddingRight: "8px", // Space for scrollbar
                   }}
                 >
-                  {activeCard.content}
+                  <p className="text-sm text-gray-700">{activeCard.content}</p>
                 </div>
+
+                {/* Scroll Buttons */}
+                {isScrollable && (
+                  <div className="absolute right-2 top-0 bottom-0 flex flex-col justify-between">
+                    <button
+                      className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center"
+                      onClick={() =>
+                        scrollContainer.current.scrollBy({
+                          top: -50,
+                          behavior: "smooth",
+                        })
+                      }
+                    >
+                      ▲
+                    </button>
+                    <button
+                      className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center"
+                      onClick={() =>
+                        scrollContainer.current.scrollBy({
+                          top: 50,
+                          behavior: "smooth",
+                        })
+                      }
+                    >
+                      ▼
+                    </button>
+                  </div>
+                )}
               </div>
 
               {/* Buttons Container */}
@@ -293,7 +360,7 @@ export const ExpandableCards = () => {
                   rel="noopener noreferrer"
                   className="bg-blue-500 text-white text-sm font-semibold rounded-full px-4 py-2 hover:bg-orange-500 transition-all duration-300"
                   style={{
-                    width: "calc(50% - 0.5rem)", // Ensures equal button sizes with a gap
+                    width: "calc(50% - 1rem)", // Ensures equal button sizes with a gap
                     textAlign: "center",
                     border: "2px solid rgb(255, 255, 255)",
                   }}
@@ -306,7 +373,7 @@ export const ExpandableCards = () => {
                   onClick={() => setActiveCard(null)}
                   className="bg-red-500 text-white text-sm font-semibold rounded-full px-4 py-2 hover:bg-orange-500 transition-all duration-300"
                   style={{
-                    width: "calc(50% - 0.5rem)", // Ensures equal button sizes with a gap
+                    width: "calc(50% - 1rem)", // Ensures equal button sizes with a gap
                     textAlign: "center",
                     border: "2px solid rgb(255, 255, 255)",
                   }}

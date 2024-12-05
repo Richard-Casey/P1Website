@@ -6,7 +6,7 @@
   padding: 0;
   position: sticky; /* Make NavBar sticky */
   top: 53px; /* Adjust based on Header's height */
-  z-index: 10; /* Ensure it's above the content */
+  z-index: 50; /* Ensure it's above the content */
   width: 100%;
   display: flex;
   justify-content: center;
