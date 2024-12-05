@@ -148,7 +148,10 @@ export const ExpandableCards = () => {
               border: "3px solid rgba(58, 58, 58, 1)",
               boxShadow: "0 8px 16px rgba(0, 0, 0, 0.2)",
               background: resource.gradient,
-              transition: "all 0.3s ease",
+            }}
+            transition={{
+              duration: 0.3, // Reduce duration for quicker transitions
+              ease: "linear",
             }}
           >
             <motion.img
@@ -158,6 +161,7 @@ export const ExpandableCards = () => {
               className="w-16 h-16 rounded-lg object-cover"
               style={{
                 border: "2px solid #f0f0f0",
+                borderRadius: "14px",
               }}
             />
             <div className="flex-1">
@@ -179,7 +183,7 @@ export const ExpandableCards = () => {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 10 }}
-              transition={{ duration: 0.3 }}
+              transition={{ duration: 0.1 }}
               className="flex-shrink-0"
             >
               <a
@@ -204,6 +208,10 @@ export const ExpandableCards = () => {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.9 }}
+            transition={{
+              duration: 0.1, // Reduce duration for quicker transitions
+              ease: "linear",
+            }}
           >
             <motion.div
               ref={cardRef}
