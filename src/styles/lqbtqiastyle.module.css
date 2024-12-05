@@ -1,58 +1,30 @@
-/* ExpandableCards.css */
-
-/* From Uiverse.io by cssbuttons-io */ 
-button {
-    font-size: 17px;
-    padding: 1em 2.7em;
-    font-weight: 500;
-    background: #1f2937;
-    color: white;
-    border: none;
-    position: relative;
-    overflow: hidden;
-    border-radius: 0.6em;
-    cursor: pointer;
+/* Updated Expandable Cards Style */
+.expandable-card {
+    backdrop-filter: blur(14px) saturate(141%);
+    -webkit-backdrop-filter: blur(14px) saturate(141%);
+    background-color: rgba(255, 255, 255, 0.25); /* Subtle light background */
+    border-radius: 12px; /* Rounded corners */
+    border: 1px solid rgba(255, 255, 255, 0.125); /* Subtle border */
+    padding: 1rem; /* Adjust padding */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Soft shadow */
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out; /* Animation */
   }
   
-  .gradient {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    left: 0;
-    top: 0;
-    border-radius: 0.6em;
-    margin-top: -0.25em;
-    background-image: linear-gradient(
-      rgba(0, 0, 0, 0),
-      rgba(0, 0, 0, 0),
-      rgba(0, 0, 0, 0.3)
-    );
+  .expandable-card:hover {
+    transform: translateY(-5px); /* Slight lift on hover */
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2); /* Enhance shadow on hover */
   }
   
-  .label {
-    position: relative;
-    top: -1px;
-  }
-  
-  .transition {
-    transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
-    transition-duration: 500ms;
-    background-color: rgba(16, 185, 129, 0.6);
-    border-radius: 9999px;
-    width: 0;
-    height: 0;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-  }
-  
-  button:hover .transition {
-    width: 14em;
-    height: 14em;
-  }
-  
-  button:active {
-    transform: scale(0.97);
+  /* Background for the ExpandableCards Section */
+.expandable-cards-section {
+    background-color: #50e3c2;
+    background-image: radial-gradient(
+        at 47% 33%,
+        hsl(30, 0%, 98%) 0,
+        transparent 59%
+      ),
+      radial-gradient(at 82% 65%, hsl(37, 91%, 55%) 0, transparent 55%);
+    padding: 2rem; /* Adds padding around the cards */
+    border-radius: 16px; /* Rounds the section container */
   }
   

@@ -12,62 +12,95 @@ const resources = [
         for same-sex families.`,
     imgSrc: `${process.env.PUBLIC_URL}/images/tileimages/pink-parents.png`,
     link: "https://www.pinkparents.org.uk/",
+    gradient:
+      "linear-gradient(135deg, rgba(243,17,109,0.9), rgba(243,17,109,0.5), rgba(255,255,255,0.5), rgba(255,255,255,0.9))", // Pink to White
+    gradientExpanded:
+      "linear-gradient(135deg, rgb(243,17,109), rgb(243,17,109), rgb(255,255,255), rgb(255,255,255))",
   },
   {
     title: "DadPad",
-    description: "Ask Dadpad: Trans and non-binary parents - Ask Dadpad LGBTQI+ Parents Q&A",
+    description:
+      "Ask Dadpad: Trans and non-binary parents - Ask Dadpad LGBTQI+ Parents Q&A",
+    // eslint-disable-next-line
     content: `The article \"Ask DadPad: Trans and Non-Binary Parents\" offers guidance and support for trans and non-binary parents navigating parenthood. It discusses 
         the importance of creating inclusive environments, addresses common concerns, and provides practical advice on pregnancy, birth, and parenting. The article also 
         highlights the need for open communication with healthcare providers to ensure respectful and appropriate care. It aims to empower trans and non-binary individuals 
         with knowledge and resources to confidently embrace their parenting.`,
     imgSrc: `${process.env.PUBLIC_URL}/images/tileimages/dadpad.png`,
     link: "https://thedadpad.co.uk/lgbtqi-parents/ask-dadpad-trans-and-non-binary-parents/",
+    gradient:
+      "linear-gradient(135deg, rgba(0,0,0,0.9), rgba(0,0,0,0.5), rgba(252,200,43,0.5), rgba(252,200,43,0.9))", // Yellow to Black
+    gradientExpanded:
+      "linear-gradient(135deg, rgb(0,0,0), rgb(0,0,0), rgb(252,200,43), rgb(252,200,43))",
   },
   {
     title: "Acacia Family Support",
-    description: "Support for LGBTQ+ parents facing perinatal mental health issues.",
+    description:
+      "Support for LGBTQ+ parents facing perinatal mental health issues.",
     content: `The Acacia Family Support's LGBTQ+ Partners page provides a comprehensive guide for LGBTQ+ parents dealing with perinatal mental health issues. 
         This page offers a wealth of resources, including self-help guides, local and national support services, and advice on recognising and managing mental health 
         problems. It emphasises the importance of early intervention, supporting one's partner, and self-care. `,
     imgSrc: `${process.env.PUBLIC_URL}/images/tileimages/acacia-family.png`,
     link: "https://www.acacia.org.uk/dads-partners/lgbtq/",
+    gradient:
+      "linear-gradient(135deg, rgba(255,0,0,0.9), rgba(255,153,0,0.9), rgba(255,255,0,0.5), rgba(0,255,0,0.5), rgba(0,0,255,0.5), rgba(75,0,130,0.9), rgba(238,130,238,0.9))", // Rainbow
+    gradientExpanded:
+      "linear-gradient(135deg, rgb(255,0,0), rgb(255,153,0), rgb(255,255,0), rgb(0,255,0), rgb(0,0,255), rgb(75,0,130), rgb(238,130,238))",
   },
   {
-    title: "Feed Play Love",
+    title: "Feed Play Love: A Different Rulebook",
     description: "One Dads choice to parent from a different rulebook.",
     content: `Spotify/Podcast: Sean Szeps shares his story of overcoming the challenges of being a gay man with 
         dreams of becoming a parent. Sean discusses his early struggles, his fascination with diverse mothers, and the obstacles he and his husband Josh faced on their path 
         to parenthood. He also reflects on why he believes he is the best father for his daughter.`,
     imgSrc: `${process.env.PUBLIC_URL}/images/tileimages/different-rule-book.png`,
     link: "https://open.spotify.com/episode/7woJNDoJlAcbkRGte4kBRu?si=-jKiYGadSlC_u1ljgpQ5SA&nd=1&dlsi=dc4d7ce6e1b24ab1",
+    gradient:
+      "linear-gradient(135deg, rgba(23,111,178,0.9), rgba(23,111,178,0.5), rgba(252,200,43,0.5), rgba(252,200,43,0.9))", // Blue to Yellow
+    gradientExpanded:
+      "linear-gradient(135deg, rgb(23,111,178), rgb(23,111,178), rgb(252,200,43), rgb(252,200,43))",
   },
   {
     title: "Kim & Andi",
-    description: "A Journey with Postnatal Anxiety & Depression through the Lesbian Lens.",
+    description:
+      "A Journey with Postnatal Anxiety & Depression through the Lesbian Lens.",
     content: `Youtube: In this personal video, Kim and Andi share their journey through postnatal 
         anxiety and depression from a lesbian perspective. They discuss the emotional challenges, the vivid and distressing, and the vital role of community support. It 
         highlights the importance of language and inclusivity in healthcare, while emphasising the societal need for better support for all mothers, especially those 
         facing mental health issues.`,
     imgSrc: `${process.env.PUBLIC_URL}/images/tileimages/kim-andi.png`,
     link: "https://www.youtube.com/watch?v=1t02frctzkY",
+    gradient:
+      "linear-gradient(135deg, rgba(223, 0, 6, 0.9), rgba(255,255,255,0.5), rgba(255,255,255,0.5), rgba(223, 0, 6, 0.5), rgba(223, 0, 6, 0.9))",
+    gradientExpanded:
+      "linear-gradient(135deg, rgb(223, 0, 6), rgb(255,255,255), rgb(255,255,255), rgb(223, 0, 6), rgb(223, 0, 6))",
   },
   {
     title: "ManUp!",
-    description: "Man Up! is a UK-based men's mental health podcast hosted by Andy Richardson and Tommy Danquah. ",
+    description:
+      "Man Up! is a UK-based men's mental health podcast hosted by Andy Richardson and Tommy Danquah. ",
     content: `Spotify/Podcast: The podcast aims to encourage open conversations about 
         mental health among men. Each episode features discussions with various guests, including celebrities and experts, on topics ranging from personal mental health 
         experiences to broader issues in mental health advocacy.`,
     imgSrc: `${process.env.PUBLIC_URL}/images/tileimages/manup.png`,
     link: "https://open.spotify.com/show/2ahFYl1h4tkXrjIYiA6mXZ",
+    gradient:
+      "linear-gradient(135deg, rgba(94,131,156,0.9), rgba(94,131,156,0.5), rgba(197,184,164,0.5), rgba(197,184,164,0.9))",
+    gradientExpanded:
+      "linear-gradient(135deg, rgb(94,131,156), rgb(94,131,156), rgb(197,184,164), rgb(197,184,164))",
   },
   {
-    title: "Feed Play Love",
+    title: "Feed Play Love: When Dads get PND",
     description: "When Dads Get PND.",
-    content:`Spotify/Podcast: In this 14-minute episode from June 2022, Dave Edwards, a father of two, shares his experience with perinatal depression and 
+    content: `Spotify/Podcast: In this 14-minute episode from June 2022, Dave Edwards, a father of two, shares his experience with perinatal depression and 
         anxiety (PND) following the birth of his son. Despite PND affecting one in ten dads, over half do not seek help. Dave hopes that by telling his story, he can 
         encourage other dads to reach out for support.`,
     imgSrc: `${process.env.PUBLIC_URL}/images/tileimages/when-dads-get-pnd.png`,
     link: "https://open.spotify.com/episode/5tUODv7C44U0KJ2wphKbLt",
+    gradient:
+      "linear-gradient(135deg, rgba(23,111,178,0.9), rgba(23,111,178,0.5), rgba(252,200,43,0.5), rgba(252,200,43,0.9))", // Blue to Yellow
+    gradientExpanded:
+      "linear-gradient(135deg, rgb(23,111,178), rgb(23,111,178), rgb(252,200,43), rgb(252,200,43))",
   },
 ];
 
@@ -109,17 +142,23 @@ export const ExpandableCards = () => {
             key={resource.title}
             layoutId={`card-${resource.title}`}
             onClick={() => setActiveCard(resource)}
-            className={`cursor-pointer rounded-lg shadow-md ${
-              activeCard?.title === resource.title
-                ? "bg-blue-500 text-white"
-                : "bg-white dark:bg-gray-900"
-            } flex items-center p-4 gap-4`}
+            className={`cursor-pointer flex items-center p-4 gap-4`}
+            style={{
+              borderRadius: "24px",
+              border: "3px solid rgba(58, 58, 58, 1)",
+              boxShadow: "0 8px 16px rgba(0, 0, 0, 0.2)",
+              background: resource.gradient,
+              transition: "all 0.3s ease",
+            }}
           >
             <motion.img
               layoutId={`image-${resource.title}`}
               src={resource.imgSrc}
               alt={resource.title}
               className="w-16 h-16 rounded-lg object-cover"
+              style={{
+                border: "2px solid #f0f0f0",
+              }}
             />
             <div className="flex-1">
               <motion.h3
@@ -130,7 +169,7 @@ export const ExpandableCards = () => {
               </motion.h3>
               <motion.p
                 layoutId={`description-${resource.description}`}
-                className="text-sm text-gray-500"
+                className="text-sm font-bold text-gray-900"
               >
                 {resource.description}
               </motion.p>
@@ -148,6 +187,7 @@ export const ExpandableCards = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-blue-500 text-white text-sm font-semibold rounded-full px-4 py-2 hover:bg-orange-500 transition-all duration-300"
+                style={{ border: "2px solid rgb(255, 255, 255)" }}
               >
                 Visit Website
               </a>
@@ -168,7 +208,13 @@ export const ExpandableCards = () => {
             <motion.div
               ref={cardRef}
               layoutId={`card-${activeCard.title}`}
-              className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-xl max-w-lg w-full relative"
+              className="p-6 max-w-lg w-full relative"
+              style={{
+                borderRadius: "36px", // Rounded corners
+                border: "4px solid rgb(255, 255, 255)",
+                boxShadow: "0 8px 20px rgba(0, 0, 0, 0.2)", // Stronger shadow
+                background: activeCard.gradientExpanded, // Use gradient instead of backgroundColor
+              }}
             >
               {/* Expanded Image */}
               <motion.img
@@ -176,60 +222,85 @@ export const ExpandableCards = () => {
                 src={activeCard.imgSrc}
                 alt={activeCard.title}
                 className="w-full h-64 rounded-lg object-cover"
+                style={{
+                  border: "2px solid rgb(58, 58, 58)",
+                  borderRadius: "36px", // Rounded corners
+                }}
               />
-              <motion.h3
-                layoutId={`title-${activeCard.title}`}
-                className="text-xl font-bold mt-4 text-gray-900 dark:text-white"
+
+              {/* Glassmorphism Container */}
+              <div
+                className="backdrop-blur-lg bg-white/30 border border-white/20 rounded-lg p-4 shadow-md relative"
+                style={{
+                  backdropFilter: "blur(16px) saturate(180%)",
+                  WebkitBackdropFilter: "blur(16px) saturate(180%)",
+                  backgroundColor: "rgba(255, 255, 255, 0.83)",
+                  borderRadius: "24px",
+                  border: "2px solid rgb(58, 58, 58)",
+                  padding: "1rem",
+                  marginTop: "0.5rem", // Small gap between the image and container
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "0.5rem", // Ensures uniform spacing between elements
+                }}
               >
-                {activeCard.title}
-              </motion.h3>
-              <motion.p
-                layoutId={`description-${activeCard.description}`}
-                className="text-sm text-gray-500 dark:text-gray-400 mt-2"
-              >
-                {activeCard.description}
-              </motion.p>
-              <div className="mt-4 text-gray-700 dark:text-gray-300 text-sm">
-                {activeCard.content}
+                {/* Title */}
+                <motion.h3
+                  layoutId={`title-${activeCard.title}`}
+                  className="text-xl font-bold text-gray-900 dark:text-black"
+                  style={{
+                    margin: 0, // Remove unwanted top/bottom margins
+                  }}
+                >
+                  {activeCard.title}
+                </motion.h3>
+
+                <motion.p
+                  layoutId={`description-${activeCard.description}`}
+                  className="text-sm text-gray-700 dark:text-darkgray-400"
+                  style={{
+                    margin: 0, // Remove unwanted top/bottom margins
+                  }}
+                >
+                  {activeCard.description}
+                </motion.p>
+
+                {/* Full Content */}
+                <div
+                  className="text-gray-700 dark:text-darkgray-300 text-sm"
+                  style={{
+                    margin: 0, // Remove unwanted top/bottom margins
+                  }}
+                >
+                  {activeCard.content}
+                </div>
               </div>
 
               {/* Buttons Container */}
-              <div className="mt-6">
+              <div className="mt-6 flex justify-between">
                 {/* Visit Website Button */}
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 10 }}
-                  transition={{ duration: 0.3 }}
-                  className="flex-shrink-0"
+                <motion.a
+                  href={activeCard.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-blue-500 text-white text-sm font-semibold rounded-full px-4 py-2 hover:bg-orange-500 transition-all duration-300"
                   style={{
-                    position: "absolute",
-                    bottom: "1rem",
-                    left: "1rem",
+                    width: "calc(50% - 0.5rem)", // Ensures equal button sizes with a gap
+                    textAlign: "center",
+                    border: "2px solid rgb(255, 255, 255)",
                   }}
                 >
-                  <a
-                    href={activeCard.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="bg-blue-500 text-white text-sm font-semibold rounded-full px-4 py-2 hover:bg-orange-500 transition-all duration-300"
-                  >
-                    Visit Website
-                  </a>
-                </motion.div>
+                  Visit Website
+                </motion.a>
 
                 {/* Close Button */}
                 <motion.button
                   onClick={() => setActiveCard(null)}
-                  className="mt-4 bg-blue-500 text-white text-sm font-semibold rounded-full px-4 py-2 hover:bg-black-500 transition-all duration-10"
-                  whileHover={{
-                    backgroundColor: "#0392a2", // Cyan on hover
-                  }}
+                  className="bg-red-500 text-white text-sm font-semibold rounded-full px-4 py-2 hover:bg-orange-500 transition-all duration-300"
                   style={{
-                    backgroundColor: "#d27a14",
-                    position: "absolute",
-                    bottom: "1rem",
-                    right: "1rem",
+                    width: "calc(50% - 0.5rem)", // Ensures equal button sizes with a gap
+                    textAlign: "center",
+                    border: "2px solid rgb(255, 255, 255)",
                   }}
                 >
                   Close
