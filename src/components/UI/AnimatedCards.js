@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
+import styles from "../../styles/customscrollbar.module.css";
 import {
   IconArrowBigLeftLinesFilled,
   IconArrowBigRightLinesFilled,
@@ -203,47 +204,18 @@ export const AnimatedCards = () => {
 
               {/* Scrollable Content */}
               <div
-                className="overflow-hidden h-[110px] pr-4 relative"
+                className={`overflow-y-auto h-[110px] pr-4 relative ${styles.customScrollbar}`}
                 ref={scrollContainer}
+                style={{
+                  maxHeight: "110px", // Restrict the height
+                  scrollbarWidth: "thin", // Optional: For Firefox thin scrollbar
+                  WebkitOverflowScrolling: "touch", // Smooth scrolling for touch devices
+                }}
               >
                 <p className="text-sm" style={{ color: "black" }}>
                   {resources[activeIndex].description}
                 </p>
               </div>
-
-              {/* Conditionally Render Scroll Buttons */}
-              {isScrollable && (
-                <div className="absolute top-0 right-2 flex flex-col justify-between h-full">
-                  <button
-                    className="h-8 w-8 rounded-full text-cyan flex items-center justify-center"
-                    onClick={() =>
-                      scrollContainer.current.scrollBy({
-                        top: -30,
-                        behavior: "smooth",
-                      })
-                    }
-                    style={{
-                      marginTop: "2.5rem", // Adds space between the top edge and the up button
-                    }}
-                  >
-                    <IconArrowBigUpLinesFilled className="h-5 w-5" />
-                  </button>
-                  <button
-                    className="h-8 w-8 rounded-full text-cyan flex items-center justify-center"
-                    onClick={() =>
-                      scrollContainer.current.scrollBy({
-                        top: 30,
-                        behavior: "smooth",
-                      })
-                    }
-                    style={{
-                      marginBottom: "1.5rem", // Space below the down button
-                    }}
-                  >
-                    <IconArrowBigDownLinesFilled className="h-5 w-5" />
-                  </button>
-                </div>
-              )}
 
               <a
                 href={resources[activeIndex].link}
