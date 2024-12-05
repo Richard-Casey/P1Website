@@ -1,6 +1,11 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useRef, useEffect } from "react";
+import styles from "../../styles/customscrollbar.module.css";
 import { useOutsideClick } from "../../hooks/use-outside-click";
+import {
+  IconArrowBigDownLinesFilled,
+  IconArrowBigUpLinesFilled,
+} from "@tabler/icons-react";
 
 const resources = [
   {
@@ -312,40 +317,48 @@ export const ExpandableCards = () => {
 
                 {/* Scrollable Content */}
                 <div
+                  className={`overflow-y-auto h-[200px] pr-4 relative ${styles.customScrollbar}`}
                   ref={scrollContainer}
-                  className="overflow-y-auto pr-4"
                   style={{
-                    maxHeight: "200px", // Define height of scrollable area
-                    paddingRight: "8px", // Space for scrollbar
+                    maxHeight: "200px", // Adjust this as needed to match the height from AnimatedCards.js
+                    paddingRight: "8px", // Ensures space for the scrollbar
                   }}
                 >
-                  <p className="text-sm text-gray-700">{activeCard.content}</p>
+                  <p className="text-sm" style={{ color: "black" }}>
+                    {activeCard.content}
+                  </p>
                 </div>
 
                 {/* Scroll Buttons */}
                 {isScrollable && (
-                  <div className="absolute right-2 top-0 bottom-0 flex flex-col justify-between">
+                  <div className="absolute top-0 right-2 flex flex-col justify-between h-full">
                     <button
-                      className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center"
+                      className="h-8 w-8 rounded-full text-cyan flex items-center justify-center"
                       onClick={() =>
                         scrollContainer.current.scrollBy({
-                          top: -50,
+                          top: -30,
                           behavior: "smooth",
                         })
                       }
+                      style={{
+                        marginTop: "2.5rem", // Space between the top edge and the up button
+                      }}
                     >
-                      ▲
+                      <IconArrowBigUpLinesFilled className="h-5 w-5" />
                     </button>
                     <button
-                      className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center"
+                      className="h-8 w-8 rounded-full text-cyan flex items-center justify-center"
                       onClick={() =>
                         scrollContainer.current.scrollBy({
-                          top: 50,
+                          top: 30,
                           behavior: "smooth",
                         })
                       }
+                      style={{
+                        marginBottom: "1.5rem", // Space below the down button
+                      }}
                     >
-                      ▼
+                      <IconArrowBigDownLinesFilled className="h-5 w-5" />
                     </button>
                   </div>
                 )}

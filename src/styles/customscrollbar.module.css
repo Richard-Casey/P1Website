@@ -1,0 +1,20 @@
+.customScrollbar {
+    scrollbar-width: thin; /* Firefox */
+    scrollbar-color: #0196aa transparent; /* Firefox */
+  
+    /* Webkit Scrollbar */
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+  
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+  
+    &::-webkit-scrollbar-thumb {
+      background-color: #0196aa; /* Thumb color */
+      border-radius: 20px; /* Rounded thumb */
+      border: 3px solid transparent; /* Padding around thumb */
+    }
+  }
+  
