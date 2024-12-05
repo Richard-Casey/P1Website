@@ -90,194 +90,199 @@ export const AnimatedCards = () => {
     };
 
     return (
+      <div
+        className="relative w-full max-w-6xl mx-auto py-6 rounded-3xl shadow-lg"
+        style={{
+          backdropFilter: "blur(16px) saturate(180%)",
+          WebkitBackdropFilter: "blur(16px) saturate(180%)",
+          backgroundColor: "rgba(17, 25, 40, 0.75)",
+          borderRadius: "36px",
+          border: "4px solid #03969b",
+          backgroundImage: `url(${resources[activeIndex].imgSrc})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          boxShadow: "0 10px 30px rgba(0, 0, 0, 0.5)",
+          marginBottom: "0.5rem",
+        }}
+      >
         <div
-            className="relative w-full max-w-6xl mx-auto py-6 rounded-3xl shadow-lg"
-            style={{
-                backdropFilter: "blur(16px) saturate(180%)",
-                WebkitBackdropFilter: "blur(16px) saturate(180%)",
-                backgroundColor: "rgba(17, 25, 40, 0.75)",
-                borderRadius: "36px",
-                border: "4px solid #03969b",
-                backgroundImage: `url(${resources[activeIndex].imgSrc})`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                boxShadow: "0 10px 30px rgba(0, 0, 0, 0.5)",
-                marginBottom: "0.5rem"
-            }}
+          className="grid grid-cols-1 md:grid-cols-2 gap-x-0 items-start"
+          style={{ paddingTop: "1rem" }}
         >
-            <div
-                className="grid grid-cols-1 md:grid-cols-2 gap-x-0 items-start"
-                style={{ paddingTop: "1rem" }}
+          {/* Image Section */}
+          <div className="relative flex items-center justify-center h-full">
+            <AnimatePresence>
+              {resources.map((resource, index) => (
+                <motion.div
+                  key={resource.title}
+                  className="absolute inset-0 origin-center flex justify-center items-center"
+                  style={{ overflow: "hidden" }}
+                  initial={{
+                    opacity: 0,
+                    scale: 0.9,
+                    z: -100,
+                    rotate: randomRotateY(),
+                  }}
+                  animate={{
+                    opacity: isActive(index) ? 1 : 0.3,
+                    scale: isActive(index) ? 1 : 0.95,
+                    z: isActive(index) ? 0 : -10,
+                    rotate: isActive(index) ? 0 : randomRotateY(),
+                    zIndex: isActive(index) ? 999 : -index,
+                    y: isActive(index) ? [0, -20, 0] : 10,
+                  }}
+                  exit={{
+                    opacity: 0,
+                    scale: 0.9,
+                    z: 100,
+                    rotate: randomRotateY(),
+                  }}
+                  transition={{
+                    duration: 0.4,
+                    ease: "easeInOut",
+                  }}
+                >
+                  <img
+                    src={resource.imgSrc}
+                    alt={resource.title}
+                    style={{
+                      width: "222px",
+                      height: "221px",
+                      borderRadius: "24px",
+                      objectFit: "cover",
+                      boxShadow: "0 10px 20px rgba(0, 0, 0, 0.2)",
+                      border: "4px solid #03969b",
+                    }}
+                  />
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </div>
+
+          {/* Text Section */}
+          <div
+            className="flex flex-col justify-center items-start h-full md:pl-4 lg:pl-0"
+            style={{ marginRight: "4rem" }}
+          >
+            <motion.div
+              key={activeIndex}
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: -20, opacity: 0 }}
+              transition={{ duration: 0.2, ease: "easeInOut" }}
+              className="h-full flex flex-col justify-between"
             >
+              {/* Glassmorphism White */}
+              <div
+                className="backdrop-blur-lg bg-white/30 border border-white/20 rounded-lg p-4 shadow-md relative h-full"
+                style={{
+                  height: "240px",
+                  backdropFilter: "blur(16px) saturate(180%)",
+                  WebkitBackdropFilter: "blur(16px) saturate(180%)",
+                  backgroundColor: "rgba(255, 255, 255, 0.63)",
+                  borderRadius: "12px",
+                  border: "4px solid #03969b",
+                }}
+              >
+                <h3
+                  className="text-3xl font-bold mb-2"
+                  style={{
+                    color: "#03969b",
+                    marginBottom: "10px", // Reduce gap above the title
+                  }}
+                >
+                  {resources[activeIndex].title}
+                </h3>
 
-                {/* Image Section */}
-                <div className="relative flex items-center justify-center h-full">
-                    <AnimatePresence>
-                        {resources.map((resource, index) => (
-                            <motion.div
-                                key={resource.title}
-                                className="absolute inset-0 origin-center flex justify-center items-center"
-                                style={{ overflow: "hidden" }}
-                                initial={{
-                                    opacity: 0,
-                                    scale: 0.9,
-                                    z: -100,
-                                    rotate: randomRotateY(),
-                                }}
-                                animate={{
-                                    opacity: isActive(index) ? 1 : 0.3,
-                                    scale: isActive(index) ? 1 : 0.95,
-                                    z: isActive(index) ? 0 : -10,
-                                    rotate: isActive(index) ? 0 : randomRotateY(),
-                                    zIndex: isActive(index) ? 999 : -index,
-                                    y: isActive(index) ? [0, -20, 0] : 10,
-                                }}
-                                exit={{
-                                    opacity: 0,
-                                    scale: 0.9,
-                                    z: 100,
-                                    rotate: randomRotateY(),
-                                }}
-                                transition={{
-                                    duration: 0.4,
-                                    ease: "easeInOut",
-                                }}
-                            >
-                                <img
-                                    src={resource.imgSrc}
-                                    alt={resource.title}
-                                    style={{
-                                        width: "222px",
-                                        height: "221px",
-                                        borderRadius: "24px",
-                                        objectFit: "cover",
-                                        boxShadow: "0 10px 20px rgba(0, 0, 0, 0.2)",
-                                        border: "4px solid #03969b",
-                                    }}
-                                />
-                            </motion.div>
-                        ))}
-                    </AnimatePresence>
-                </div>
-
-                {/* Text Section */}
+                {/* Scrollable Content */}
                 <div
-                    className="flex flex-col justify-center items-start h-full md:pl-4 lg:pl-0"
-                    style={{ marginRight: "4rem" }}
+                  className="overflow-hidden h-[110px] pr-4 relative"
+                  ref={scrollContainer}
                 >
-                    <motion.div
-                        key={activeIndex}
-                        initial={{ y: 20, opacity: 0 }}
-                        animate={{ y: 0, opacity: 1 }}
-                        exit={{ y: -20, opacity: 0 }}
-                        transition={{ duration: 0.2, ease: "easeInOut" }}
-                        className="h-full flex flex-col justify-between"
-                    >
-                        {/* Glassmorphism White */}
-                        <div
-                            className="backdrop-blur-lg bg-white/30 border border-white/20 rounded-lg p-4 shadow-md relative h-full"
-                            style={{
-                                height: "222px",
-                                backdropFilter: "blur(16px) saturate(180%)",
-                                WebkitBackdropFilter: "blur(16px) saturate(180%)",
-                                backgroundColor: "rgba(255, 255, 255, 0.63)",
-                                borderRadius: "12px",
-                                border: "4px solid #03969b",
-                            }}
-                        >
-                            <h3
-                                className="text-3xl font-bold mb-2"
-                                style={{
-                                    color: "#03969b",
-                                    marginBottom: "10px", // Reduce gap above the title
-                                }}
-                            >
-                                {resources[activeIndex].title}
-                            </h3>
-
-                            {/* Scrollable Content */}
-                            <div
-                                className="overflow-hidden h-[110px] pr-4 relative"
-                                ref={scrollContainer}
-                            >
-                                <p className="text-sm" style={{ color: "black" }}>
-                                    {resources[activeIndex].description}
-                                </p>
-                            </div>
-
-                            {/* Conditionally Render Scroll Buttons */}
-                            {isScrollable && (
-                                <div className="absolute top-0 right-2 flex flex-col justify-between h-full">
-
-                                    <button
-                                        className="h-8 w-8 rounded-full text-cyan flex items-center justify-center"
-                                        onClick={() =>
-                                            scrollContainer.current.scrollBy({ top: -30, behavior: "smooth" })
-                                        }
-                                        style={{
-                                            marginTop: "2.5rem", // Adds space between the top edge and the up button
-                                        }}
-                                    >
-                                        <IconArrowBigUpLinesFilled className="h-5 w-5" />
-                                    </button>
-                                    <button
-                                        className="h-8 w-8 rounded-full text-cyan flex items-center justify-center"
-                                        onClick={() =>
-                                            scrollContainer.current.scrollBy({ top: 30, behavior: "smooth" })
-                                        }
-                                        style={{
-                                            marginBottom: "1.5rem", // Space below the down button
-                                        }}
-                                    >
-                                        <IconArrowBigDownLinesFilled className="h-5 w-5" />
-                                    </button>
-                                </div>
-                            )}
-
-                            <a
-                                href={resources[activeIndex].link}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="mt-4 inline-block text-blue-600 hover:underline"
-                                style={{
-                                    marginTop: "0.5rem",
-                                }}
-                            >
-                                Visit Website
-                            </a>
-                        </div>
-
-
-                    </motion.div>
+                  <p className="text-sm" style={{ color: "black" }}>
+                    {resources[activeIndex].description}
+                  </p>
                 </div>
 
-            </div>
+                {/* Conditionally Render Scroll Buttons */}
+                {isScrollable && (
+                  <div className="absolute top-0 right-2 flex flex-col justify-between h-full">
+                    <button
+                      className="h-8 w-8 rounded-full text-cyan flex items-center justify-center"
+                      onClick={() =>
+                        scrollContainer.current.scrollBy({
+                          top: -30,
+                          behavior: "smooth",
+                        })
+                      }
+                      style={{
+                        marginTop: "2.5rem", // Adds space between the top edge and the up button
+                      }}
+                    >
+                      <IconArrowBigUpLinesFilled className="h-5 w-5" />
+                    </button>
+                    <button
+                      className="h-8 w-8 rounded-full text-cyan flex items-center justify-center"
+                      onClick={() =>
+                        scrollContainer.current.scrollBy({
+                          top: 30,
+                          behavior: "smooth",
+                        })
+                      }
+                      style={{
+                        marginBottom: "1.5rem", // Space below the down button
+                      }}
+                    >
+                      <IconArrowBigDownLinesFilled className="h-5 w-5" />
+                    </button>
+                  </div>
+                )}
 
-            {/* Navigation Buttons */}
-            <div className="flex justify-center gap-40 pt-8 md:pt-2"
-                style={{ marginTop: "1rem" }}
-            >
-                <button
-                    onClick={handlePrev}
-                    className="h-9 w-9 rounded-full bg-gray-100 dark:bg-neutral-800 flex items-center justify-center"
-                    style={{
-                        outline: "2px solid orange",
-                        outlineOffset: "4px",
-                    }}
-                >
-                    <IconArrowBigLeftLinesFilled className="h-7 w-7 text-white group-hover:rotate-12 transition-transform duration-300" />
-                </button>
-                <button
-                    onClick={handleNext}
-                    className="h-9 w-9 rounded-full bg-gray-100 dark:bg-neutral-800 flex items-center justify-center"
-                    style={{
-                        outline: "2px solid orange",
-                        outlineOffset: "4px",
-                    }}
-                >
-                    <IconArrowBigRightLinesFilled className="h-7 w-7 text-white group-hover:-rotate-12 transition-transform duration-300" />
-                </button>
-            </div>
+<a
+  href={resources[activeIndex].link}
+  target="_blank"
+  rel="noopener noreferrer"
+  className="bg-blue-500 text-white text-sm font-semibold rounded-full px-4 py-2 hover:bg-orange-500 transition-all duration-300"
+  style={{ 
+    border: "2px solid rgb(255, 255, 255)",
+    marginTop: "0.5rem", // Add spacing above the button
+    display: "inline-block", // Ensure the button behaves like a block-level element
+  }}
+>
+  Visit Website
+</a>
+
+              </div>
+            </motion.div>
+          </div>
         </div>
+
+        {/* Navigation Buttons */}
+        <div
+          className="flex justify-center gap-40 pt-8 md:pt-2"
+          style={{ marginTop: "1rem" }}
+        >
+          <button
+            onClick={handlePrev}
+            className="h-9 w-9 rounded-full bg-gray-100 dark:bg-neutral-800 flex items-center justify-center"
+            style={{
+              outline: "2px solid orange",
+              outlineOffset: "4px",
+            }}
+          >
+            <IconArrowBigLeftLinesFilled className="h-7 w-7 text-white group-hover:rotate-12 transition-transform duration-300" />
+          </button>
+          <button
+            onClick={handleNext}
+            className="h-9 w-9 rounded-full bg-gray-100 dark:bg-neutral-800 flex items-center justify-center"
+            style={{
+              outline: "2px solid orange",
+              outlineOffset: "4px",
+            }}
+          >
+            <IconArrowBigRightLinesFilled className="h-7 w-7 text-white group-hover:-rotate-12 transition-transform duration-300" />
+          </button>
+        </div>
+      </div>
     );
 };
