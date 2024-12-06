@@ -13,6 +13,7 @@ import WhatWeDo from './components/Pages/WhatWeDo';
 import StaffPage from "./components/Pages/StaffPage";
 import PeerSupport from "./components/Pages/PeerSupport";
 import LGBTQIA from './components/Pages/LGBTQIA';
+import Podcasts from "./components/Pages/Podcasts";
 import "./App.css";
 
 const App = () => {
@@ -33,11 +34,12 @@ const App = () => {
           <Route path="/wellbeing-review-form" element={<WellbeingForm />} />
           <Route path="/minimal-form" element={<WellbeingForm />} />
           <Route path="/in-crisis" element={<InCrisis />} />
-          <Route path="*" element={<div>Page Not Found</div>} />
           <Route path="/what-we-do" element={<WhatWeDo />} />
           <Route path="/staff" element={<StaffPage />} />
           <Route path="/what-is-peer-support" element={<PeerSupport />} />
           <Route path="/lgbtqia" element={<LGBTQIA />} />
+          <Route path="/podcasts" element={<Podcasts />} />
+          <Route path="*" element={<div>Page Not Found</div>} />
         </Routes>
       </main>
       {!isMinimalRoute && <Footer />}
