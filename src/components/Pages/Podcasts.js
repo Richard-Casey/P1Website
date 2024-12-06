@@ -12,15 +12,39 @@ import {
 const dynamicPodcasts = [
   {
     title: "Developing Dads",
-    description: "A podcast for dads navigating fatherhood.",
+    description: "",
     imgSrc: `${process.env.PUBLIC_URL}/images/tileimages/developing-dads.png`,
     showId: "1BI9lY2envJJJlGXUGknqR", // Spotify Show ID
   },
   {
     title: "First Time Dads",
-    description: "A podcast for new dads learning the ropes.",
+    description: "",
     imgSrc: `${process.env.PUBLIC_URL}/images/tileimages/first-time-dads.png`,
     showId: "5GYBrz9tC8kaoMcmNyLU0j", // Spotify Show ID
+  },
+  {
+    title: "Dad Still Standing",
+    description: "",
+    imgSrc: `${process.env.PUBLIC_URL}/images/tileimages/dad-still-standing.png`,
+    showId: "7F8twoXWLSkI3uSlXS6DKN", // Spotify Show ID
+  },
+  {
+    title: "Dope Black Dads",
+    description: "",
+    imgSrc: `${process.env.PUBLIC_URL}/images/tileimages/dope-black-dads.png`,
+    showId: "3cIh6ejnk3lUUVhqSKzPUS", // Spotify Show ID
+  },
+  {
+    title: "Feed Play Love",
+    description: "",
+    imgSrc: `${process.env.PUBLIC_URL}/images/tileimages/when-dads-get-pnd.png`,
+    showId: "58tt7X46mxU7NE8Ad4RfTz", // Spotify Show ID
+  },
+  {
+    title: "ManUp!",
+    description: "",
+    imgSrc: `${process.env.PUBLIC_URL}/images/tileimages/manup.png`,
+    showId: "2ahFYl1h4tkXrjIYiA6mXZ", // Spotify Show ID
   },
 ];
 
@@ -296,7 +320,7 @@ const PodcastHeader = ({ podcasts, onSelect }) => {
         {/* Left Navigation Button */}
         <button
           onClick={handlePrev}
-          className="absolute left-[-20px] top-1/2 transform -translate-y-1/2 h-14 w-14 rounded-full bg-gray-100 dark:bg-neutral-800 flex items-center justify-center"
+          className="absolute left-[60px] top-1/2 transform -translate-y-1/2 h-14 w-14 rounded-full bg-gray-100 dark:bg-neutral-800 flex items-center justify-center"
           style={{
             outline: "3px solid white",
           }}
