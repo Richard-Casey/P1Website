@@ -26,14 +26,14 @@ const getAccessToken = async () => {
 
 // Fetch podcast details by Show ID
 export const getPodcastDetails = async (showId) => {
-    const token = await getAccessToken();
-    const response = await axios.get(`${BASE_URL}/shows/${showId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return response.data; // Includes description, external_urls, etc.
-  };
+  const token = await getAccessToken();
+  const response = await axios.get(`${BASE_URL}/shows/${showId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data; // Includes description, external_urls, etc.
+};
 
 // Fetch Podcast Episodes by Show ID
 export const getPodcastEpisodes = async (showId) => {

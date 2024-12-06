@@ -58,13 +58,15 @@ const Podcasts = () => {
       try {
         const fetchedEpisodes = await getPodcastEpisodes(activePodcast.showId);
         setEpisodes(
-          fetchedEpisodes.map((episode) => ({
-            title: episode.name,
-            description: episode.description,
-            date: episode.release_date,
-            duration: new Date(episode.duration_ms).toISOString().substr(11, 8), // Format duration
-          }))
-        );
+            fetchedEpisodes.map((episode) => ({
+              title: episode.name,
+              description: episode.description,
+              date: episode.release_date,
+              duration: new Date(episode.duration_ms).toISOString().substr(11, 8), // Format duration
+              thumbnail: episode.images?.[0]?.url || "default-thumbnail.jpg", // Default if no thumbnail
+            }))
+          );
+          
       } catch (error) {
         console.error("Error fetching episodes:", error);
       }
@@ -160,6 +162,7 @@ const PodcastHeader = ({ podcasts, onSelect }) => {
   }, [activeIndex, onSelect]);
 
   return (
+    /* Dynamic Header Section */
     <div
       className="relative w-full max-w-6xl mx-auto py-6 rounded-3xl shadow-lg"
       style={{
@@ -283,17 +286,16 @@ const PodcastHeader = ({ podcasts, onSelect }) => {
                 {podcasts[activeIndex].title}
               </h3>
               <div
-  className={`overflow-y-auto pr-2 ${styles.customScrollbar}`}
-  style={{
-    maxHeight: "6.5rem", // Set a max height to trigger scrolling for long descriptions
-    marginBottom: "2rem", // Add space between description and the button
-  }}
->
-  <p className="text-sm" style={{ color: "black" }}>
-    {podcastDetails.description}
-  </p>
-</div>
-
+                className={`overflow-y-auto pr-2 ${styles.customScrollbar}`}
+                style={{
+                  maxHeight: "6.5rem", // Set a max height to trigger scrolling for long descriptions
+                  marginBottom: "2rem", // Add space between description and the button
+                }}
+              >
+                <p className="text-sm" style={{ color: "black" }}>
+                  {podcastDetails.description}
+                </p>
+              </div>
 
               {/* Visit on Spotify Button */}
               <a
@@ -302,10 +304,10 @@ const PodcastHeader = ({ podcasts, onSelect }) => {
                 rel="noopener noreferrer"
                 className="bg-green-600 text-white text-sm font-semibold rounded-full px-4 py-2 flex items-center gap-2 hover:bg-green-700 transition-all duration-300"
                 style={{
-                    position: "absolute",
-    bottom: "0.5rem",
-    left: "50%",
-    transform: "translateX(-50%)",
+                  position: "absolute",
+                  bottom: "0.5rem",
+                  left: "50%",
+                  transform: "translateX(-50%)",
                   width: "fit-content",
                   outline: "2px solid white",
                 }}
@@ -343,25 +345,84 @@ const PodcastHeader = ({ podcasts, onSelect }) => {
   );
 };
 
-// PodcastEpisodes Component
+// DYANAMICALLY ADDED ENTRIES SECTION
 const PodcastEpisodes = ({ episodes }) => {
-  return (
-    <div className="podcast-episodes grid gap-6 mt-8">
-      {episodes.map((episode, index) => (
-        <motion.div
-          key={index}
-          className="flex flex-col p-4 gap-4 border border-gray-300 rounded-lg shadow-lg"
-          whileHover={{ scale: 1.02 }}
-        >
-          <h4 className="text-lg font-bold">{episode.title}</h4>
-          <p className="text-sm text-gray-500">
-            {episode.date} | {episode.duration}
-          </p>
-          <p className="text-sm">{episode.description}</p>
-        </motion.div>
-      ))}
-    </div>
-  );
-};
+    const [activeEpisode, setActiveEpisode] = useState(null);
+  
+    return (
+      <div
+        className="w-full flex flex-col items-center gap-6 py-8"
+        style={{
+          backgroundColor: "#001F3F", // Navy blue background for the section
+          border: "3px solid #000000", // Light grey border
+          borderRadius: "36px",
+        }}
+      >
+        {episodes.map((episode, index) => (
+          <motion.div
+            key={index}
+            className={`flex items-center p-4 gap-4 w-[80%] cursor-pointer`}
+            style={{
+              backgroundColor: "#f4f4f4", // Mellow white card background
+              border: "2px solid #d3d3d3", // Light grey border
+              borderRadius: "16px",
+              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+              overflow: "hidden", // Ensure content doesn’t overflow
+            }}
+            onClick={() => setActiveEpisode(activeEpisode === index ? null : index)} // Toggle expansion
+            initial={{ scale: 1 }}
+            whileHover={{ scale: 1.02 }}
+            transition={{ duration: 0.2 }}
+          >
+            {/* Thumbnail */}
+            <img
+              src={episode.thumbnail}
+              alt={episode.title}
+              className="w-20 h-20 object-cover rounded-lg"
+              style={{
+                border: "2px solid #d3d3d3",
+                flexShrink: 0, // Prevent shrinking
+              }}
+            />
+  
+            {/* Text Content */}
+            <div className="flex-1 flex flex-col">
+              <h4
+                className="text-lg font-bold text-black"
+                style={{
+                  marginBottom: "0.5rem",
+                }}
+              >
+                {episode.title}
+              </h4>
+  
+              {/* Date and Duration */}
+              <p className="text-sm text-gray-700">
+                {new Date(episode.date).toLocaleDateString("en-GB")} |{" "}
+                {episode.duration}
+              </p>
+  
+              {/* Expandable Content */}
+              {activeEpisode === index && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className={`mt-2 overflow-y-auto ${styles.customScrollbar}`}
+                  style={{
+                    maxHeight: "8rem", // Add a scrollable area for longer descriptions
+                  }}
+                >
+                  <p className="text-sm text-gray-700">{episode.description}</p>
+                </motion.div>
+              )}
+            </div>
+          </motion.div>
+        ))}
+      </div>
+    );
+  };
+  
 
 export default Podcasts;
