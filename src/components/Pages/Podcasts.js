@@ -1,56 +1,51 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { getPodcastEpisodes } from "../../services/spotify";
 import {
   IconArrowBigLeftLinesFilled,
   IconArrowBigRightLinesFilled,
-  IconArrowBigDownLinesFilled,
-  IconArrowBigUpLinesFilled,
 } from "@tabler/icons-react";
 
 // Mock podcast data
 const mockPodcasts = [
-  {
-    title: "Developing Dads",
-    description: "A podcast for dads navigating fatherhood.",
-    imgSrc: "https://via.placeholder.com/200",
-    episodes: [
-      {
-        title: "Episode 1: Welcome to Developing Dads",
-        description: "An introduction to the podcast.",
-        date: "2024-01-01",
-        duration: "25:00",
-      },
-      {
-        title: "Episode 2: Work-Life Balance",
-        description: "Tips on managing time as a dad.",
-        date: "2024-01-08",
-        duration: "30:00",
-      },
-    ],
-  },
-  {
-    title: "First Time Dads",
-    description: "A podcast for new dads learning the ropes.",
-    imgSrc: "https://via.placeholder.com/200",
-    episodes: [
-      {
-        title: "Episode 1: Surviving the First Month",
-        description: "How to handle the challenges of the first month.",
-        date: "2024-01-05",
-        duration: "20:00",
-      },
-      {
-        title: "Episode 2: Baby Sleep Patterns",
-        description: "Understanding your baby's sleep habits.",
-        date: "2024-01-12",
-        duration: "35:00",
-      },
-    ],
-  },
-];
+    {
+      title: "Developing Dads",
+      description: "A podcast for dads navigating fatherhood.",
+      imgSrc: `${process.env.PUBLIC_URL}/images/tileimages/developing-dads.png`,
+      showId: "1BI9lY2envJJJlGXUGknqR", // Spotify Show ID
+    },
+    {
+      title: "First Time Dads",
+      description: "A podcast for new dads learning the ropes.",
+      imgSrc: `${process.env.PUBLIC_URL}/images/tileimages/first-time-dads.png`,
+      showId: "5GYBrz9tC8kaoMcmNyLU0j", // Spotify Show ID
+    },
+  ];
 
 const Podcasts = () => {
   const [activePodcast, setActivePodcast] = useState(mockPodcasts[0]);
+  const [episodes, setEpisodes] = useState([]); // Store fetched episodes
+
+  // Fetch episodes whenever a new podcast is selected
+  useEffect(() => {
+    const fetchEpisodes = async () => {
+      try {
+        const fetchedEpisodes = await getPodcastEpisodes(activePodcast.showId);
+        setEpisodes(
+          fetchedEpisodes.map((episode) => ({
+            title: episode.name,
+            description: episode.description,
+            date: episode.release_date,
+            duration: new Date(episode.duration_ms).toISOString().substr(11, 8), // Format duration
+          }))
+        );
+      } catch (error) {
+        console.error("Error fetching episodes:", error);
+      }
+    };
+
+    fetchEpisodes();
+  }, [activePodcast]);
 
   // Select a podcast based on index
   const handlePodcastSelect = (index) => {
@@ -66,7 +61,7 @@ const Podcasts = () => {
       />
 
       {/* Podcast Episodes */}
-      <PodcastEpisodes episodes={activePodcast.episodes} />
+      <PodcastEpisodes episodes={episodes} />
     </div>
   );
 };
