@@ -345,84 +345,109 @@ const PodcastHeader = ({ podcasts, onSelect }) => {
   );
 };
 
-// DYANAMICALLY ADDED ENTRIES SECTION
+// DYNAMICALLY ADDED ENTRIES SECTION
 const PodcastEpisodes = ({ episodes }) => {
-    const [activeEpisode, setActiveEpisode] = useState(null);
-  
-    return (
-      <div
-        className="w-full flex flex-col items-center gap-6 py-8"
-        style={{
-          backgroundColor: "#001F3F", // Navy blue background for the section
-          border: "3px solid #000000", // Light grey border
-          borderRadius: "36px",
-        }}
-      >
+  const [activeEpisode, setActiveEpisode] = useState(null);
+
+  return (
+    <div
+      className="w-full flex flex-col items-center gap-6 py-8"
+      style={{
+        backgroundColor: "#001F3F", // Navy blue background for the section
+        border: "3px solid #000000", // Light grey border
+        borderRadius: "36px",
+      }}
+    >
+      <AnimatePresence>
         {episodes.map((episode, index) => (
-          <motion.div
-            key={index}
-            className={`flex items-center p-4 gap-4 w-[80%] cursor-pointer`}
-            style={{
-              backgroundColor: "#f4f4f4", // Mellow white card background
-              border: "2px solid #d3d3d3", // Light grey border
-              borderRadius: "16px",
-              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-              overflow: "hidden", // Ensure content doesn’t overflow
-            }}
-            onClick={() => setActiveEpisode(activeEpisode === index ? null : index)} // Toggle expansion
-            initial={{ scale: 1 }}
-            whileHover={{ scale: 1.02 }}
-            transition={{ duration: 0.2 }}
-          >
-            {/* Thumbnail */}
-            <img
-              src={episode.thumbnail}
-              alt={episode.title}
-              className="w-20 h-20 object-cover rounded-lg"
+          <React.Fragment key={index}>
+            <motion.div
+              className={`flex items-center p-4 gap-4 w-[80%] cursor-pointer`}
               style={{
-                border: "2px solid #d3d3d3",
-                flexShrink: 0, // Prevent shrinking
+                backgroundColor: "#f4f4f4", // Mellow white card background
+                border: "2px solid #d3d3d3", // Light grey border
+                borderRadius: "16px",
+                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                overflow: "hidden", // Ensure content doesn’t overflow
               }}
-            />
-  
-            {/* Text Content */}
-            <div className="flex-1 flex flex-col">
-              <h4
-                className="text-lg font-bold text-black"
+              onClick={() =>
+                setActiveEpisode(activeEpisode === index ? null : index)
+              } // Toggle expansion
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: -20, opacity: 0 }}
+              transition={{
+                type: "spring", // Adds bounce effect
+                damping: 20,
+                stiffness: 120,
+                delay: index * 0.15, // Stagger animation for each card
+              }}
+            >
+              {/* Thumbnail */}
+              <img
+                src={episode.thumbnail}
+                alt={episode.title}
+                className="w-20 h-20 object-cover rounded-lg"
                 style={{
-                  marginBottom: "0.5rem",
+                  border: "2px solid #d3d3d3",
+                  flexShrink: 0, // Prevent shrinking
                 }}
-              >
-                {episode.title}
-              </h4>
-  
-              {/* Date and Duration */}
-              <p className="text-sm text-gray-700">
-                {new Date(episode.date).toLocaleDateString("en-GB")} |{" "}
-                {episode.duration}
-              </p>
-  
-              {/* Expandable Content */}
-              {activeEpisode === index && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className={`mt-2 overflow-y-auto ${styles.customScrollbar}`}
+              />
+
+              {/* Text Content */}
+              <div className="flex-1 flex flex-col">
+                <h4
+                  className="text-lg font-bold text-black"
                   style={{
-                    maxHeight: "8rem", // Add a scrollable area for longer descriptions
+                    marginBottom: "0.5rem",
                   }}
                 >
-                  <p className="text-sm text-gray-700">{episode.description}</p>
-                </motion.div>
-              )}
-            </div>
-          </motion.div>
+                  {episode.title}
+                </h4>
+
+                {/* Date and Duration */}
+                <p className="text-sm text-gray-700">
+                  {new Date(episode.date).toLocaleDateString("en-GB")} |{" "}
+                  {episode.duration}
+                </p>
+
+                {/* Expandable Content */}
+                {activeEpisode === index && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className={`mt-2 overflow-y-auto ${styles.customScrollbar}`}
+                    style={{
+                      maxHeight: "8rem", // Add a scrollable area for longer descriptions
+                    }}
+                  >
+                    <p className="text-sm text-gray-700">
+                      {episode.description}
+                    </p>
+                  </motion.div>
+                )}
+              </div>
+            </motion.div>
+
+            {/* Divider */}
+            {index < episodes.length - 1 && (
+              <div
+                className="w-[80%]"
+                style={{
+                  borderBottom: "1px solid #d3d3d3",
+                  margin: "12px 0", // Spacing between entries
+                }}
+              />
+            )}
+          </React.Fragment>
         ))}
-      </div>
-    );
-  };
+      </AnimatePresence>
+    </div>
+  );
+};
+
   
 
 export default Podcasts;
