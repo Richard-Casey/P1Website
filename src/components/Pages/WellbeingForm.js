@@ -533,15 +533,62 @@ const WellbeingForm = () => {
 // Mapping of postcodes to hubs
 const postcodeToHubMap = {
   "North Essex": {
-    "North East": ["CO1", "CO2", "CO3", "CO4", "CO5", "CO6", "CO7", "CO8", "CO9", "CO10", "CO11"], // Colchester & Tendring
-    "North West": ["CM16", "CM17", "CM19", "CM20", "CM22", "CM23", "CM24", "CB10", "CB11", "EN9", "IG10"], // Harlow, Epping Forest, Uttlesford
+    "North East": [
+    "CO1", // Colchester
+    "CO2", // Old Heath, Berechurch, Layer de la Haye
+    "CO3", // Lexden, Fordham Heath, Stanway
+    "CO4", // Greenstead, Highwoods, St Johns, Myland, Boxted, Braiswick
+    "CO5", // Tiptree, Kelvedon, Westy Mersea, Peldon, Rowhedge
+    "CO6", // Coggeshall, Earls Colne, Marks Tey, Great Tey, Chappel, White Colne, Wakes Colne, Fordham, Copford, West Bergholt, Great Horkesley, Wormingford, Nayland, Stroke-by-Nayland, Polstead
+    "CO7", // Brightlingsea, Wivenhoe, Great Bentley, Alresford
+    "CO8", // Bures
+    "CO9", // Halsted
+    "CO10", // Sudbury
+    "CO11", // Manningtree
+    "CO12", // Harwich (Tendering)
+    "CO13", // Frinton-on-Sea
+    "CO14", // Walton-on-the-Naze
+    "CO15", // Clacton-on-Sea, Jaywick
+    "CO16"], // Clacton-on-Sea, St Osyth, Little Clacton
+
+
+    "North West": [
+    "CM16", // Epping
+    "CM17", "CM18", "CM19", "CM20", // Harlow
+    "CM21", // Sawbridgeworth
+    "CM22", "CM23", // Bishops Stortford
+    "CM24", // Stansted
+    "CB10", "CB11", // Uttlesford
+    "EN9", "IG10"], // Epping Forest
   },
+
+
   "Mid Essex": [
-    "CM0", "CM1", "CM2", "CM3", "CM4", "CM5", "CM6", "CM7", "CM8", "CM9" // Chelmsford, Maldon, Braintree
+    "CM0", //Maldon
+    "CM1", "CM2", "CM3",// Chelmsford
+    "CM4", // Ingatestone
+    "CM5", // Ongar
+    "CM6", // Dunmow
+    "CM7", // Braintree
+    "CM8", // Witham
+    "CM9" // Maldon
   ],
+
+
   "South Essex": {
-    "South West": ["CM11", "CM12", "CM13", "CM14", "CM15", "RM14"], // Basildon, Brentwood, Thurrock
-    "South East": ["SS0", "SS1", "SS2", "SS3", "SS4", "SS5", "SS6", "SS7", "SS8", "SS9", "SS11"] // Southend, Rochford, Castle Point
+    "South West": ["SS13", "SS14", "SS15", "SS16", //Basildon
+                   "SS11", "SS12", //Wickford
+                   "CM11", "CM12", //Billericay
+                   "CM13", "CM14", "CM15", //Brentwood
+                   "RM15", "RM16", "RM17", "RM18", "RM19", "RM20", // Thurrock
+                   "CM4"], // Ingatestone
+    "South East": ["SS0", "SS1", "SS2", "SS3", // Southend
+                   "SS4", // Rochford
+                   "SS5", // Hockley
+                   "SS6", // Rayleigh
+                   "SS7", // Benfleet
+                   "SS8", // Canvey Island
+                   "SS9", "SS11"] // Southend
   }
 };
 
