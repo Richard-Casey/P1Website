@@ -42,6 +42,7 @@ const App = () => {
           {/* Minimal Routes */}
           <Route path="/minimal-form" element={<WellbeingForm />} />
           <Route path="/minimal-incrisis" element={<InCrisis />} />
+          <Route path="/minimal-whatwedo" element={<InCrisis />} />
 
           {/* 404 Fallback */}
           <Route path="*" element={<div>Page Not Found</div>} />
