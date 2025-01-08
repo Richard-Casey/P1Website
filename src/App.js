@@ -44,6 +44,7 @@ const App = () => {
           <Route path="/minimal-incrisis" element={<InCrisis />} />
           <Route path="/minimal-whatwedo" element={<WhatWeDo />} />
           <Route path="/minimal-staff" element={<StaffPage />} />
+          <Route path="/minimal-whatispeersupport" element={<PeerSupport />} />
 
           {/* 404 Fallback */}
           <Route path="*" element={<div>Page Not Found</div>} />
