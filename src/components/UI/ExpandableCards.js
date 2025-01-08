@@ -110,6 +110,7 @@ const resources = [
 
 export const ExpandableCards = () => {
   const [activeCard, setActiveCard] = useState(null);
+  const isMinimalRoute = window.location.pathname.includes("/minimal");
   const cardRef = useRef(null);
   const scrollContainer = useRef(null);
 
@@ -154,7 +155,14 @@ export const ExpandableCards = () => {
   }, [activeCard]);
 
   return (
-    <div className="relative">
+    <div
+      className="relative"
+      style={{
+        width: "100%",
+        maxWidth: isMinimalRoute ? "none" : "1200px", // Remove max-width for minimal mode
+        margin: "0 auto",
+      }}
+      >
       {/* Backdrop */}
       <AnimatePresence>
         {activeCard && (
@@ -242,6 +250,9 @@ export const ExpandableCards = () => {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.9 }}
+            style={{
+              maxWidth: "100%", // Ensure the expanded card scales
+              maxHeight: "100vh",}}
             transition={{
               duration: 0.1, // Reduce duration for quicker transitions
               ease: "linear",
