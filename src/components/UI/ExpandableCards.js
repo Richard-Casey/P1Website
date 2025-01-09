@@ -255,20 +255,27 @@ export const ExpandableCards = () => {
               paddingTop: "20px", // Optional additional spacing
             }}
           >
-            <motion.div
-              ref={cardRef}
-              layoutId={`card-${activeCard.title}`}
-              className="p-6 max-w-lg w-full relative"
-              style={{
-                maxWidth: "40vw", // Restrict width for responsiveness
-                maxHeight: "75vh", // Prevent the card from exceeding the viewport height
-                borderRadius: "36px",
-                border: "4px solid rgb(255, 255, 255)",
-                boxShadow: "0 8px 20px rgba(0, 0, 0, 0.2)",
-                background: activeCard.gradientExpanded,
-                overflow: "hidden", // Prevent the main container from scrolling
-              }}
-            >
+<motion.div
+  ref={cardRef}
+  layoutId={`card-${activeCard.title}`}
+  className="p-6 max-w-lg w-full relative"
+  style={{
+    maxWidth: isMinimalRoute ? "67.5vw" : "45vw", // Adjust width dynamically
+    width: "90%", // Ensure responsiveness for smaller screens
+    maxHeight: "56.25vh", // Restrict height to fit the viewport
+    borderRadius: "36px",
+    border: "4px solid rgb(255, 255, 255)",
+    boxShadow: "0 8px 20px rgba(0, 0, 0, 0.2)",
+    background: activeCard.gradientExpanded,
+    overflow: "hidden", // Prevent internal scrolling
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+  }}
+>
+
+
               {/* Expanded Image */}
               <motion.img
                 layoutId={`image-${activeCard.title}`}

@@ -143,9 +143,9 @@ const WellbeingForm = () => {
         'input[name="livingWithPregnantPerson"]:checked'
       )?.value,
       gestation: document.querySelector("#gestation")?.value.trim(),
-      town: town, // Use state variable
-      localAuthority: localAuthority, // Use state variable
-      location: location, // Use state variable
+    town: town || "Unknown", // Use updated state variable or default
+    localAuthority: localAuthority || "Unknown", // Use updated state variable or default
+    location: location || "Unknown", // Use updated state variable or default
     };
 
     // Debug: Log form values before submission
@@ -244,23 +244,23 @@ const WellbeingForm = () => {
         {
           fields: {
             [airtableFieldIDs.name]: formValues.name,
-            [airtableFieldIDs.email]: formValues.email,
-            [airtableFieldIDs.phone]: formValues.phone,
-            [airtableFieldIDs.postcode]: formValues.postcode,
-            [airtableFieldIDs.localHub]: hub,
-            [airtableFieldIDs.serviceAccessed]: formValues.serviceAccessed,
-            [airtableFieldIDs.ethnicity]: formValues.ethnicity,
-            [airtableFieldIDs.gender]: formValues.gender,
-            [airtableFieldIDs.dob]: formValues.dob,
-            [airtableFieldIDs.livingWithPregnantPerson]:
-              formValues.livingWithPregnantPerson,
-            [airtableFieldIDs.gestation]: formValues.gestation,
-            [airtableFieldIDs.preferredContactMethods]: selectedMethods,
-            [airtableFieldIDs.otherContactMethod]: otherContact || null,
-            [airtableFieldIDs.consent]: formValues.consent,
-            [airtableFieldIDs.town]: formValues.town,
-            [airtableFieldIDs.localAuthority]: formValues.localAuthority,
-            [airtableFieldIDs.location]: formValues.location,
+          [airtableFieldIDs.email]: formValues.email,
+          [airtableFieldIDs.phone]: formValues.phone,
+          [airtableFieldIDs.postcode]: formValues.postcode,
+          [airtableFieldIDs.localHub]: determineHub(formValues.postcode),
+          [airtableFieldIDs.serviceAccessed]: formValues.serviceAccessed,
+          [airtableFieldIDs.ethnicity]: formValues.ethnicity,
+          [airtableFieldIDs.gender]: formValues.gender,
+          [airtableFieldIDs.dob]: formValues.dob,
+          [airtableFieldIDs.livingWithPregnantPerson]:
+            formValues.livingWithPregnantPerson,
+          [airtableFieldIDs.gestation]: formValues.gestation,
+          [airtableFieldIDs.town]: formValues.town, // Include Town
+          [airtableFieldIDs.localAuthority]: formValues.localAuthority, // Include Local Authority
+          [airtableFieldIDs.location]: formValues.location, // Include Location
+          [airtableFieldIDs.preferredContactMethods]: selectedMethods,
+          [airtableFieldIDs.otherContactMethod]: otherContact || null,
+          [airtableFieldIDs.consent]: formValues.consent,
           },
         },
       ],
@@ -270,7 +270,6 @@ const WellbeingForm = () => {
     console.log("Airtable Payload:", airtableData);
 
     try {
-      // Submit data to Airtable
       const response = await fetch(airtableURL, {
         method: "POST",
         headers: {
@@ -279,13 +278,12 @@ const WellbeingForm = () => {
         },
         body: JSON.stringify(airtableData),
       });
-
+  
       const responseData = await response.json();
       console.log("Airtable API Response:", responseData);
-
+  
       if (!response.ok) {
         console.error("Error from Airtable API:", responseData);
-        console.log("Request Payload:", airtableData);
         setErrorMessage(
           `Failed to submit the form. Airtable error: ${
             JSON.stringify(responseData.error) || "Unknown error"
@@ -293,9 +291,8 @@ const WellbeingForm = () => {
         );
         return;
       }
-
-      // Success state
-      setSuccess(true);
+  
+      setSuccess(true); // Show success message
     } catch (error) {
       console.error("Error submitting to Airtable:", error);
       setErrorMessage(

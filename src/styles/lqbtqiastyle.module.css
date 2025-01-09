@@ -27,4 +27,9 @@
     padding: 2rem; /* Adds padding around the cards */
     border-radius: 16px; /* Rounds the section container */
   }
+
+  /* Additional responsiveness for minimal mode */
+body.minimal .expandable-cards-section {
+  padding: 1rem;
+}
   
