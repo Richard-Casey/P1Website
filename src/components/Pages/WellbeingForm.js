@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import styles from "../../styles/formstyle.module.css";
 
 const airtableFieldIDs = {
@@ -22,6 +22,79 @@ const airtableFieldIDs = {
   location: "fldTQc0voyHuyXJeZ", // Add Location field ID
 };
 
+const fetchPostcodeDetails = async (postcode) => {
+  try {
+    const response = await fetch(
+      `https://api.postcodes.io/postcodes/${postcode}`
+    );
+    const data = await response.json();
+
+    if (data.status === 200) {
+      const details = data.result;
+      return {
+        postTown: details.admin_ward,
+        adminDistrict: details.admin_district,
+        parish: details.parish,
+      };
+    } else {
+      console.warn(`Postcode API Error: ${data.error}`);
+      return null;
+    }
+  } catch (error) {
+    console.error("Error fetching postcode details:", error);
+    return null;
+  }
+};
+
+// Update function to accept updater functions as arguments
+const updatePostcodeDetails = async (
+  setTown,
+  setLocalAuthority,
+  setLocation
+) => {
+  const postcodeField = document.querySelector("#postcode");
+  if (!postcodeField) {
+    console.warn("Postcode field not found.");
+    return;
+  }
+
+  let postcode = postcodeField.value.trim().toUpperCase();
+
+  // Ensure the postcode is formatted correctly
+  const postcodeRegex = /^[A-Z]{1,2}\d{1,2}[A-Z]?\s?\d[A-Z]{2}$/i;
+  if (postcodeRegex.test(postcode)) {
+    postcode = postcode.replace(
+      /^([A-Z]{1,2}\d[A-Z\d]?)(\d[A-Z]{2})$/,
+      "$1 $2"
+    );
+    postcodeField.value = postcode; // Update the input field
+  } else {
+    console.warn("Invalid postcode format:", postcode);
+    return;
+  }
+
+  console.log("Formatted Postcode:", postcode);
+
+  // Fetch details from the API
+  const details = await fetchPostcodeDetails(postcode);
+
+  if (details) {
+    console.log("Details retrieved from API:", details);
+
+    setTown(details.postTown || "Unknown");
+    setLocalAuthority(details.adminDistrict || "Unknown");
+    setLocation(details.parish || "Unknown");
+
+    console.log("Updated state with details:", {
+      town: details.postTown || "Unknown",
+      localAuthority: details.adminDistrict || "Unknown",
+      location: details.parish || "Unknown",
+    });
+  } else {
+    console.warn("Postcode not recognized or invalid.");
+  }
+};
+
 const airtableURL =
   "https://api.airtable.com/v0/appESMQNwIowYCCld/Wellbeing%20Review%20request%20form";
 
@@ -37,6 +110,7 @@ const WellbeingForm = () => {
   const [town, setTown] = useState("");
   const [localAuthority, setLocalAuthority] = useState("");
   const [location, setLocation] = useState("");
+  const postcodeRef = useRef();
 
   const handleContinue = () => {
     const isEligible = document.getElementById("eligibility").checked; // Check the checkbox value
@@ -52,66 +126,13 @@ const WellbeingForm = () => {
   };
 
   // Handle postcode changes
-  const handlePostcodeChange = async (event) => {
-    let postcode = event.target.value.trim().toUpperCase();
-  
-    // Automatically format the postcode to include a space
-    const postcodeRegex = /^[A-Z]{1,2}\d[A-Z\d]?\d[A-Z]{2}$/i; // Match unformatted postcode
-    if (postcodeRegex.test(postcode)) {
-      postcode = postcode.replace(
-        /^([A-Z]{1,2}\d[A-Z\d]?)(\d[A-Z]{2})$/,
-        "$1 $2"
-      );
-      event.target.value = postcode; // Update the input field
-    } else {
-      console.warn("Invalid postcode format:", postcode);
-      return;
-    }
-  
-    // Fetch details from the API
-    const details = await fetchPostcodeDetails(postcode);
-  
-    if (details) {
-      // Update state variables
-      setTown(details.postTown || "Unknown"); // Use admin_ward for town
-      setLocalAuthority(details.adminDistrict || "Unknown"); // Use admin_district for local authority
-      setLocation(details.parish || "Unknown"); // Use parish for location
-  
-      console.log("Populated Fields:", {
-        town: details.postTown || "Unknown",
-        localAuthority: details.adminDistrict || "Unknown",
-        location: details.parish || "Unknown",
-      });
-    } else {
-      console.warn("Postcode not recognised or invalid.");
-    }
-  };
-  
-
-  const fetchPostcodeDetails = async (postcode) => {
-    try {
-      const response = await fetch(
-        `https://api.postcodes.io/postcodes/${postcode}`
-      );
-      const data = await response.json();
-
-      if (data.status === 200) {
-        const details = data.result;
-        console.log("Postcode Details:", details);
-
-        return {
-          postTown: details.admin_ward, // Change from post_town to admin_ward for Town
-          adminDistrict: details.admin_district, // Local Authority
-          parish: details.parish, // Location
-        };
-      } else {
-        console.warn(`Postcode API Error: ${data.error}`);
-        return null;
-      }
-    } catch (error) {
-      console.error("Error fetching postcode details:", error);
-      return null;
-    }
+  const handlePostcodeChange = async () => {
+    console.log("Handling postcode change...");
+    await updatePostcodeDetails(setTown, setLocalAuthority, setLocation);
+    console.log("Postcode change handled. Current state:");
+    console.log("Town:", town);
+    console.log("Local Authority:", localAuthority);
+    console.log("Location:", location);
   };
 
   const handleCheckboxChange = (event) => {
@@ -128,9 +149,61 @@ const WellbeingForm = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // Retrieve all form values
+    // Fetch and validate postcode
+// Validate and re-fetch postcode details
+const postcode = document.querySelector("#postcode")?.value.trim();
+if (!postcode) {
+  setErrorMessage("Postcode is required.");
+  document.querySelector("#postcode")?.focus();
+  return;
+}
+
+// Use updated regex and format
+const postcodeRegex = /^[A-Z]{1,2}\d{1,2}[A-Z]?\s?\d[A-Z]{2}$/i;
+if (!postcodeRegex.test(postcode)) {
+  setErrorMessage("Invalid postcode format. Please enter a valid UK postcode.");
+  document.querySelector("#postcode")?.focus();
+  return;
+}
+
+const formattedPostcode = postcode.replace(
+  /^([A-Z]{1,2}\d{1,2}[A-Z]?)(\d[A-Z]{2})$/i,
+  "$1 $2"
+);
+
+const details = await fetchPostcodeDetails(formattedPostcode);
+if (!details) {
+  setErrorMessage(
+    "Could not retrieve details for the entered postcode. Please confirm it is correct and try again."
+  );
+  return;
+}
+
+// Log the fetched details
+console.log("Details fetched from API:", details);
+
+setTown(details.postTown || "Unknown");
+setLocalAuthority(details.adminDistrict || "Unknown");
+setLocation(details.parish || "Unknown");
+
+
+console.log("Postcode details re-fetched successfully:", {
+  town: details.postTown,
+  localAuthority: details.adminDistrict,
+  location: details.parish,
+});
+
+
+    // Check eligibility
+    if (!eligibility) {
+      setErrorMessage("Please confirm eligibility.");
+      document.querySelector("#eligibility")?.focus();
+      return;
+    }
+
+    // Gather form values
     const formValues = {
-      postcode: document.querySelector("#postcode")?.value.trim(),
+      postcode: formattedPostcode,
       name: document.querySelector("#name")?.value.trim(),
       email: document.querySelector("#email")?.value.trim(),
       phone: document.querySelector("#phone")?.value.trim(),
@@ -143,22 +216,15 @@ const WellbeingForm = () => {
         'input[name="livingWithPregnantPerson"]:checked'
       )?.value,
       gestation: document.querySelector("#gestation")?.value.trim(),
-    town: town || "Unknown", // Use updated state variable or default
-    localAuthority: localAuthority || "Unknown", // Use updated state variable or default
-    location: location || "Unknown", // Use updated state variable or default
+      town, // Updated state variable
+      localAuthority, // Updated state variable
+      location, // Updated state variable
     };
 
-    // Debug: Log form values before submission
-    console.log("Form Values:", formValues);
+    // Debugging: Log the form values
+    console.log("Form Values Before Submission:", formValues);
 
-    // Check eligibility
-    if (!eligibility) {
-      setErrorMessage("Please confirm eligibility.");
-      document.querySelector("#eligibility")?.focus();
-      return;
-    }
-
-    // Required fields validation
+    // Validate required fields
     const requiredFields = [
       { key: "postcode", message: "Postcode is required." },
       { key: "name", message: "Name is required." },
@@ -184,7 +250,7 @@ const WellbeingForm = () => {
       }
     }
 
-    // Additional validations
+    // Validate contact methods
     if (
       selectedMethods.includes("Microsoft Teams") ||
       selectedMethods.includes("Zoom")
@@ -216,11 +282,9 @@ const WellbeingForm = () => {
         document.querySelector("#phone")?.focus();
         return;
       }
-
-      
     }
 
-    // Determine localHub based on postcode
+    // Determine local hub based on postcode
     const hub = determineHub(formValues.postcode);
     setLocalHub(hub || "Not Recognised");
 
@@ -230,37 +294,29 @@ const WellbeingForm = () => {
       );
     }
 
-    // Debug: Log form values before submission
-    console.log("Form Values:", {
-      ...formValues,
-      hub,
-      selectedMethods,
-      otherContact,
-    });
-
     // Prepare data for Airtable submission
     const airtableData = {
       records: [
         {
           fields: {
             [airtableFieldIDs.name]: formValues.name,
-          [airtableFieldIDs.email]: formValues.email,
-          [airtableFieldIDs.phone]: formValues.phone,
-          [airtableFieldIDs.postcode]: formValues.postcode,
-          [airtableFieldIDs.localHub]: determineHub(formValues.postcode),
-          [airtableFieldIDs.serviceAccessed]: formValues.serviceAccessed,
-          [airtableFieldIDs.ethnicity]: formValues.ethnicity,
-          [airtableFieldIDs.gender]: formValues.gender,
-          [airtableFieldIDs.dob]: formValues.dob,
-          [airtableFieldIDs.livingWithPregnantPerson]:
-            formValues.livingWithPregnantPerson,
-          [airtableFieldIDs.gestation]: formValues.gestation,
-          [airtableFieldIDs.town]: formValues.town, // Include Town
-          [airtableFieldIDs.localAuthority]: formValues.localAuthority, // Include Local Authority
-          [airtableFieldIDs.location]: formValues.location, // Include Location
-          [airtableFieldIDs.preferredContactMethods]: selectedMethods,
-          [airtableFieldIDs.otherContactMethod]: otherContact || null,
-          [airtableFieldIDs.consent]: formValues.consent,
+            [airtableFieldIDs.email]: formValues.email,
+            [airtableFieldIDs.phone]: formValues.phone,
+            [airtableFieldIDs.postcode]: formValues.postcode,
+            [airtableFieldIDs.localHub]: determineHub(formValues.postcode),
+            [airtableFieldIDs.serviceAccessed]: formValues.serviceAccessed,
+            [airtableFieldIDs.ethnicity]: formValues.ethnicity,
+            [airtableFieldIDs.gender]: formValues.gender,
+            [airtableFieldIDs.dob]: formValues.dob,
+            [airtableFieldIDs.livingWithPregnantPerson]:
+              formValues.livingWithPregnantPerson,
+            [airtableFieldIDs.gestation]: formValues.gestation,
+            [airtableFieldIDs.town]: formValues.town, // Include updated Town
+            [airtableFieldIDs.localAuthority]: formValues.localAuthority, // Include updated Local Authority
+            [airtableFieldIDs.location]: formValues.location, // Include updated Location
+            [airtableFieldIDs.preferredContactMethods]: selectedMethods,
+            [airtableFieldIDs.otherContactMethod]: otherContact || null,
+            [airtableFieldIDs.consent]: formValues.consent,
           },
         },
       ],
@@ -278,10 +334,10 @@ const WellbeingForm = () => {
         },
         body: JSON.stringify(airtableData),
       });
-  
+
       const responseData = await response.json();
       console.log("Airtable API Response:", responseData);
-  
+
       if (!response.ok) {
         console.error("Error from Airtable API:", responseData);
         setErrorMessage(
@@ -291,7 +347,7 @@ const WellbeingForm = () => {
         );
         return;
       }
-  
+
       setSuccess(true); // Show success message
     } catch (error) {
       console.error("Error submitting to Airtable:", error);
@@ -779,9 +835,6 @@ const determineHub = (postcode) => {
       }
     }
   }
-
-
-
 
   // Fallback for unmapped postcodes
   console.log("Unknown Hub for:", outwardCode);
