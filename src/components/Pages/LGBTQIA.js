@@ -4,6 +4,7 @@ import { ExpandableCards } from "../UI/ExpandableCards";
 
 const LGBTQIA = () => {
   const isMinimalRoute = window.location.pathname.includes("/minimal");
+
   return (
     <div
       style={{
@@ -24,7 +25,6 @@ const LGBTQIA = () => {
         }}
       >
         <div className="LGBTQIA-page">
-          {/* Title */}
           <h1
             className="text-4xl font-bold text-center mb-8"
             style={{
@@ -34,8 +34,6 @@ const LGBTQIA = () => {
           >
             LGBTQIA+
           </h1>
-
-          {/* Cards */}
           <AnimatedCards />
           <div className="expandable-cards-section">
             <ExpandableCards />
@@ -45,6 +43,5 @@ const LGBTQIA = () => {
     </div>
   );
 };
-
 
 export default LGBTQIA;

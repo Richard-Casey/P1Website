@@ -111,16 +111,12 @@ const resources = [
 export const ExpandableCards = () => {
   const [activeCard, setActiveCard] = useState(null);
   const isMinimalRoute = window.location.pathname.includes("/minimal");
-  const cardRef = useRef(null);
   const scrollContainer = useRef(null);
+  const [isScrollable, setIsScrollable] = useState(false);
+  const cardRef = useRef(null);
 
-  // Check if scrollable
-  const isScrollable =
-    scrollContainer.current?.scrollHeight >
-    scrollContainer.current?.clientHeight;
-
-  // Close on outside click
-  useOutsideClick(cardRef, () => setActiveCard(null));
+    // Close on outside click
+    useOutsideClick(cardRef, () => setActiveCard(null));
 
   // Close on Escape key
   useEffect(() => {
@@ -131,38 +127,39 @@ export const ExpandableCards = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  // Lock/Unlock Scroll
   useEffect(() => {
-    const lockScroll = () => {
-      const scrollbarWidth =
-        window.innerWidth - document.documentElement.clientWidth;
+    const checkScrollable = () => {
+      const container = scrollContainer.current;
+      if (container) {
+        setIsScrollable(container.scrollHeight > container.clientHeight);
+      }
+    };
+  
+    checkScrollable(); // Check on mount
+    window.addEventListener("resize", checkScrollable); // Recheck on resize
+    return () => window.removeEventListener("resize", checkScrollable);
+  }, []);
+  
+
+  // Scroll Lock for Minimal View
+  useEffect(() => {
+    if (isMinimalRoute && activeCard) {
       document.body.style.overflow = "hidden";
-      document.body.style.paddingRight = `${scrollbarWidth}px`;
-    };
-
-    const unlockScroll = () => {
-      document.body.style.overflow = "";
-      document.body.style.paddingRight = "";
-    };
-
-    if (activeCard) {
-      lockScroll();
     } else {
-      unlockScroll();
+      document.body.style.overflow = "";
     }
+    return () => (document.body.style.overflow = "");
+  }, [isMinimalRoute, activeCard]);
 
-    return () => unlockScroll();
-  }, [activeCard]);
 
   return (
     <div
       className="relative"
       style={{
-        width: "100%",
-        maxWidth: isMinimalRoute ? "none" : "1200px", // Remove max-width for minimal mode
+        width: "100%", // Ensure the component takes full width
         margin: "0 auto",
       }}
-      >
+    >
       {/* Backdrop */}
       <AnimatePresence>
         {activeCard && (
@@ -250,9 +247,7 @@ export const ExpandableCards = () => {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.9 }}
-            style={{
-              maxWidth: "100%", // Ensure the expanded card scales
-              maxHeight: "100vh",}}
+            style={{ overflow: isMinimalRoute ? "hidden" : "auto" }}
             transition={{
               duration: 0.1, // Reduce duration for quicker transitions
               ease: "linear",
