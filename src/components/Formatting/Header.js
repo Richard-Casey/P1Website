@@ -1,4 +1,5 @@
 import React from "react";
+import globalStyles from "../../styles/globalstyle.module.css";
 import styles from "../../styles/headerstyle.module.css";
 import NumberTicker from "./NumberTicker";
 

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { getPodcastEpisodes, getPodcastDetails } from "../../services/spotify";
+import globalStyles from "../../styles/globalstyle.module.css";
 import styles from "../../styles/customscrollbar.module.css";
 import {
   IconArrowBigLeftLinesFilled,

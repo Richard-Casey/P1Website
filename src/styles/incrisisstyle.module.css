@@ -1,93 +1,49 @@
-/* Overall background container with grey background */
-.inCrisisBackground {
-    background-color: #f7f7f7; /* Light grey background */
-    padding: 1.5rem 1.5rem; /* Add spacing above and below the white container */
-  }
-  
-  /* White container for the content */
-  .inCrisisContentContainer {
-    background-color: #fff; /* White background */
-    margin: 0 auto; /* Center the container */
-    padding: 1.5rem; /* Inner padding for the content */
-    max-width: 90%; /* Stretch to 80% of the screen width */
-    border-radius: 8px; /* Rounded corners */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-  }
-  
-  /* Text container styles */
-  .inCrisisText {
-    text-align: left; /* Left-align text inside the white container */
-    font-family: 'Century Gothic', sans-serif;
-    color: #333; /* Text color */
-    line-height: 1.2;
-    font-size: 0.95rem;
-  }
-  
-  /* Header styles */
-  .inCrisisHeader {
-    color: #03969b; /* Match site heading colors */
-    text-align: left; /* Center align the headings */
-    margin-bottom: 1rem;
-  }
-  
-  .inCrisisHeaderMain {
-    font-size: 2.5rem;
-  }
-  
-  .inCrisisHeaderSub {
-    font-size: 2rem;
-    margin-top: 2rem;
-  }
-  
-  /* Paragraph and list styles */
-  .inCrisisParagraph {
-    margin-bottom: 1.5rem;
-    font-size: 0.95rem;
-    line-height: 1.2;
-  }
+/* incrisisstyle.module.css */
 
-  .inCrisisemerg {
-    margin-bottom: 1.5rem;
-    font-size: 1.2rem;
-    line-height: 1.2;
-    text-align: left;
-  }
-  
-  .inCrisisList {
-    margin: 20px auto;
-    max-width: 750px; /* Ensure it doesn't stretch too wide */
-    line-height: 1.2;
-  }
-  
-  .inCrisisListItem {
-    margin-bottom: 0.8rem;
-    line-height: 1.2;
-  }
-  
-  /* Link styles */
-  .inCrisisLink {
-    color: #0073e6; /* Match link colors */
-    text-decoration: none;
-  }
-  
-  .inCrisisLink:hover {
-    text-decoration: underline;
-  }
-  
-  /* Image styles */
-  .inCrisisImage {
-    float: right; /* Float to the right of the initial paragraph */
-    margin-left: 20px; /* Add space between image and text */
-    max-width: 200px;
-    height: auto;
-    border-radius: 5px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
-  
-  .inCrisisQRCode {
-    display: block;
-    margin: 2rem auto; /* Center the QR code */
-    max-width: 120px;
-    height: auto;
-  }
-  
+/* Emergency text style */
+.inCrisisemerg {
+  margin-bottom: 1.5rem;
+  font-size: 1.2rem;
+  line-height: 1.2;
+  text-align: left;
+}
+
+/* List styles */
+.inCrisisList {
+  margin: 20px auto;
+  max-width: 750px; /* Ensure it doesn't stretch too wide */
+  line-height: 1.2;
+}
+
+.inCrisisListItem {
+  font-size: 0.95rem;
+  line-height: 0.80;
+  margin-bottom: 1.5rem;
+}
+
+/* Link styles specific to this page */
+.inCrisisLink {
+  color: #0073e6;
+  text-decoration: none;
+}
+
+.inCrisisLink:hover {
+  text-decoration: underline;
+}
+
+/* Image styles specific to this page */
+.inCrisisImage {
+  float: right; /* Float to the right of the initial paragraph */
+  margin-left: 20px; /* Add space between image and text */
+  max-width: 200px;
+  height: auto;
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.inCrisisQRCode {
+  display: block;
+  margin: 2rem auto; /* Center the QR code */
+  max-width: 120px;
+  height: auto;
+}

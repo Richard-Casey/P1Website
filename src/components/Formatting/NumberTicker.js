@@ -2,6 +2,7 @@
 import React, { useEffect, useRef } from 'react';
 import { useInView } from 'framer-motion';
 import { useMotionValue, useSpring } from 'framer-motion';
+import globalStyles from "../../styles/globalstyle.module.css";
 
 function NumberTicker({ value, decimalPlaces = 0 }) {
   const ref = useRef(null);

@@ -1,0 +1,114 @@
+/* globalstyle.module.css */
+
+/* General Reset */
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: "Century Gothic", Arial, sans-serif;
+    color: #333; /* Default text color */
+    background-color: #f7f7f7; /* Light grey background for all pages */
+  }
+  
+  /* Containers */
+  .container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1.5rem 1.5rem;
+    background-color: #fff; /* Default white background */
+    border-radius: 40px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    border: 1px solid #333; /* Thin border */
+  }
+
+  .container-minimal {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem; /* Adjusted padding */
+    background-color: #fff;
+    border-radius: 40px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #333; /* Thin border */
+}
+  
+  /* Headings */
+  h1, h2, h3, h4, h5, h6 {
+    color: #03969b; /* Default heading color */
+    margin: 1rem 0;
+    line-height: 1.3;
+  }
+  
+  h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  .h1-minimal {
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-align: center;
+    margin: 0 1rem 1rem; /* No top margin, but side and bottom margins remain */
+  }
+  
+  
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 500;
+    text-align: left;
+  }
+  
+  h3 {
+    font-size: 1rem;
+    text-align: left;
+  }
+  
+  /* Paragraphs */
+  p {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: 1.5rem;
+  }
+  
+  /* Links */
+  a {
+    color: #0073e6;
+    text-decoration: none;
+  }
+  
+  a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Lists */
+  ul {
+    margin: 20px 0;
+    padding-left: 20px;
+  }
+  
+  li {
+    margin-bottom: 10px;
+  }
+  
+  /* Images */
+  img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Utility Classes */
+  .text-center {
+    text-align: center;
+  }
+  
+  .text-left {
+    text-align: left;
+  }
+
+
+
+  

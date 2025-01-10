@@ -1,5 +1,6 @@
 // src/components/PeerSupport.js
 import React from "react";
+import globalStyles from "../../styles/globalstyle.module.css";
 import styles from "../../styles/whatispeersupportstyle.module.css";
 
 const PeerSupport = () => {

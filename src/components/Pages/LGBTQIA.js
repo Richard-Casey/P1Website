@@ -1,4 +1,5 @@
 import React from "react";
+import globalStyles from "../../styles/globalstyle.module.css";
 import { AnimatedCards } from "../UI/AnimatedCards";
 import { ExpandableCards } from "../UI/ExpandableCards";
 

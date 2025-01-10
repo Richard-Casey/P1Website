@@ -1,5 +1,6 @@
 // src/components/WhatWeDo.js
 import React from "react";
+import globalStyles from "../../styles/globalstyle.module.css";
 import styles from "../../styles/whatwedostyle.module.css";
 
 const WhatWeDo = () => {

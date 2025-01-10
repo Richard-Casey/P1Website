@@ -23,30 +23,30 @@ const App = () => {
   const isHeroVisible = location.pathname === "/";
 
   return (
-    <div className={styles.App}>
+    <div className={`${styles.App} ${isMinimalRoute ? "minimal" : ""}`}>
       <ScrollToTop />
       {!isMinimalRoute && <Header />}
       {!isMinimalRoute && isHeroVisible && <Hero />}
       {!isMinimalRoute && <NavBar />}
       <main>
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/wellbeing-review-form" element={<WellbeingForm />} />
-          <Route path="/in-crisis" element={<InCrisis />} />
-          <Route path="/what-we-do" element={<WhatWeDo />} />
-          <Route path="/staff" element={<StaffPage />} />
-          <Route path="/what-is-peer-support" element={<PeerSupport />} />
-          <Route path="/lgbtqia" element={<LGBTQIA />} />
-          <Route path="/podcasts" element={<Podcasts />} />
+          <Route path="/" element={<Home isMinimal={false} />} />
+          <Route path="/wellbeing-review-form" element={<WellbeingForm isMinimal={false} />} />
+          <Route path="/in-crisis" element={<InCrisis isMinimal={false} />} />
+          <Route path="/what-we-do" element={<WhatWeDo isMinimal={false} />} />
+          <Route path="/staff" element={<StaffPage isMinimal={false} />} />
+          <Route path="/what-is-peer-support" element={<PeerSupport isMinimal={false} />} />
+          <Route path="/lgbtqia" element={<LGBTQIA isMinimal={false} />} />
+          <Route path="/podcasts" element={<Podcasts isMinimal={false} />} />
 
           {/* Minimal Routes */}
-          <Route path="/minimal-form" element={<WellbeingForm />} />
-          <Route path="/minimal-incrisis" element={<InCrisis />} />
-          <Route path="/minimal-whatwedo" element={<WhatWeDo />} />
-          <Route path="/minimal-staff" element={<StaffPage />} />
-          <Route path="/minimal-whatispeersupport" element={<PeerSupport />} />
-          <Route path="/minimal-lgbtqia" element={<LGBTQIA />} />
-          <Route path="/minimal-podcasts" element={<Podcasts />} />
+          <Route path="/minimal-form" element={<WellbeingForm isMinimal={true} />} />
+          <Route path="/minimal-incrisis" element={<InCrisis isMinimal={true} />} />
+          <Route path="/minimal-whatwedo" element={<WhatWeDo isMinimal={true} />} />
+          <Route path="/minimal-staff" element={<StaffPage isMinimal={true} />} />
+          <Route path="/minimal-whatispeersupport" element={<PeerSupport isMinimal={true} />} />
+          <Route path="/minimal-lgbtqia" element={<LGBTQIA isMinimal={true} />} />
+          <Route path="/minimal-podcasts" element={<Podcasts isMinimal={true} />} />
 
           {/* 404 Fallback */}
           <Route path="*" element={<div>Page Not Found</div>} />

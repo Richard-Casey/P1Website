@@ -13,8 +13,13 @@ header {
 
 main {
   flex: 1;
-  margin-top: 1rem; /* Space below the NavBar or Hero */
+  margin-top: 1rem; /* Default margin */
 }
+
+.minimal main {
+  margin-top: 0; /* No margin for minimal versions */
+}
+
 
 .hero-section {
   margin-bottom: 0; /* Ensure no extra margin */

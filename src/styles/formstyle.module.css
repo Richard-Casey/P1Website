@@ -1,5 +1,5 @@
 /* Global styles for body */
-body {
+.formbody {
   font-family: "Century Gothic", Arial, sans-serif;
   margin: 1.5rem;
   padding: 0;
@@ -87,8 +87,8 @@ body {
 
 
 /* Form headers */
-h1,
-h2 {
+.formh1,
+.formh2 {
   font-size: 28px;
   font-weight: bold;
   color: #0392a2;
@@ -96,7 +96,7 @@ h2 {
 }
 
 /* Labels for input fields */
-label {
+.formlabel {
   display: block;
   margin: 10px 0 5px;
   font-size: 18px;

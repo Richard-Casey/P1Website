@@ -1,4 +1,5 @@
 import React, { useState, useRef } from "react";
+import globalStyles from "../../styles/globalstyle.module.css";
 import styles from "../../styles/formstyle.module.css";
 
 const airtableFieldIDs = {

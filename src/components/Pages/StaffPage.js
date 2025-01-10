@@ -1,5 +1,6 @@
 // src/components/StaffPage.js
 import React from "react";
+import globalStyles from "../../styles/globalstyle.module.css";
 import styles from "../../styles/staffpagestyle.module.css";
 import StaffCard from "../StaffCard";
 

@@ -1,0 +1,20 @@
+/* Minimal-specific overrides */
+.inCrisisBackground {
+    background-color: #fff;
+    border-radius: 8px; /* Rounded corners */
+    padding: 0;
+    border: 1px solid #333; 
+  }
+  
+  .inCrisisContentContainer {
+    margin: 0 auto; /* Center the container */
+    max-width: 100%; /* Stretch to 80% of the screen width */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  }
+  
+  .inCrisisText {
+    font-size: 0.9rem;
+    color: #333;
+    line-height: 1.5;
+  }
+  

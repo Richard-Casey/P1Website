@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import globalStyles from "../../styles/globalstyle.module.css";
 import styles from "../../styles/herostyle.module.css";
 
 function Hero() {

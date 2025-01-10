@@ -1,5 +1,6 @@
 // src/components/Home.js
 import React from "react";
+import globalStyles from "../../styles/globalstyle.module.css";
 import styles from "../../styles/homestyle.module.css";
 import Button from "../Button"; // Import the Button component
 

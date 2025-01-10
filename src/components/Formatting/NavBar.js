@@ -1,5 +1,6 @@
 // src/components/NavBar.js
 import React, { useState } from "react";
+import globalStyles from "../../styles/globalstyle.module.css";
 import styles from "../../styles/navtoolbarstyle.module.css";
 
 const NavBar = ({ onNavigate }) => {
