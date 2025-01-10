@@ -1,45 +1,12 @@
 /* Staff Page Styles */
-.staffContainer {
-    max-width: 90%;
-    margin: 1.5rem auto;
-    padding: 20px;
-    background-color: #ffffff; /* White background */
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-    font-family: 'Century Gothic', sans-serif;
-    color: #333;
-    line-height: 1.8;
-  }
-  
   .staffHeaderImage {
     width: 100%;
     height: auto;
     border-radius: 10px;
+    margin-top: 20px;
     margin-bottom: 20px;
   }
-  
-  .staffContent h3 {
-    font-size: 1.5rem;
-    color: #03969b;
-    margin-bottom: 0.5rem;
-  }
-  
-  .staffContent p {
-    font-size: 1rem;
-    margin-bottom: 1.5rem;
-    text-align: justify;
-  }
-  
-  .staffContent a {
-    color: #0073e6;
-    text-decoration: none;
-  }
-  
-  .staffContent a:hover {
-    text-decoration: underline;
-  }
-  
-  /* Responsive Styles */
+ /* Responsive Styles */
   @media (max-width: 768px) {
     .staffContainer {
       padding: 15px;

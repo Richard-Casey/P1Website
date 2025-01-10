@@ -1,7 +1,6 @@
 import React from "react";
 import globalStyles from "../../styles/globalstyle.module.css";
-import minimalStyles from "../../styles/minimalstyle.module.css"; // Minimal styles
-import normalStyles from "../../styles/incrisisstyle.module.css"; // Normal styles
+import styles from "../../styles/incrisisstyle.module.css"; // Normal styles
 
 const InCrisis = ({ isMinimal }) => {
   return (
@@ -18,7 +17,7 @@ const InCrisis = ({ isMinimal }) => {
           <img
             src={`${process.env.PUBLIC_URL}/images/InCrisis/111-mental-health-crisis.png`}
             alt="Mental Health Crisis"
-            className={normalStyles.inCrisisImage}
+            className={styles.inCrisisImage}
           />
           <p className={globalStyles.p}>
             If you are experiencing a mental health crisis or something that
@@ -86,29 +85,29 @@ const InCrisis = ({ isMinimal }) => {
           <h2 className={globalStyles.h2}>
             Signs you may need to call NHS 111:
           </h2>
-          <li className={normalStyles.inCrisisListItem}>
+          <li className={styles.inCrisisListItem}>
             Severe changes to your mood
           </li>
-          <li className={normalStyles.inCrisisListItem}>
+          <li className={styles.inCrisisListItem}>
             Withdrawing from people (close family, friends, or work colleagues)
           </li>
-          <li className={normalStyles.inCrisisListItem}>
+          <li className={styles.inCrisisListItem}>
             Not taking care of yourself like you usually would
           </li>
-          <li className={normalStyles.inCrisisListItem}>
+          <li className={styles.inCrisisListItem}>
             Having increased thoughts about your life not being worth living
           </li>
-          <li className={normalStyles.inCrisisListItem}>Excessive worry</li>
-          <li className={normalStyles.inCrisisListItem}>
+          <li className={styles.inCrisisListItem}>Excessive worry</li>
+          <li className={styles.inCrisisListItem}>
             Feeling out of control or unable to cope
           </li>
-          <li className={normalStyles.inCrisisListItem}>
+          <li className={styles.inCrisisListItem}>
             Feeling anxious about leaving the house
           </li>
-          <li className={normalStyles.inCrisisListItem}>
+          <li className={styles.inCrisisListItem}>
             Hearing voices or seeing things that others can’t
           </li>
-          <li className={normalStyles.inCrisisListItem}>
+          <li className={styles.inCrisisListItem}>
             Thinking about harming yourself
           </li>
           <p></p>
@@ -118,7 +117,7 @@ const InCrisis = ({ isMinimal }) => {
             option, we can help to get you the urgent support you need for your
             mental health.
           </p>
-          <p className={normalStyles.inCrisisemerg}>
+          <p className={styles.inCrisisemerg}>
             <strong>
               In emergency situations, where there is an immediate risk to life,
               you should continue to contact 999 or go to A&E.
@@ -126,7 +125,7 @@ const InCrisis = ({ isMinimal }) => {
           </p>
 
           <h2
-            className={`${normalStyles.inCrisisHeader} ${normalStyles.inCrisisHeaderSub}`}
+            className={`${styles.inCrisisHeader} ${styles.inCrisisHeaderSub}`}
           >
             National survey
           </h2>
@@ -139,7 +138,7 @@ const InCrisis = ({ isMinimal }) => {
           <img
             src={`${process.env.PUBLIC_URL}/images/InCrisis/111-survey-qr-code.png`}
             alt="QR Code for survey"
-            className={normalStyles.inCrisisQRCode}
+            className={styles.inCrisisQRCode}
           />
         </div>
       </div>
