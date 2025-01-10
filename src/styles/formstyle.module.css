@@ -31,7 +31,6 @@
   padding: 20px;
   background-color: #fff;
   border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .consentandsubmit {
@@ -64,11 +63,6 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.formContainer label {
-  margin-top: 20px;
-  /* Add extra spacing above each label */
-}
-
 /* Radio button group styling */
 .radioGroup {
   display: flex;
@@ -97,12 +91,18 @@
 
 /* Labels for input fields */
 .formlabel {
-  display: block;
+  display: flex;
+  align-items: center; /* Align checkbox and text vertically */
   margin: 10px 0 5px;
   font-size: 18px;
   font-weight: bold;
   color: #0392a2;
 }
+
+.formlabel input[type="checkbox"] {
+  margin-right: 8px; /* Add space between the checkbox and the text */
+}
+
 
 /* Input field styling */
 .input {
@@ -133,23 +133,33 @@
 }
 
 /* Checkbox group styling */
+/* Checkbox group styling */
 .checkboxGroup {
   margin: 10px 0;
 }
 
 .checkboxGroup label {
-  display: block;
+  display: flex; /* Align checkbox and text horizontally */
+  align-items: center; /* Vertically center align text and checkbox */
+  gap: 10px; /* Add space between the checkbox and the text */
   background-color: #f1f1f1;
   padding: 10px;
   margin: 5px 0;
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  font-weight: 600;
+  color: #03969b; /* Update text color */
 }
 
 .checkboxGroup label:hover {
   background-color: #e0e0e0;
 }
+
+.checkboxGroup input[type="checkbox"] {
+  margin: 0; /* Remove any additional margin around the checkbox */
+}
+
 
 /* Textarea styling (for "Other" contact method) */
 .textarea {

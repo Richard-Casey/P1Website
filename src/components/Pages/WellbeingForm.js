@@ -99,7 +99,7 @@ const updatePostcodeDetails = async (
 const airtableURL =
   "https://api.airtable.com/v0/appESMQNwIowYCCld/Wellbeing%20Review%20request%20form";
 
-const WellbeingForm = () => {
+const WellbeingForm = ({ isMinimal }) => {
   // State variables
   const [eligibility, setEligibility] = useState(false); // Declare inside the component
   const [showForm, setShowForm] = useState(false);
@@ -151,49 +151,49 @@ const WellbeingForm = () => {
     event.preventDefault();
 
     // Fetch and validate postcode
-// Validate and re-fetch postcode details
-const postcode = document.querySelector("#postcode")?.value.trim();
-if (!postcode) {
-  setErrorMessage("Postcode is required.");
-  document.querySelector("#postcode")?.focus();
-  return;
-}
+    // Validate and re-fetch postcode details
+    const postcode = document.querySelector("#postcode")?.value.trim();
+    if (!postcode) {
+      setErrorMessage("Postcode is required.");
+      document.querySelector("#postcode")?.focus();
+      return;
+    }
 
-// Use updated regex and format
-const postcodeRegex = /^[A-Z]{1,2}\d{1,2}[A-Z]?\s?\d[A-Z]{2}$/i;
-if (!postcodeRegex.test(postcode)) {
-  setErrorMessage("Invalid postcode format. Please enter a valid UK postcode.");
-  document.querySelector("#postcode")?.focus();
-  return;
-}
+    // Use updated regex and format
+    const postcodeRegex = /^[A-Z]{1,2}\d{1,2}[A-Z]?\s?\d[A-Z]{2}$/i;
+    if (!postcodeRegex.test(postcode)) {
+      setErrorMessage(
+        "Invalid postcode format. Please enter a valid UK postcode."
+      );
+      document.querySelector("#postcode")?.focus();
+      return;
+    }
 
-const formattedPostcode = postcode.replace(
-  /^([A-Z]{1,2}\d{1,2}[A-Z]?)(\d[A-Z]{2})$/i,
-  "$1 $2"
-);
+    const formattedPostcode = postcode.replace(
+      /^([A-Z]{1,2}\d{1,2}[A-Z]?)(\d[A-Z]{2})$/i,
+      "$1 $2"
+    );
 
-const details = await fetchPostcodeDetails(formattedPostcode);
-if (!details) {
-  setErrorMessage(
-    "Could not retrieve details for the entered postcode. Please confirm it is correct and try again."
-  );
-  return;
-}
+    const details = await fetchPostcodeDetails(formattedPostcode);
+    if (!details) {
+      setErrorMessage(
+        "Could not retrieve details for the entered postcode. Please confirm it is correct and try again."
+      );
+      return;
+    }
 
-// Log the fetched details
-console.log("Details fetched from API:", details);
+    // Log the fetched details
+    console.log("Details fetched from API:", details);
 
-setTown(details.postTown || "Unknown");
-setLocalAuthority(details.adminDistrict || "Unknown");
-setLocation(details.parish || "Unknown");
+    setTown(details.postTown || "Unknown");
+    setLocalAuthority(details.adminDistrict || "Unknown");
+    setLocation(details.parish || "Unknown");
 
-
-console.log("Postcode details re-fetched successfully:", {
-  town: details.postTown,
-  localAuthority: details.adminDistrict,
-  location: details.parish,
-});
-
+    console.log("Postcode details re-fetched successfully:", {
+      town: details.postTown,
+      localAuthority: details.adminDistrict,
+      location: details.parish,
+    });
 
     // Check eligibility
     if (!eligibility) {
@@ -360,10 +360,14 @@ console.log("Postcode details re-fetched successfully:", {
 
   // Function to render success message
   const renderSuccessMessage = () => (
-    <div className={styles.successMessage}>
-      <h1>Thank You!</h1>
-      <p>Your form has been submitted successfully.</p>
-      <p>
+    <div className={styles.prescreening}>
+      <h1 className={isMinimal ? globalStyles["h1-minimal"] : globalStyles.h1}>
+        Thank You!
+      </h1>
+      <p className={globalStyles.p}>
+        Your form has been submitted successfully.
+      </p>
+      <p className={globalStyles.p}>
         If you provided an email address, you will receive a confirmation email
         shortly. Otherwise, our Fathers & Partners Wellbeing coordinator will
         contact you within 7 days via your selected preferred method of contact
@@ -389,20 +393,29 @@ console.log("Postcode details re-fetched successfully:", {
   );
 
   return (
-    <div className={styles.wellbeingFormContainer}>
+    <div
+      className={
+        isMinimal ? globalStyles["container-minimal"] : globalStyles.container
+      }
+    >
       {success ? (
         renderSuccessMessage() // Show success message if form submission was successful
       ) : !showForm ? (
         <div className={styles.prescreening}>
-          <h2>Eligibility Confirmation</h2>
-          <p>
+          <h1
+            className={isMinimal ? globalStyles["h1-minimal"] : globalStyles.h1}
+          >
+            Eligibility Confirmation
+          </h1>
+          <p className={globalStyles.p}>
             Please confirm that your partner is currently under the care of EPUT
             (Essex Partnership University Trust).
           </p>
-          <label>
+          <label className={styles.formlabel}>
             <input type="checkbox" id="eligibility" />
             Confirm Eligibility
           </label>
+
           <button
             className={styles.fancyButton}
             onClick={handleContinue}
@@ -604,11 +617,11 @@ console.log("Postcode details re-fetched successfully:", {
             {/* Living with Pregnant Partner */}
             <div className={styles.row}>
               <div className={styles.columnFull}>
-                <label>
+              <label htmlFor="serviceAccessed">
                   Are you living with your partner?{" "}
                   <span className={styles.required}>*</span>
                 </label>
-                <div className={styles.radioGroup}>
+                <div className={styles.checkboxGroup}>
                   <label>
                     <input
                       type="radio"
@@ -705,8 +718,8 @@ console.log("Postcode details re-fetched successfully:", {
               given us will be used, shared, and stored by us and that you give
               your consent for this by checking the box below.
             </p>
-            <div className={styles.consentandsubmit}>
-              <label>
+            <div className={styles.prescreening}>
+            <label className={styles.formlabel}>
                 <input type="checkbox" id="consent" required /> Consent{" "}
                 <span className={styles.required}>
                   <font color="red">*</font>
