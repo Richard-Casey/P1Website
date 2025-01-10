@@ -15,6 +15,8 @@ import PeerSupport from "./components/Pages/PeerSupport";
 import LGBTQIA from "./components/Pages/LGBTQIA";
 import Podcasts from "./components/Pages/Podcasts";
 import "./App.css";
+import "./index.css";
+
 
 const App = () => {
   const location = useLocation();

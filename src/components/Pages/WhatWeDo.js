@@ -2,10 +2,12 @@
 import React from "react";
 import globalStyles from "../../styles/globalstyle.module.css";
 import styles from "../../styles/whatwedostyle.module.css";
+import customScrollbar from "../../styles/customscrollbar.module.css";
+
 
 const WhatWeDo = ({ isMinimal }) => {
   return (
-    <div
+      <div
       className={
         isMinimal ? globalStyles["container-minimal"] : globalStyles.container
       }
@@ -75,5 +77,7 @@ const WhatWeDo = ({ isMinimal }) => {
     </div>
   );
 };
+
+
 
 export default WhatWeDo;
