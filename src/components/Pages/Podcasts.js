@@ -65,6 +65,7 @@ const Podcasts = ({ isMinimal }) => {
             date: episode.release_date,
             duration: new Date(episode.duration_ms).toISOString().substr(11, 8), // Format duration
             thumbnail: episode.images?.[0]?.url || "default-thumbnail.jpg", // Default if no thumbnail
+            spotifyUrl: episode.external_urls.spotify, // Spotify URL for the episode
           }))
         );
       } catch (error) {
@@ -160,180 +161,177 @@ const PodcastHeader = ({ podcasts, onSelect }) => {
     >
       {/* Main Container */}
       <div
-  className="relative flex justify-center items-center gap-4" // Flex layout for side-by-side alignment
-  style={{
-    maxWidth: "1200px",
-    margin: "0 auto", // Center the container
-    position: "relative", // Required for absolute positioning of buttons
-  }}
->
-  {/* Image Section */}
-  <div
-    className="flex items-center justify-center"
-    style={{
-      width: "15rem", // Adjust the width of the image container
-      height: "15rem", // Ensure a square container
-    }}
-  >
-    <AnimatePresence>
-      {podcasts.map((podcast, index) => (
-        <motion.div
-          key={podcast.title}
-          className="absolute flex justify-center items-center"
+        className="relative flex justify-center items-center gap-4" // Flex layout for side-by-side alignment
+        style={{
+          maxWidth: "1200px",
+          margin: "0 auto", // Center the container
+          position: "relative", // Required for absolute positioning of buttons
+        }}
+      >
+        {/* Image Section */}
+        <div
+          className="flex items-center justify-center"
           style={{
-            width: "13.875rem",
-            height: "13.813rem",
-            borderRadius: "36px",
-            zIndex: index === activeIndex ? 999 : index, // Active card is on top
-            transform:
-              index === activeIndex ? "none" : "translateX(-50px)", // Shift inactive card slightly
-          }}
-          initial={{
-            opacity: 0,
-            scale: 0.9,
-            z: -100,
-            rotate: Math.floor(Math.random() * 21) - 10, // Randomized rotation
-          }}
-          animate={{
-            opacity: index === activeIndex ? 1 : 0.3, // Check if active
-            scale: index === activeIndex ? 1 : 0.95, // Slightly smaller for inactive
-            z: index === activeIndex ? 0 : -10, // Z-index layering
-            rotate:
-              index === activeIndex
-                ? 0
-                : Math.floor(Math.random() * 21) - 10,
-            zIndex: index === activeIndex ? 999 : -index, // Ensure proper stacking
-            y: index === activeIndex ? [0, -20, 0] : 10, // Active card bounces slightly
-          }}
-          exit={{
-            opacity: 0,
-            scale: 0.9,
-            z: 100,
-            rotate: Math.floor(Math.random() * 21) - 10, // Randomized rotation for exit
-          }}
-          transition={{
-            duration: 0.4,
-            ease: "easeInOut",
+            width: "15rem", // Adjust the width of the image container
+            height: "15rem", // Ensure a square container
           }}
         >
-          <img
-            src={podcasts[activeIndex].imgSrc}
-            alt={podcasts[activeIndex].title}
-            style={{
-              width: "100%",
-              height: "100%",
-              borderRadius: "24px",
-              objectFit: "cover",
-              boxShadow: "0 10px 20px rgba(0, 0, 0, 0.2)",
-              border: "4px solid #03969b",
-            }}
-          />
-        </motion.div>
-      ))}
-    </AnimatePresence>
-  </div>
+          <AnimatePresence>
+            {podcasts.map((podcast, index) => (
+              <motion.div
+                key={podcast.title}
+                className="absolute flex justify-center items-center"
+                style={{
+                  width: "13.875rem",
+                  height: "13.813rem",
+                  borderRadius: "36px",
+                  zIndex: index === activeIndex ? 999 : index, // Active card is on top
+                  transform:
+                    index === activeIndex ? "none" : "translateX(-50px)", // Shift inactive card slightly
+                }}
+                initial={{
+                  opacity: 0,
+                  scale: 0.9,
+                  z: -100,
+                  rotate: Math.floor(Math.random() * 21) - 10, // Randomized rotation
+                }}
+                animate={{
+                  opacity: index === activeIndex ? 1 : 0.3, // Check if active
+                  scale: index === activeIndex ? 1 : 0.95, // Slightly smaller for inactive
+                  z: index === activeIndex ? 0 : -10, // Z-index layering
+                  rotate:
+                    index === activeIndex
+                      ? 0
+                      : Math.floor(Math.random() * 21) - 10,
+                  zIndex: index === activeIndex ? 999 : -index, // Ensure proper stacking
+                  y: index === activeIndex ? [0, -20, 0] : 10, // Active card bounces slightly
+                }}
+                exit={{
+                  opacity: 0,
+                  scale: 0.9,
+                  z: 100,
+                  rotate: Math.floor(Math.random() * 21) - 10, // Randomized rotation for exit
+                }}
+                transition={{
+                  duration: 0.4,
+                  ease: "easeInOut",
+                }}
+              >
+                <img
+                  src={podcasts[activeIndex].imgSrc}
+                  alt={podcasts[activeIndex].title}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    borderRadius: "24px",
+                    objectFit: "cover",
+                    boxShadow: "0 10px 20px rgba(0, 0, 0, 0.2)",
+                    border: "4px solid #03969b",
+                  }}
+                />
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </div>
 
-  {/* Text Section */}
-  <div className="flex flex-col justify-start items-start">
-    <motion.div
-      key={activeIndex}
-      initial={{ y: 20, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      exit={{ y: -20, opacity: 0 }}
-      transition={{ duration: 0.2, ease: "easeInOut" }}
-      className="h-full flex flex-col justify-start"
-    >
-      {/* Glassmorphism Section */}
-      <div
-    className="backdrop-blur-lg bg-white/30 border border-white/20 rounded-lg shadow-md relative flex flex-col justify-between"
-    style={{
-      height: "15rem", // Match the height of the image
-      width: "28rem", // Adjustable width for the glassmorphism box
-      backdropFilter: "blur(16px) saturate(180%)",
-      WebkitBackdropFilter: "blur(16px) saturate(180%)",
-      backgroundColor: "rgba(255, 255, 255, 0.63)",
-      borderRadius: "12px",
-      border: "4px solid #03969b",
-      padding: "1rem", // Padding inside the box
-    }}
-  >
+        {/* Text Section */}
+        <div className="flex flex-col justify-start items-start">
+          <motion.div
+            key={activeIndex}
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -20, opacity: 0 }}
+            transition={{ duration: 0.2, ease: "easeInOut" }}
+            className="h-full flex flex-col justify-start"
+          >
+            {/* Glassmorphism Section */}
+            <div
+              className="backdrop-blur-lg bg-white/30 border border-white/20 rounded-lg shadow-md relative flex flex-col justify-between"
+              style={{
+                height: "15rem", // Match the height of the image
+                width: "28rem", // Adjustable width for the glassmorphism box
+                backdropFilter: "blur(16px) saturate(180%)",
+                WebkitBackdropFilter: "blur(16px) saturate(180%)",
+                backgroundColor: "rgba(255, 255, 255, 0.63)",
+                borderRadius: "12px",
+                border: "4px solid #03969b",
+                padding: "1rem", // Padding inside the box
+              }}
+            >
+              {/* Title */}
+              <h3
+                className="text-3xl font-bold"
+                style={{
+                  color: "#03969b",
+                  margin: "0",
+                  marginBottom: "0.5rem",
+                }}
+              >
+                {podcasts[activeIndex].title}
+              </h3>
 
-    {/* Title */}
-    <h3
-      className="text-3xl font-bold"
-      style={{
-        color: "#03969b",
-        margin: "0",
-        marginBottom: "0.5rem",
-      }}
-    >
-      {podcasts[activeIndex].title}
-    </h3>
+              {/* Scrollable Description */}
+              <div
+                className={`overflow-y-auto pr-2 ${styles.customScrollbar}`}
+                style={{
+                  flex: 1, // Allow the description to take up remaining space
+                  maxHeight: "10rem", // Set a max height
+                  marginBottom: "1rem", // Add spacing above the button
+                }}
+              >
+                <p className="text-sm" style={{ color: "black" }}>
+                  {podcastDetails.description}
+                </p>
+              </div>
 
-        {/* Scrollable Description */}
-           <div
-      className={`overflow-y-auto pr-2 ${styles.customScrollbar}`}
-      style={{
-        flex: 1, // Allow the description to take up remaining space
-        maxHeight: "10rem", // Set a max height
-        marginBottom: "1rem", // Add spacing above the button
-      }}
-    >
-      <p className="text-sm" style={{ color: "black" }}>
-        {podcastDetails.description}
-      </p>
-    </div>
+              {/* Visit on Spotify Button */}
+              <a
+                href={podcastDetails.spotifyUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-green-600 text-white text-sm font-semibold rounded-full px-4 py-2 flex items-center gap-2 hover:bg-green-700 transition-all duration-300"
+                style={{
+                  textAlign: "center",
+                  width: "fit-content",
+                  alignSelf: "center",
+                  outline: "2px solid white",
+                  textDecoration: "none",
+                }}
+              >
+                <IconBrandSpotifyFilled className="h-5 w-5 text-white" />
+                Visit on Spotify
+              </a>
+            </div>
+          </motion.div>
+        </div>
 
-    {/* Visit on Spotify Button */}
-    <a
-      href={podcastDetails.spotifyUrl}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="bg-green-600 text-white text-sm font-semibold rounded-full px-4 py-2 flex items-center gap-2 hover:bg-green-700 transition-all duration-300"
-      style={{
-        textAlign: "center",
-        width: "fit-content",
-        alignSelf: "center",
-        outline: "2px solid white",
-        textDecoration: "none",
-      }}
-    >
-      <IconBrandSpotifyFilled className="h-5 w-5 text-white" />
-      Visit on Spotify
-    </a>
-  </div>
+        {/* Left Navigation Button */}
+        <button
+          onClick={handlePrev}
+          className="absolute left-0 transform -translate-y-1/2 h-14 w-14 rounded-full bg-gray-100 dark:bg-neutral-800 flex items-center justify-center"
+          style={{
+            top: "50%", // Vertically centered
+            outline: "3px solid white",
+            zIndex: 9999, // Ensure button is on top
+            marginLeft: "0.5rem", // Add a small margin from the edge
+          }}
+        >
+          <IconArrowBigLeftLinesFilled className="h-9 w-9 text-white group-hover:rotate-12 transition-transform duration-300" />
+        </button>
 
-    </motion.div>
-  </div>
-
-
- {/* Left Navigation Button */}
- <button
-    onClick={handlePrev}
-    className="absolute left-0 transform -translate-y-1/2 h-14 w-14 rounded-full bg-gray-100 dark:bg-neutral-800 flex items-center justify-center"
-    style={{
-      top: "50%", // Vertically centered
-      outline: "3px solid white",
-      zIndex: 9999, // Ensure button is on top
-      marginLeft: "0.5rem", // Add a small margin from the edge
-    }}
-  >
-    <IconArrowBigLeftLinesFilled className="h-9 w-9 text-white group-hover:rotate-12 transition-transform duration-300" />
-  </button>
-
-  {/* Right Navigation Button */}
-  <button
-    onClick={handleNext}
-    className="absolute right-0 transform -translate-y-1/2 h-14 w-14 rounded-full bg-gray-100 dark:bg-neutral-800 flex items-center justify-center"
-    style={{
-      top: "50%", // Vertically centered
-      outline: "3px solid white",
-      zIndex: 9999, // Ensure button is on top
-      marginRight: "0.5rem", // Add a small margin from the edge
-    }}
-  >
-    <IconArrowBigRightLinesFilled className="h-9 w-9 text-white group-hover:-rotate-12 transition-transform duration-300" />
-  </button>
+        {/* Right Navigation Button */}
+        <button
+          onClick={handleNext}
+          className="absolute right-0 transform -translate-y-1/2 h-14 w-14 rounded-full bg-gray-100 dark:bg-neutral-800 flex items-center justify-center"
+          style={{
+            top: "50%", // Vertically centered
+            outline: "3px solid white",
+            zIndex: 9999, // Ensure button is on top
+            marginRight: "0.5rem", // Add a small margin from the edge
+          }}
+        >
+          <IconArrowBigRightLinesFilled className="h-9 w-9 text-white group-hover:-rotate-12 transition-transform duration-300" />
+        </button>
       </div>
     </div>
   );
@@ -345,26 +343,26 @@ const PodcastEpisodes = ({ episodes }) => {
 
   return (
     <div
-      className="w-full flex flex-col items-center gap-6 py-8"
+      className="w-full flex flex-col items-center gap-1 py-4"
       style={{
         backgroundColor: "#001F3F", // Navy blue background for the section
         border: "3px solid #000000", // Light grey border
         borderRadius: "36px",
       }}
     >
-      <AnimatePresence>
-        {episodes.map((episode, index) => (
-          <React.Fragment key={index}>
-            <motion.div
-              className={`flex items-center p-4 gap-4 w-[80%] cursor-pointer`}
-              style={{
-                backgroundColor: "#f4f4f4", // Mellow white card background
-                border: "2px solid #d3d3d3", // Light grey border
-                borderRadius: "16px",
-                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-                overflow: "hidden", // Ensure content doesn’t overflow
-              }}
-              onClick={() =>
+      {episodes.map((episode, index) => (
+        <React.Fragment key={index}>
+          <motion.div
+            className={`flex items-center p-4 gap-4 w-[80%] cursor-pointer`}
+            style={{
+              backgroundColor: "#f4f4f4", // Mellow white card background
+              border: "2px solid #d3d3d3", // Light grey border
+              borderRadius: "16px",
+              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+              overflow: "hidden", // Ensure content doesn’t overflow
+              position: "relative", // For positioning the button
+            }}
+            onClick={() =>
                 setActiveEpisode(activeEpisode === index ? null : index)
               } // Toggle expansion
               initial={{ y: 20, opacity: 0 }}
@@ -374,40 +372,42 @@ const PodcastEpisodes = ({ episodes }) => {
                 type: "spring", // Adds bounce effect
                 damping: 20,
                 stiffness: 120,
-                delay: index * 0.15, // Stagger animation for each card
+                delay: index * 0.1, // Stagger animation for each card
               }}
             >
               {/* Thumbnail */}
-              <img
-                src={episode.thumbnail}
-                alt={episode.title}
-                className="w-20 h-20 object-cover rounded-lg"
+            <img
+              src={episode.thumbnail}
+              alt={episode.title}
+              className="w-20 h-20 object-cover rounded-lg"
+              style={{
+                border: "2px solid #d3d3d3",
+                flexShrink: 0, // Prevent shrinking
+              }}
+            />
+
+ {/* Text Content */}
+ <div className="flex-1 flex flex-col">
+              <h4
+                className="text-lg font-bold text-black"
                 style={{
-                  border: "2px solid #d3d3d3",
-                  flexShrink: 0, // Prevent shrinking
+                  marginBottom: "0.5rem",
                 }}
-              />
+              >
+                {episode.title}
+              </h4>
 
-              {/* Text Content */}
-              <div className="flex-1 flex flex-col">
-                <h4
-                  className="text-lg font-bold text-black"
-                  style={{
-                    marginBottom: "0.5rem",
-                  }}
-                >
-                  {episode.title}
-                </h4>
-
-                {/* Date and Duration */}
-                <p className="text-sm text-gray-700">
-                  {new Date(episode.date).toLocaleDateString("en-GB")} |{" "}
-                  {episode.duration}
-                </p>
+              {/* Date and Duration */}
+              <p className="text-sm text-gray-700">
+                {new Date(episode.date).toLocaleDateString("en-GB")} |{" "}
+                {episode.duration}
+              </p>
 
                 {/* Expandable Content */}
+              <AnimatePresence>
                 {activeEpisode === index && (
                   <motion.div
+                    key={index}
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: "auto" }}
                     exit={{ opacity: 0, height: 0 }}
@@ -422,22 +422,43 @@ const PodcastEpisodes = ({ episodes }) => {
                     </p>
                   </motion.div>
                 )}
-              </div>
-            </motion.div>
+              </AnimatePresence>
+            </div>
 
-            {/* Divider */}
-            {index < episodes.length - 1 && (
-              <div
-                className="w-[80%]"
-                style={{
-                  borderBottom: "1px solid #d3d3d3",
-                  margin: "12px 0", // Spacing between entries
-                }}
-              />
-            )}
-          </React.Fragment>
-        ))}
-      </AnimatePresence>
+            {/* Listen on Spotify Button */}
+            <a
+              href={episode.spotifyUrl} // Link to the Spotify episode
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-green-600 text-white text-sm font-semibold rounded-full px-4 py-2 flex items-center gap-2 hover:bg-green-700 transition-all duration-300"
+              style={{
+                position: "absolute", // Keep the button fixed
+                right: "1rem", // Align to the right of the card
+                top: "50%", // Center vertically
+                transform: "translateY(-50%)", // Adjust for centering
+                textAlign: "center", 
+                textDecoration: "none",
+                outline: "2px solid white",
+              }}
+            >
+              <IconBrandSpotifyFilled className="h-5 w-5 text-white" />
+              Listen on Spotify
+            </a>
+          </motion.div>
+
+           {/* Divider */}
+          {index < episodes.length - 1 && (
+            <div
+              className="w-[80%]"
+              style={{
+                borderBottom: "1px solid #d3d3d3",
+                borderTop: "1px solid #d3d3d3",
+                margin: "12px 0", // Spacing between entries
+              }}
+            />
+          )}
+        </React.Fragment>
+      ))}
     </div>
   );
 };
