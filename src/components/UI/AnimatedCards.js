@@ -197,53 +197,52 @@ export const AnimatedCards = () => {
                 padding: "1rem", // Adjust padding
               }}
             >
-      {/* Title */}
-      <h3
-        className="text-3xl font-bold"
-        style={{
-          margin: "0", // Remove unnecessary margin
-          marginBottom: "0.5rem", // Adjust gap below the title
-          color: "#03969b",
-        }}
-      >
-        {resources[activeIndex].title}
-      </h3>
+              {/* Title */}
+              <h3
+                className="text-3xl font-bold"
+                style={{
+                  margin: "0", // Remove unnecessary margin
+                  marginBottom: "0.5rem", // Adjust gap below the title
+                  color: "#03969b",
+                }}
+              >
+                {resources[activeIndex].title}
+              </h3>
 
               {/* Scrollable Description */}
-      <div
-        className={`overflow-y-auto ${styles.customScrollbar}`}
-        ref={scrollContainer}
-        style={{
-          flexGrow: 1, // Make the description take up remaining space
-          maxHeight: "100%", // Allow dynamic height adjustment
-          scrollbarWidth: "thin", // Optional: For Firefox thin scrollbar
-          WebkitOverflowScrolling: "touch", // Smooth scrolling for touch devices
-          marginBottom: "1rem", // Add spacing below the description
-        }}
-      >
-        <p className="text-sm" style={{ color: "black" }}>
-          {resources[activeIndex].description}
-        </p>
-      </div>
+              <div
+                className={`overflow-y-auto ${styles.customScrollbar}`}
+                ref={scrollContainer}
+                style={{
+                  flexGrow: 1, // Make the description take up remaining space
+                  maxHeight: "100%", // Allow dynamic height adjustment
+                  scrollbarWidth: "thin", // Optional: For Firefox thin scrollbar
+                  WebkitOverflowScrolling: "touch", // Smooth scrolling for touch devices
+                  marginBottom: "1rem", // Add spacing below the description
+                }}
+              >
+                <p className="text-sm" style={{ color: "black" }}>
+                  {resources[activeIndex].description}
+                </p>
+              </div>
 
-
- {/* Visit Website Button */}
- <a
-        href={resources[activeIndex].link}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="bg-blue-500 text-white text-sm font-semibold rounded-full px-4 py-2 hover:bg-orange-500 transition-all duration-300"
-        style={{
-          border: "2px solid rgb(255, 255, 255)",
-          textDecoration: "none", // Remove underline
-          alignSelf: "center", // Center the button horizontally
-        }}
-      >
-        Visit Website
-      </a>
-    </div>
-  </motion.div>
-</div>
+              {/* Visit Website Button */}
+              <a
+                href={resources[activeIndex].link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-blue-500 text-white text-sm font-semibold rounded-full px-4 py-2 hover:bg-orange-500 transition-all duration-300"
+                style={{
+                  border: "2px solid rgb(255, 255, 255)",
+                  textDecoration: "none", // Remove underline
+                  alignSelf: "center", // Center the button horizontally
+                }}
+              >
+                Visit Website
+              </a>
+            </div>
+          </motion.div>
+        </div>
       </div>
 
       {/* Navigation Buttons */}

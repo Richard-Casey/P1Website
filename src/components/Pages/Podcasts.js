@@ -59,15 +59,14 @@ const Podcasts = ({ isMinimal }) => {
       try {
         const fetchedEpisodes = await getPodcastEpisodes(activePodcast.showId);
         setEpisodes(
-            fetchedEpisodes.map((episode) => ({
-              title: episode.name,
-              description: episode.description,
-              date: episode.release_date,
-              duration: new Date(episode.duration_ms).toISOString().substr(11, 8), // Format duration
-              thumbnail: episode.images?.[0]?.url || "default-thumbnail.jpg", // Default if no thumbnail
-            }))
-          );
-          
+          fetchedEpisodes.map((episode) => ({
+            title: episode.name,
+            description: episode.description,
+            date: episode.release_date,
+            duration: new Date(episode.duration_ms).toISOString().substr(11, 8), // Format duration
+            thumbnail: episode.images?.[0]?.url || "default-thumbnail.jpg", // Default if no thumbnail
+          }))
+        );
       } catch (error) {
         console.error("Error fetching episodes:", error);
       }
@@ -87,18 +86,19 @@ const Podcasts = ({ isMinimal }) => {
         isMinimal ? globalStyles["container-minimal"] : globalStyles.container
       }
     >
-      <h1 className={isMinimal ? globalStyles["h1-minimal"] : globalStyles.h1}>Podcasts
-        </h1>
+      <h1 className={isMinimal ? globalStyles["h1-minimal"] : globalStyles.h1}>
+        Podcasts
+      </h1>
 
-        {/* Podcast Header */}
-        <PodcastHeader
-          podcasts={dynamicPodcasts}
-          onSelect={handlePodcastSelect}
-        />
+      {/* Podcast Header */}
+      <PodcastHeader
+        podcasts={dynamicPodcasts}
+        onSelect={handlePodcastSelect}
+      />
 
-        {/* Podcast Episodes */}
-        <PodcastEpisodes episodes={episodes} />
-      </div>
+      {/* Podcast Episodes */}
+      <PodcastEpisodes episodes={episodes} />
+    </div>
   );
 };
 
@@ -158,168 +158,182 @@ const PodcastHeader = ({ podcasts, onSelect }) => {
         marginBottom: "1.5rem",
       }}
     >
-      {/* Content Section */}
+      {/* Main Container */}
       <div
-        className="relative grid grid-cols-2 -space-x-20"
-        style={{
-          paddingTop: "0", // Remove extra padding
-        }}
-      >
-        {/* Image Section */}
-        <div
-          className="absolute inset-0 origin-center flex justify-center items-center"
+  className="relative flex justify-center items-center gap-4" // Flex layout for side-by-side alignment
+  style={{
+    maxWidth: "1200px",
+    margin: "0 auto", // Center the container
+    position: "relative", // Required for absolute positioning of buttons
+  }}
+>
+  {/* Image Section */}
+  <div
+    className="flex items-center justify-center"
+    style={{
+      width: "15rem", // Adjust the width of the image container
+      height: "15rem", // Ensure a square container
+    }}
+  >
+    <AnimatePresence>
+      {podcasts.map((podcast, index) => (
+        <motion.div
+          key={podcast.title}
+          className="absolute flex justify-center items-center"
           style={{
-            position: "relative", // Ensure cards overlap each other
-            height: "222px", // Adjust height to align better
-            marginLeft: "10rem",
-            width: "15rem",
-            //border: "4px solid red",
+            width: "13.875rem",
+            height: "13.813rem",
+            borderRadius: "36px",
+            zIndex: index === activeIndex ? 999 : index, // Active card is on top
+            transform:
+              index === activeIndex ? "none" : "translateX(-50px)", // Shift inactive card slightly
+          }}
+          initial={{
+            opacity: 0,
+            scale: 0.9,
+            z: -100,
+            rotate: Math.floor(Math.random() * 21) - 10, // Randomized rotation
+          }}
+          animate={{
+            opacity: index === activeIndex ? 1 : 0.3, // Check if active
+            scale: index === activeIndex ? 1 : 0.95, // Slightly smaller for inactive
+            z: index === activeIndex ? 0 : -10, // Z-index layering
+            rotate:
+              index === activeIndex
+                ? 0
+                : Math.floor(Math.random() * 21) - 10,
+            zIndex: index === activeIndex ? 999 : -index, // Ensure proper stacking
+            y: index === activeIndex ? [0, -20, 0] : 10, // Active card bounces slightly
+          }}
+          exit={{
+            opacity: 0,
+            scale: 0.9,
+            z: 100,
+            rotate: Math.floor(Math.random() * 21) - 10, // Randomized rotation for exit
+          }}
+          transition={{
+            duration: 0.4,
+            ease: "easeInOut",
           }}
         >
-          <AnimatePresence>
-            {podcasts.map((podcast, index) => (
-              <motion.div
-                key={podcast.title}
-                className="absolute flex justify-center items-center"
-                style={{
-                  width: "13.875rem",
-                  height: "13.813rem",
-                  borderRadius: "36px",
-                  zIndex: index === activeIndex ? 999 : index, // Active card is on top
-                  transform:
-                    index === activeIndex ? "none" : "translateX(-50px)", // Shift inactive card slightly
-                }}
-                initial={{
-                  opacity: 0,
-                  scale: 0.9,
-                  z: -100,
-                  rotate: Math.floor(Math.random() * 21) - 10, // Randomized rotation
-                }}
-                animate={{
-                  opacity: index === activeIndex ? 1 : 0.3, // Check if active
-                  scale: index === activeIndex ? 1 : 0.95, // Slightly smaller for inactive
-                  z: index === activeIndex ? 0 : -10, // Z-index layering
-                  rotate:
-                    index === activeIndex
-                      ? 0
-                      : Math.floor(Math.random() * 21) - 10,
-                  zIndex: index === activeIndex ? 999 : -index, // Ensure proper stacking
-                  y: index === activeIndex ? [0, -20, 0] : 10, // Active card bounces slightly
-                }}
-                exit={{
-                  opacity: 0,
-                  scale: 0.9,
-                  z: 100,
-                  rotate: Math.floor(Math.random() * 21) - 10, // Randomized rotation for exit
-                }}
-                transition={{
-                  duration: 0.4,
-                  ease: "easeInOut",
-                }}
-              >
-                <img
-                  src={podcast.imgSrc}
-                  alt={podcast.title}
-                  style={{
-                    width: "222px",
-                    height: "221px",
-                    borderRadius: "24px",
-                    objectFit: "cover",
-                    boxShadow: "0 10px 20px rgba(0, 0, 0, 0.2)",
-                    border: "4px solid #03969b",
-                  }}
-                />
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        </div>
+          <img
+            src={podcasts[activeIndex].imgSrc}
+            alt={podcasts[activeIndex].title}
+            style={{
+              width: "100%",
+              height: "100%",
+              borderRadius: "24px",
+              objectFit: "cover",
+              boxShadow: "0 10px 20px rgba(0, 0, 0, 0.2)",
+              border: "4px solid #03969b",
+            }}
+          />
+        </motion.div>
+      ))}
+    </AnimatePresence>
+  </div>
 
-        {/* Text Section */}
-        <div className="flex flex-col justify-start items-start">
-          <motion.div
-            key={activeIndex}
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: -20, opacity: 0 }}
-            transition={{ duration: 0.2, ease: "easeInOut" }}
-            className="h-full flex flex-col justify-start"
-          >
-            {/* Glassmorphism Section */}
-            <div
-              className="backdrop-blur-lg bg-white/30 border border-white/20 rounded-lg p-4 shadow-md relative"
-              style={{
-                height: "14rem", // Reduced height for better fit
-                width: "28rem", // Reduce width to align closer to the image
-                backdropFilter: "blur(16px) saturate(180%)",
-                WebkitBackdropFilter: "blur(16px) saturate(180%)",
-                backgroundColor: "rgba(255, 255, 255, 0.63)",
-                borderRadius: "12px",
-                border: "4px solid #03969b",
-              }}
-            >
-              <h3
-                className="text-3xl font-bold mb-2"
-                style={{
-                  color: "#03969b",
-                }}
-              >
-                {podcasts[activeIndex].title}
-              </h3>
-              <div
-                className={`overflow-y-auto pr-2 ${styles.customScrollbar}`}
-                style={{
-                  maxHeight: "6.5rem", // Set a max height to trigger scrolling for long descriptions
-                  marginBottom: "2rem", // Add space between description and the button
-                }}
-              >
-                <p className="text-sm" style={{ color: "black" }}>
-                  {podcastDetails.description}
-                </p>
-              </div>
+  {/* Text Section */}
+  <div className="flex flex-col justify-start items-start">
+    <motion.div
+      key={activeIndex}
+      initial={{ y: 20, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      exit={{ y: -20, opacity: 0 }}
+      transition={{ duration: 0.2, ease: "easeInOut" }}
+      className="h-full flex flex-col justify-start"
+    >
+      {/* Glassmorphism Section */}
+      <div
+    className="backdrop-blur-lg bg-white/30 border border-white/20 rounded-lg shadow-md relative flex flex-col justify-between"
+    style={{
+      height: "15rem", // Match the height of the image
+      width: "28rem", // Adjustable width for the glassmorphism box
+      backdropFilter: "blur(16px) saturate(180%)",
+      WebkitBackdropFilter: "blur(16px) saturate(180%)",
+      backgroundColor: "rgba(255, 255, 255, 0.63)",
+      borderRadius: "12px",
+      border: "4px solid #03969b",
+      padding: "1rem", // Padding inside the box
+    }}
+  >
 
-              {/* Visit on Spotify Button */}
-              <a
-                href={podcastDetails.spotifyUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-green-600 text-white text-sm font-semibold rounded-full px-4 py-2 flex items-center gap-2 hover:bg-green-700 transition-all duration-300"
-                style={{
-                  position: "absolute",
-                  bottom: "0.5rem",
-                  left: "50%",
-                  transform: "translateX(-50%)",
-                  width: "fit-content",
-                  outline: "2px solid white",
-                }}
-              >
-                <IconBrandSpotifyFilled className="h-5 w-5 text-white" />
-                Visit on Spotify
-              </a>
-            </div>
-          </motion.div>
-        </div>
+    {/* Title */}
+    <h3
+      className="text-3xl font-bold"
+      style={{
+        color: "#03969b",
+        margin: "0",
+        marginBottom: "0.5rem",
+      }}
+    >
+      {podcasts[activeIndex].title}
+    </h3>
 
-        {/* Left Navigation Button */}
-        <button
-          onClick={handlePrev}
-          className="absolute left-[60px] top-1/2 transform -translate-y-1/2 h-14 w-14 rounded-full bg-gray-100 dark:bg-neutral-800 flex items-center justify-center"
-          style={{
-            outline: "3px solid white",
-          }}
-        >
-          <IconArrowBigLeftLinesFilled className="h-9 w-9 text-white group-hover:rotate-12 transition-transform duration-300" />
-        </button>
+        {/* Scrollable Description */}
+           <div
+      className={`overflow-y-auto pr-2 ${styles.customScrollbar}`}
+      style={{
+        flex: 1, // Allow the description to take up remaining space
+        maxHeight: "10rem", // Set a max height
+        marginBottom: "1rem", // Add spacing above the button
+      }}
+    >
+      <p className="text-sm" style={{ color: "black" }}>
+        {podcastDetails.description}
+      </p>
+    </div>
 
-        {/* Right Navigation Button */}
-        <button
-          onClick={handleNext}
-          className="absolute right-[-20px] top-1/2 transform -translate-y-1/2 h-14 w-14 rounded-full bg-gray-100 dark:bg-neutral-800 flex items-center justify-center"
-          style={{
-            outline: "3px solid white",
-          }}
-        >
-          <IconArrowBigRightLinesFilled className="h-9 w-9 text-white group-hover:-rotate-12 transition-transform duration-300" />
-        </button>
+    {/* Visit on Spotify Button */}
+    <a
+      href={podcastDetails.spotifyUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="bg-green-600 text-white text-sm font-semibold rounded-full px-4 py-2 flex items-center gap-2 hover:bg-green-700 transition-all duration-300"
+      style={{
+        textAlign: "center",
+        width: "fit-content",
+        alignSelf: "center",
+        outline: "2px solid white",
+        textDecoration: "none",
+      }}
+    >
+      <IconBrandSpotifyFilled className="h-5 w-5 text-white" />
+      Visit on Spotify
+    </a>
+  </div>
+
+    </motion.div>
+  </div>
+
+
+ {/* Left Navigation Button */}
+ <button
+    onClick={handlePrev}
+    className="absolute left-0 transform -translate-y-1/2 h-14 w-14 rounded-full bg-gray-100 dark:bg-neutral-800 flex items-center justify-center"
+    style={{
+      top: "50%", // Vertically centered
+      outline: "3px solid white",
+      zIndex: 9999, // Ensure button is on top
+      marginLeft: "0.5rem", // Add a small margin from the edge
+    }}
+  >
+    <IconArrowBigLeftLinesFilled className="h-9 w-9 text-white group-hover:rotate-12 transition-transform duration-300" />
+  </button>
+
+  {/* Right Navigation Button */}
+  <button
+    onClick={handleNext}
+    className="absolute right-0 transform -translate-y-1/2 h-14 w-14 rounded-full bg-gray-100 dark:bg-neutral-800 flex items-center justify-center"
+    style={{
+      top: "50%", // Vertically centered
+      outline: "3px solid white",
+      zIndex: 9999, // Ensure button is on top
+      marginRight: "0.5rem", // Add a small margin from the edge
+    }}
+  >
+    <IconArrowBigRightLinesFilled className="h-9 w-9 text-white group-hover:-rotate-12 transition-transform duration-300" />
+  </button>
       </div>
     </div>
   );
@@ -427,7 +441,5 @@ const PodcastEpisodes = ({ episodes }) => {
     </div>
   );
 };
-
-  
 
 export default Podcasts;
