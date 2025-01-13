@@ -186,56 +186,64 @@ export const AnimatedCards = () => {
             <div
               className="backdrop-blur-lg bg-white/30 border border-white/20 rounded-lg p-4 shadow-md relative h-full"
               style={{
-                height: "240px",
+                height: "260px",
                 backdropFilter: "blur(16px) saturate(180%)",
                 WebkitBackdropFilter: "blur(16px) saturate(180%)",
                 backgroundColor: "rgba(255, 255, 255, 0.63)",
                 borderRadius: "12px",
                 border: "4px solid #03969b",
+                display: "flex", // Enable flex layout
+                flexDirection: "column", // Stack children vertically
+                padding: "1rem", // Adjust padding
               }}
             >
-              <h3
-                className="text-3xl font-bold mb-2"
-                style={{
-                  color: "#03969b",
-                  marginBottom: "10px", // Reduce gap above the title
-                }}
-              >
-                {resources[activeIndex].title}
-              </h3>
+      {/* Title */}
+      <h3
+        className="text-3xl font-bold"
+        style={{
+          margin: "0", // Remove unnecessary margin
+          marginBottom: "0.5rem", // Adjust gap below the title
+          color: "#03969b",
+        }}
+      >
+        {resources[activeIndex].title}
+      </h3>
 
-              {/* Scrollable Content */}
-              <div
-                className={`overflow-y-auto h-[110px] pr-4 relative ${styles.customScrollbar}`}
-                ref={scrollContainer}
-                style={{
-                  maxHeight: "110px", // Restrict the height
-                  scrollbarWidth: "thin", // Optional: For Firefox thin scrollbar
-                  WebkitOverflowScrolling: "touch", // Smooth scrolling for touch devices
-                }}
-              >
-                <p className="text-sm" style={{ color: "black" }}>
-                  {resources[activeIndex].description}
-                </p>
-              </div>
+              {/* Scrollable Description */}
+      <div
+        className={`overflow-y-auto ${styles.customScrollbar}`}
+        ref={scrollContainer}
+        style={{
+          flexGrow: 1, // Make the description take up remaining space
+          maxHeight: "100%", // Allow dynamic height adjustment
+          scrollbarWidth: "thin", // Optional: For Firefox thin scrollbar
+          WebkitOverflowScrolling: "touch", // Smooth scrolling for touch devices
+          marginBottom: "1rem", // Add spacing below the description
+        }}
+      >
+        <p className="text-sm" style={{ color: "black" }}>
+          {resources[activeIndex].description}
+        </p>
+      </div>
 
 
-              <a
-                href={resources[activeIndex].link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-blue-500 text-white text-sm font-semibold rounded-full px-4 py-2 hover:bg-orange-500 transition-all duration-300"
-                style={{
-                  border: "2px solid rgb(255, 255, 255)",
-                  marginTop: "0.5rem", // Add spacing above the button
-                  display: "inline-block", // Ensure the button behaves like a block-level element
-                }}
-              >
-                Visit Website
-              </a>
-            </div>
-          </motion.div>
-        </div>
+ {/* Visit Website Button */}
+ <a
+        href={resources[activeIndex].link}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="bg-blue-500 text-white text-sm font-semibold rounded-full px-4 py-2 hover:bg-orange-500 transition-all duration-300"
+        style={{
+          border: "2px solid rgb(255, 255, 255)",
+          textDecoration: "none", // Remove underline
+          alignSelf: "center", // Center the button horizontally
+        }}
+      >
+        Visit Website
+      </a>
+    </div>
+  </motion.div>
+</div>
       </div>
 
       {/* Navigation Buttons */}
