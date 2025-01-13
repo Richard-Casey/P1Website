@@ -2,10 +2,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState, useRef, useEffect } from "react";
 import styles from "../../styles/customscrollbar.module.css";
 import { useOutsideClick } from "../../hooks/use-outside-click";
-import {
-  IconArrowBigDownLinesFilled,
-  IconArrowBigUpLinesFilled,
-} from "@tabler/icons-react";
 
 const resources = [
   {
@@ -115,8 +111,8 @@ export const ExpandableCards = () => {
   const [isScrollable, setIsScrollable] = useState(false);
   const cardRef = useRef(null);
 
-    // Close on outside click
-    useOutsideClick(cardRef, () => setActiveCard(null));
+  // Close on outside click
+  useOutsideClick(cardRef, () => setActiveCard(null));
 
   // Close on Escape key
   useEffect(() => {
@@ -134,23 +130,28 @@ export const ExpandableCards = () => {
         setIsScrollable(container.scrollHeight > container.clientHeight);
       }
     };
-  
+
     checkScrollable(); // Check on mount
     window.addEventListener("resize", checkScrollable); // Recheck on resize
     return () => window.removeEventListener("resize", checkScrollable);
   }, []);
-  
 
-  // Scroll Lock for Minimal View
+  // Scroll Lock for Expanded Card
   useEffect(() => {
-    if (isMinimalRoute && activeCard) {
-      document.body.style.overflow = "hidden";
+    if (activeCard) {
+      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+      document.body.style.overflow = "hidden"; // Prevent scrolling
+      document.body.style.paddingRight = `${scrollbarWidth}px`; // Maintain scrollbar width
     } else {
-      document.body.style.overflow = "";
+      document.body.style.overflow = ""; // Restore scrolling
+      document.body.style.paddingRight = ""; // Reset padding
     }
-    return () => (document.body.style.overflow = "");
-  }, [isMinimalRoute, activeCard]);
 
+    return () => {
+      document.body.style.overflow = ""; // Cleanup
+      document.body.style.paddingRight = ""; // Cleanup
+    };
+  }, [activeCard]);
 
   return (
     <div
@@ -186,6 +187,7 @@ export const ExpandableCards = () => {
               border: "3px solid rgba(58, 58, 58, 1)",
               boxShadow: "0 8px 16px rgba(0, 0, 0, 0.2)",
               background: resource.gradient,
+              maxHeight: "6rem", // Set the maximum height for collapsed cards
             }}
             transition={{
               duration: 0.3, // Reduce duration for quicker transitions
@@ -230,7 +232,9 @@ export const ExpandableCards = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-blue-500 text-white text-sm font-semibold rounded-full px-4 py-2 hover:bg-orange-500 transition-all duration-300"
-                style={{ border: "2px solid rgb(255, 255, 255)" }}
+                style={{ border: "2px solid rgb(255, 255, 255)",
+                  textDecoration: "none"
+                 }}
               >
                 Visit Website
               </a>
@@ -247,7 +251,10 @@ export const ExpandableCards = () => {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.9 }}
-            style={{ overflow: isMinimalRoute ? "hidden" : "auto" }}
+            style={{
+              overflow: isMinimalRoute ? "hidden" : "auto",
+              marginTop: "5rem", // Added margin-top
+            }}
             transition={{
               duration: 0.1, // Reduce duration for quicker transitions
               ease: "linear",
@@ -255,36 +262,35 @@ export const ExpandableCards = () => {
               paddingTop: "20px", // Optional additional spacing
             }}
           >
-<motion.div
-  ref={cardRef}
-  layoutId={`card-${activeCard.title}`}
-  className="p-6 max-w-lg w-full relative"
-  style={{
-    maxWidth: isMinimalRoute ? "67.5vw" : "45vw", // Adjust width dynamically
-    width: "90%", // Ensure responsiveness for smaller screens
-    maxHeight: "56.25vh", // Restrict height to fit the viewport
-    borderRadius: "36px",
-    border: "4px solid rgb(255, 255, 255)",
-    boxShadow: "0 8px 20px rgba(0, 0, 0, 0.2)",
-    background: activeCard.gradientExpanded,
-    overflow: "hidden", // Prevent internal scrolling
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-  }}
->
-
-
+            <motion.div
+              ref={cardRef}
+              layoutId={`card-${activeCard.title}`}
+              className="p-6 max-w-lg w-full relative"
+              style={{
+                maxWidth: isMinimalRoute ? "67.5vw" : "50vw", // Adjust width dynamically
+                width: "90%", // Ensure responsiveness for smaller screens
+                maxHeight: "75vh", // Increased height to fit content and buttons
+                borderRadius: "36px",
+                border: "4px solid rgb(255, 255, 255)",
+                boxShadow: "0 8px 20px rgba(0, 0, 0, 0.2)",
+                background: activeCard.gradientExpanded,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "space-between", // Ensures proper spacing between elements
+                padding: "1rem",
+              }}
+            >
               {/* Expanded Image */}
               <motion.img
                 layoutId={`image-${activeCard.title}`}
                 src={activeCard.imgSrc}
                 alt={activeCard.title}
-                className="w-full h-64 rounded-lg object-cover"
+                className="w-full h-72 rounded-lg object-cover"
                 style={{
                   border: "2px solid rgb(58, 58, 58)",
-                  borderRadius: "36px", // Rounded corners
+                  borderRadius: "36px",
+                  marginBottom: "1rem",
                 }}
               />
 
@@ -298,12 +304,12 @@ export const ExpandableCards = () => {
                   borderRadius: "24px",
                   border: "2px solid rgb(58, 58, 58)",
                   padding: "1rem",
-                  marginTop: "0.5rem", // Small gap between the image and container
                   display: "flex",
                   flexDirection: "column",
-                  gap: "0.5rem", // Ensures uniform spacing between elements
-                  maxHeight: "200px", // Height constraint to ensure only content scrolls
-                  paddingRight: "8px", // Space for scrollbar
+                  gap: "0.5rem",
+                  maxHeight: "30vh", // Adjusted to fit more content
+                  overflowY: "auto", // Allow scrolling for overflowing content
+                  paddingRight: "8px",
                 }}
               >
                 {/* Title */}
@@ -311,74 +317,36 @@ export const ExpandableCards = () => {
                   layoutId={`title-${activeCard.title}`}
                   className="text-xl font-bold text-gray-900 dark:text-black"
                   style={{
-                    margin: 0, // Remove unwanted top/bottom margins
+                    margin: 0,
                   }}
                 >
                   {activeCard.title}
                 </motion.h3>
-
-                {/* Description */}
                 <motion.p
                   layoutId={`description-${activeCard.description}`}
                   className="text-sm font-bold text-gray-700 dark:text-darkgray-400"
                   style={{
-                    margin: 0, // Remove unwanted top/bottom margins
+                    margin: 0,
                   }}
                 >
                   {activeCard.description}
                 </motion.p>
-
-                {/* Scrollable Content */}
                 <div
                   className={`overflow-y-auto h-[200px] pr-4 relative ${styles.customScrollbar}`}
                   ref={scrollContainer}
                   style={{
-                    maxHeight: "200px", // Adjust this as needed to match the height from AnimatedCards.js
-                    paddingRight: "8px", // Ensures space for the scrollbar
+                    maxHeight: "150px",
+                    paddingRight: "8px",
                   }}
                 >
                   <p className="text-sm" style={{ color: "black" }}>
                     {activeCard.content}
                   </p>
                 </div>
-
-                {/* Scroll Buttons */}
-                {isScrollable && (
-                  <div className="absolute top-0 right-2 flex flex-col justify-between h-full">
-                    <button
-                      className="h-8 w-8 rounded-full text-cyan flex items-center justify-center"
-                      onClick={() =>
-                        scrollContainer.current.scrollBy({
-                          top: -30,
-                          behavior: "smooth",
-                        })
-                      }
-                      style={{
-                        marginTop: "2.5rem", // Space between the top edge and the up button
-                      }}
-                    >
-                      <IconArrowBigUpLinesFilled className="h-5 w-5" />
-                    </button>
-                    <button
-                      className="h-8 w-8 rounded-full text-cyan flex items-center justify-center"
-                      onClick={() =>
-                        scrollContainer.current.scrollBy({
-                          top: 30,
-                          behavior: "smooth",
-                        })
-                      }
-                      style={{
-                        marginBottom: "1.5rem", // Space below the down button
-                      }}
-                    >
-                      <IconArrowBigDownLinesFilled className="h-5 w-5" />
-                    </button>
-                  </div>
-                )}
               </div>
 
               {/* Buttons Container */}
-              <div className="mt-6 flex justify-between">
+              <div className="mt-4 flex justify-between w-full">
                 {/* Visit Website Button */}
                 <motion.a
                   href={activeCard.link}
@@ -386,9 +354,11 @@ export const ExpandableCards = () => {
                   rel="noopener noreferrer"
                   className="bg-blue-500 text-white text-sm font-semibold rounded-full px-4 py-2 hover:bg-orange-500 transition-all duration-300"
                   style={{
-                    width: "calc(50% - 1rem)", // Ensures equal button sizes with a gap
+                    width: "calc(50% - 1rem)",
                     textAlign: "center",
                     border: "2px solid rgb(255, 255, 255)",
+                    whiteSpace: "nowrap", // Ensures text stays on a single line
+                    textDecoration: "none"
                   }}
                 >
                   Visit Website
@@ -399,9 +369,11 @@ export const ExpandableCards = () => {
                   onClick={() => setActiveCard(null)}
                   className="bg-red-500 text-white text-sm font-semibold rounded-full px-4 py-2 hover:bg-orange-500 transition-all duration-300"
                   style={{
-                    width: "calc(50% - 1rem)", // Ensures equal button sizes with a gap
+                    width: "calc(50% - 1rem)",
                     textAlign: "center",
                     border: "2px solid rgb(255, 255, 255)",
+                    whiteSpace: "nowrap", // Ensures text stays on a single line
+                    textDecoration: "none"
                   }}
                 >
                   Close

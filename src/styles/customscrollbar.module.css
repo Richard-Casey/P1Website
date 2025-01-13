@@ -1,5 +1,5 @@
 .customScrollbar {
-    scrollbar-width: thin; /* Firefox */
+    scrollbar-width:thin; /* Firefox */
     scrollbar-color: #0196aa transparent; /* Firefox */
   
     /* Webkit Scrollbar */

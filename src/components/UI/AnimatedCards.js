@@ -99,8 +99,10 @@ export const AnimatedCards = () => {
 
   return (
     <div
-      className="relative w-full max-w-6xl mx-auto py-6 rounded-3xl shadow-lg"
+      className="relative w-full mx-auto py-6 rounded-3xl shadow-lg"
       style={{
+        maxWidth: "800px", // Set a maximum width
+        margin: "0 auto", // Center align
         backdropFilter: "blur(16px) saturate(180%)",
         WebkitBackdropFilter: "blur(16px) saturate(180%)",
         backgroundColor: "rgba(17, 25, 40, 0.75)",
@@ -216,6 +218,7 @@ export const AnimatedCards = () => {
                   {resources[activeIndex].description}
                 </p>
               </div>
+
 
               <a
                 href={resources[activeIndex].link}

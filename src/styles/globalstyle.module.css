@@ -111,6 +111,16 @@ body, html {
     text-align: left;
   }
 
+  .expanded-card {
+    width: 90%; /* Responsive width */
+    max-width: 800px;
+    aspect-ratio: 16 / 9; /* Maintain consistent aspect ratio */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+
 
 
   
