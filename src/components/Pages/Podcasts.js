@@ -361,21 +361,22 @@ const PodcastEpisodes = ({ episodes }) => {
               boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
               overflow: "hidden", // Ensure content doesn’t overflow
               position: "relative", // For positioning the button
+              maxWidth: "calc(100% - 6rem)", 
             }}
             onClick={() =>
-                setActiveEpisode(activeEpisode === index ? null : index)
-              } // Toggle expansion
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: -20, opacity: 0 }}
-              transition={{
-                type: "spring", // Adds bounce effect
-                damping: 20,
-                stiffness: 120,
-                delay: index * 0.1, // Stagger animation for each card
-              }}
-            >
-              {/* Thumbnail */}
+              setActiveEpisode(activeEpisode === index ? null : index)
+            } // Toggle expansion
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -20, opacity: 0 }}
+            transition={{
+              type: "spring", // Adds bounce effect
+              damping: 20,
+              stiffness: 120,
+              delay: index * 0.1, // Stagger animation for each card
+            }}
+          >
+            {/* Thumbnail */}
             <img
               src={episode.thumbnail}
               alt={episode.title}
@@ -386,14 +387,25 @@ const PodcastEpisodes = ({ episodes }) => {
               }}
             />
 
- {/* Text Content */}
- <div className="flex-1 flex flex-col">
-              <h4
-                className="text-lg font-bold text-black"
-                style={{
-                  marginBottom: "0.5rem",
-                }}
-              >
+            {/* Text Content */}
+            <div
+  className="flex-1 flex flex-col"
+  style={{
+    minWidth: 0,
+    paddingRight: "6rem", // Add padding equal to the width of the button + some buffer
+  }}
+>
+  <h4
+    className="text-lg font-bold text-black"
+    style={{
+      marginBottom: "0.5rem",
+      marginRight: "6rem",
+      wordWrap: "break-word",
+      overflow: "hidden",
+      whiteSpace: "normal",
+      textOverflow: "ellipsis", // Optional if you want truncation
+    }}
+  >
                 {episode.title}
               </h4>
 
@@ -403,7 +415,7 @@ const PodcastEpisodes = ({ episodes }) => {
                 {episode.duration}
               </p>
 
-                {/* Expandable Content */}
+              {/* Expandable Content */}
               <AnimatePresence>
                 {activeEpisode === index && (
                   <motion.div
@@ -432,13 +444,13 @@ const PodcastEpisodes = ({ episodes }) => {
               rel="noopener noreferrer"
               className="bg-green-600 text-white text-sm font-semibold rounded-full px-4 py-2 flex items-center gap-2 hover:bg-green-700 transition-all duration-300"
               style={{
-                position: "absolute", // Keep the button fixed
-                right: "1rem", // Align to the right of the card
-                top: "50%", // Center vertically
-                transform: "translateY(-50%)", // Adjust for centering
-                textAlign: "center", 
+                position: "absolute", // Position relative to the parent
+                right: "1rem", // Align to the right
+                top: "1.5rem", // Fixed position near the top of the card
+                textAlign: "center",
                 textDecoration: "none",
                 outline: "2px solid white",
+                zIndex: 10, // Ensure it's above other elements
               }}
             >
               <IconBrandSpotifyFilled className="h-5 w-5 text-white" />
@@ -446,7 +458,7 @@ const PodcastEpisodes = ({ episodes }) => {
             </a>
           </motion.div>
 
-           {/* Divider */}
+          {/* Divider */}
           {index < episodes.length - 1 && (
             <div
               className="w-[80%]"
