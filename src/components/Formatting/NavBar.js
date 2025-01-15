@@ -123,9 +123,9 @@ const NavBar = ({ onNavigate }) => {
           <div className={styles.navItemWrapper}>
             <button
               className={styles.navLink}
-              onClick={() => onNavigate("youtubeChannels")}
+              onClick={() => (window.location.href = "/Website/#/youtube")}
             >
-              YouTube Channels
+              Youtube Channels
             </button>
           </div>
         </li>
