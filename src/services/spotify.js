@@ -35,17 +35,28 @@ export const getPodcastDetails = async (showId) => {
   return response.data; // Includes description, external_urls, etc.
 };
 
-// Fetch Podcast Episodes by Show ID
+// Fetch Podcast Episodes by Show ID with Pagination
 export const getPodcastEpisodes = async (showId) => {
   const token = await getAccessToken();
-  const response = await axios.get(`${BASE_URL}/shows/${showId}/episodes`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    params: {
-      market: "US", // Use your preferred market
-      limit: 50, // Fetch up to 50 episodes
-    },
-  });
-  return response.data.items;
+  let allEpisodes = [];
+  let nextPage = `${BASE_URL}/shows/${showId}/episodes`;
+  let params = {
+    market: "GB", // Set the market to Great Britain
+    limit: 50, // Fetch up to 50 episodes per request
+  };
+
+  while (nextPage) {
+    const response = await axios.get(nextPage, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      params,
+    });
+
+    allEpisodes = [...allEpisodes, ...response.data.items];
+    nextPage = response.data.next; // Spotify API provides a `next` URL if more data is available
+  }
+
+  return allEpisodes;
 };
+

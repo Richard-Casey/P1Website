@@ -340,137 +340,337 @@ const PodcastHeader = ({ podcasts, onSelect }) => {
 // DYNAMICALLY ADDED ENTRIES SECTION
 const PodcastEpisodes = ({ episodes }) => {
   const [activeEpisode, setActiveEpisode] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [episodesPerPage] = useState(10); // Number of episodes per page
+  const [sortType, setSortType] = useState("newest"); // Default sorting by newest date
+  const [isLoading, setIsLoading] = useState(false); // Track loading state
+
+  const totalPages = Math.ceil(episodes.length / episodesPerPage);
+
+  const handlePageChange = (pageNumber) => {
+    setIsLoading(true);
+    setTimeout(() => {
+      setCurrentPage(pageNumber);
+      setActiveEpisode(null); // Collapse all entries on page change
+      setIsLoading(false);
+    }, 500); // Simulate a short delay
+  };
+
+  const handleSortChange = (sort) => {
+    setSortType(sort);
+    setCurrentPage(1); // Reset to the first page
+    setActiveEpisode(null); // Collapse all entries
+  };
+
+  const sortEpisodes = () => {
+    const sortedEpisodes = [...episodes];
+    switch (sortType) {
+      case "newest":
+        return sortedEpisodes.sort(
+          (a, b) => new Date(b.date) - new Date(a.date)
+        );
+      case "oldest":
+        return sortedEpisodes.sort(
+          (a, b) => new Date(a.date) - new Date(b.date)
+        );
+      case "longest":
+        return sortedEpisodes.sort((a, b) =>
+          b.duration.localeCompare(a.duration)
+        );
+      case "shortest":
+        return sortedEpisodes.sort((a, b) =>
+          a.duration.localeCompare(b.duration)
+        );
+      default:
+        return sortedEpisodes;
+    }
+  };
+
+  const paginatedEpisodes = sortEpisodes().slice(
+    (currentPage - 1) * episodesPerPage,
+    currentPage * episodesPerPage
+  );
+
+  const renderPagination = () => {
+    const pages = [];
+    const addEllipsis = () =>
+      pages.push(<span key={`ellipsis-${pages.length}`}>&hellip;</span>);
+
+    if (currentPage > 1) {
+      pages.push(
+        <button
+          key="prev"
+          onClick={() => handlePageChange(currentPage - 1)}
+          style={buttonStyle}
+        >
+          Previous
+        </button>
+      );
+    }
+
+    if (currentPage > 2) {
+      pages.push(
+        <button
+          key="first-hidden-left"
+          onClick={() => handlePageChange(Math.max(currentPage - 3, 1))}
+          style={buttonStyle}
+        >
+          &laquo;
+        </button>
+      );
+    }
+
+    if (currentPage > 2) addEllipsis();
+
+    if (currentPage > 1) {
+      pages.push(
+        <button
+          key={currentPage - 1}
+          onClick={() => handlePageChange(currentPage - 1)}
+          style={buttonStyle}
+        >
+          {currentPage - 1}
+        </button>
+      );
+    }
+
+    pages.push(
+      <span
+        key="current"
+        style={{
+          ...buttonStyle,
+          fontWeight: "bold",
+          fontSize: "1.2em",
+          cursor: "default",
+        }}
+      >
+        {currentPage}
+      </span>
+    );
+
+    if (currentPage < totalPages) {
+      pages.push(
+        <button
+          key={currentPage + 1}
+          onClick={() => handlePageChange(currentPage + 1)}
+          style={buttonStyle}
+        >
+          {currentPage + 1}
+        </button>
+      );
+    }
+
+    if (currentPage < totalPages - 1) addEllipsis();
+
+    if (currentPage < totalPages - 1) {
+      pages.push(
+        <button
+          key="last-hidden-right"
+          onClick={() =>
+            handlePageChange(Math.min(currentPage + 3, totalPages))
+          }
+          style={buttonStyle}
+        >
+          &raquo;
+        </button>
+      );
+    }
+
+    if (currentPage < totalPages) {
+      pages.push(
+        <button
+          key="next"
+          onClick={() => handlePageChange(currentPage + 1)}
+          style={buttonStyle}
+        >
+          Next
+        </button>
+      );
+    }
+
+    return pages;
+  };
+
+  const buttonStyle = {
+    padding: "0.5rem 1rem",
+    borderRadius: "8px",
+    border: "1px solid #d3d3d3",
+    backgroundColor: "#03969b",
+    color: "#fff",
+    margin: "0 0.25rem",
+    cursor: "pointer",
+  };
 
   return (
     <div
       className="w-full flex flex-col items-center gap-1 py-4"
       style={{
-        backgroundColor: "#001F3F", // Navy blue background for the section
-        border: "3px solid #000000", // Light grey border
+        backgroundColor: "#001F3F",
+        border: "3px solid #000000",
         borderRadius: "36px",
       }}
     >
-      {episodes.map((episode, index) => (
-        <React.Fragment key={index}>
-          <motion.div
-            className={`flex items-center p-4 gap-4 w-[80%] cursor-pointer`}
-            style={{
-              backgroundColor: "#f4f4f4", // Mellow white card background
-              border: "2px solid #d3d3d3", // Light grey border
-              borderRadius: "16px",
-              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-              overflow: "hidden", // Ensure content doesn’t overflow
-              position: "relative", // For positioning the button
-              maxWidth: "calc(100% - 6rem)", 
-            }}
-            onClick={() =>
-              setActiveEpisode(activeEpisode === index ? null : index)
-            } // Toggle expansion
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: -20, opacity: 0 }}
-            transition={{
-              type: "spring", // Adds bounce effect
-              damping: 20,
-              stiffness: 120,
-              delay: index * 0.1, // Stagger animation for each card
-            }}
-          >
-            {/* Thumbnail */}
-            <img
-              src={episode.thumbnail}
-              alt={episode.title}
-              className="w-20 h-20 object-cover rounded-lg"
+      {/* Display Loading Indicator */}
+      {isLoading && (
+        <div style={{ color: "#fff", marginBottom: "1rem" }}>
+          Fetching episodes from Spotify...
+        </div>
+      )}
+
+      {/* Sorting Controls */}
+      <div className="sorting-controls" style={{ marginBottom: "1rem" }}>
+        <label
+          htmlFor="sort-select"
+          style={{ marginRight: "0.5rem", color: "#fff", fontWeight: "600" }}
+        >
+          Sort by:
+        </label>
+        <select
+          id="sort-select"
+          onChange={(e) => handleSortChange(e.target.value)}
+          style={{
+            padding: "0.5rem",
+            borderRadius: "8px",
+            fontWeight: "600",
+            border: "1px solid #d3d3d3",
+          }}
+        >
+          <option value="newest">Date (Newest First)</option>
+          <option value="oldest">Date (Oldest First)</option>
+          <option value="longest">Duration (Longest to Shortest)</option>
+          <option value="shortest">Duration (Shortest to Longest)</option>
+        </select>
+      </div>
+
+      {/* Display Current Episodes */}
+      {!isLoading &&
+        paginatedEpisodes.map((episode, index) => (
+          <React.Fragment key={index}>
+            <motion.div
+              className={`flex items-center p-4 gap-4 w-[80%] cursor-pointer`}
               style={{
-                border: "2px solid #d3d3d3",
-                flexShrink: 0, // Prevent shrinking
+                backgroundColor: "#f4f4f4", // Mellow white card background
+                border: "2px solid #d3d3d3", // Light grey border
+                borderRadius: "16px",
+                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                overflow: "hidden", // Ensure content doesn’t overflow
+                position: "relative", // For positioning the button
               }}
-            />
-
-            {/* Text Content */}
-            <div
-  className="flex-1 flex flex-col"
-  style={{
-    minWidth: 0,
-    paddingRight: "6rem", // Add padding equal to the width of the button + some buffer
-  }}
->
-  <h4
-    className="text-lg font-bold text-black"
-    style={{
-      marginBottom: "0.5rem",
-      marginRight: "6rem",
-      wordWrap: "break-word",
-      overflow: "hidden",
-      whiteSpace: "normal",
-      textOverflow: "ellipsis", // Optional if you want truncation
-    }}
-  >
-                {episode.title}
-              </h4>
-
-              {/* Date and Duration */}
-              <p className="text-sm text-gray-700">
-                {new Date(episode.date).toLocaleDateString("en-GB")} |{" "}
-                {episode.duration}
-              </p>
-
-              {/* Expandable Content */}
-              <AnimatePresence>
-                {activeEpisode === index && (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className={`mt-2 overflow-y-auto ${styles.customScrollbar}`}
-                    style={{
-                      maxHeight: "8rem", // Add a scrollable area for longer descriptions
-                    }}
-                  >
-                    <p className="text-sm text-gray-700">
-                      {episode.description}
-                    </p>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-
-            {/* Listen on Spotify Button */}
-            <a
-              href={episode.spotifyUrl} // Link to the Spotify episode
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-green-600 text-white text-sm font-semibold rounded-full px-4 py-2 flex items-center gap-2 hover:bg-green-700 transition-all duration-300"
-              style={{
-                position: "absolute", // Position relative to the parent
-                right: "1rem", // Align to the right
-                top: "1.5rem", // Fixed position near the top of the card
-                textAlign: "center",
-                textDecoration: "none",
-                outline: "2px solid white",
-                zIndex: 10, // Ensure it's above other elements
-              }}
+              onClick={() =>
+                setActiveEpisode(activeEpisode === index ? null : index)
+              } // Toggle expansion
             >
-              <IconBrandSpotifyFilled className="h-5 w-5 text-white" />
-              Listen on Spotify
-            </a>
-          </motion.div>
+              {/* Thumbnail */}
+              <img
+                src={episode.thumbnail}
+                alt={episode.title}
+                className="w-20 h-20 object-cover rounded-lg"
+                style={{
+                  border: "2px solid #d3d3d3",
+                  flexShrink: 0, // Prevent shrinking
+                }}
+              />
 
-          {/* Divider */}
-          {index < episodes.length - 1 && (
-            <div
-              className="w-[80%]"
-              style={{
-                borderBottom: "1px solid #d3d3d3",
-                borderTop: "1px solid #d3d3d3",
-                margin: "12px 0", // Spacing between entries
-              }}
-            />
-          )}
-        </React.Fragment>
-      ))}
+              {/* Text Content */}
+              <div
+                className="flex-1 flex flex-col"
+                style={{
+                  minWidth: 0,
+                  paddingRight: "6rem", // Add padding equal to the width of the button + some buffer
+                }}
+              >
+                <h4
+                  className="text-lg font-bold text-black"
+                  style={{
+                    marginBottom: "0.5rem",
+                    marginRight: "6rem",
+                    wordWrap: "break-word",
+                    overflow: "hidden",
+                    whiteSpace: "normal",
+                    textOverflow: "ellipsis", // Optional if you want truncation
+                  }}
+                >
+                  {/* Episode Details */}
+                  {episode.title}
+                </h4>
+
+                {/* Date and Duration */}
+                <p className="text-sm text-gray-700">
+                  {new Date(episode.date).toLocaleDateString("en-GB")} |{" "}
+                  {episode.duration}
+                </p>
+
+                {/* Expandable Content */}
+                <AnimatePresence>
+                  {activeEpisode === index && (
+                    <motion.div
+                      key={index}
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.3 }}
+                      className={`mt-2 overflow-y-auto ${styles.customScrollbar}`}
+                      style={{
+                        maxHeight: "8rem", // Add a scrollable area for longer descriptions
+                      }}
+                    >
+                      <p className="text-sm text-gray-700">
+                        {episode.description}
+                      </p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              {/* Listen on Spotify Button */}
+              <a
+                href={episode.spotifyUrl} // Link to the Spotify episode
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-green-600 text-white text-sm font-semibold rounded-full px-4 py-2 flex items-center gap-2 hover:bg-green-700 transition-all duration-300"
+                style={{
+                  position: "absolute", // Position relative to the parent
+                  right: "1rem", // Align to the right
+                  top: "1.5rem", // Fixed position near the top of the card
+                  textAlign: "center",
+                  textDecoration: "none",
+                  outline: "2px solid white",
+                  zIndex: 10, // Ensure it's above other elements
+                }}
+              >
+                <IconBrandSpotifyFilled className="h-5 w-5 text-white" />
+                Listen on Spotify
+              </a>
+            </motion.div>
+
+            {/* Divider */}
+            {index < episodes.length - 1 && (
+              <div
+                className="w-[80%]"
+                style={{
+                  borderBottom: "1px solid #d3d3d3",
+                  borderTop: "1px solid #d3d3d3",
+                  margin: "12px 0", // Spacing between entries
+                }}
+              />
+            )}
+          </React.Fragment>
+        ))}
+      {/* Pagination Controls */}
+      <div
+        className="pagination"
+        style={{
+          marginTop: "1rem",
+          display: "flex",
+          gap: "0.5rem",
+          flexWrap: "wrap",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        {renderPagination()}
+      
+      </div>
     </div>
   );
 };
