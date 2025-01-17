@@ -1,5 +1,5 @@
 {
-  "name": "The Other-Half Hub - Parents 1st ",
+  "name": "the-other-half-hub-parents1st",
   "version": "1.0.0",
   "private": true,
   "description": "Support for Father & Partners",
@@ -14,11 +14,13 @@
     "clsx": "^2.1.1",
     "framer-motion": "^11.12.0",
     "granim": "^2.0.0",
+    "leaflet": "^1.9.4",
     "lottie-react": "^2.4.0",
     "next": "^15.0.3",
     "query-string": "^9.1.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-leaflet": "^4.2.1",
     "react-router-dom": "^6.28.0",
     "react-scripts": "^5.0.1",
     "styled-components": "^6.1.13",
@@ -54,6 +56,7 @@
   "devDependencies": {
     "autoprefixer": "^10.4.20",
     "gh-pages": "^6.2.0",
+    "html-webpack-plugin": "^5.6.3",
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.15"
   }

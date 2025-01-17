@@ -1,0 +1,17 @@
+.groups-page {
+    padding: 1rem;
+  }
+  
+  .search-container input {
+    width: 200px;
+  }
+  
+  .nearby-groups {
+    margin-top: 2rem;
+  }
+  
+  .logoContainer img {
+    max-width: 150px; /* Adjust the size as needed */
+    height: auto;
+  }
+  

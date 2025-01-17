@@ -15,6 +15,7 @@ import PeerSupport from "./components/Pages/PeerSupport";
 import LGBTQIA from "./components/Pages/LGBTQIA";
 import Podcasts from "./components/Pages/Podcasts";
 import Youtube from "./components/Pages/Youtube";
+import Groups from "./components/Pages/Groups";
 import "./App.css";
 import "./index.css";
 
@@ -42,6 +43,7 @@ const App = () => {
           <Route path="/lgbtqia" element={<LGBTQIA isMinimal={false} />} />
           <Route path="/podcasts" element={<Podcasts isMinimal={false} />} />
           <Route path="/youtube" element={<Youtube isMinimal={false} />} />
+          <Route path="/groups" element={<Groups isMinimal={false} />} />
 
           {/* Minimal Routes */}
           <Route path="/minimal-form" element={<WellbeingForm isMinimal={true} />} />
@@ -52,6 +54,7 @@ const App = () => {
           <Route path="/minimal-lgbtqia" element={<LGBTQIA isMinimal={true} />} />
           <Route path="/minimal-podcasts" element={<Podcasts isMinimal={true} />} />
           <Route path="/minimal-youtube" element={<Youtube isMinimal={true} />} />
+          <Route path="/minimal-groups" element={<Groups isMinimal={true} />} />
 
           {/* 404 Fallback */}
           <Route path="*" element={<div>Page Not Found</div>} />

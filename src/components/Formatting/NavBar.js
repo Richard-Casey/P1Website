@@ -133,12 +133,12 @@ const NavBar = ({ onNavigate }) => {
           <div className={styles.navItemWrapper}>
             <button
               className={styles.navLink}
-              onClick={() => onNavigate("groups")}
+              onClick={() => (window.location.href = "/Website/#/groups")}
             >
               Groups
             </button>
           </div>
-        </li>
+          </li>
         <li className={styles.navItem}>
           <div className={styles.navItemWrapper}>
             <button
