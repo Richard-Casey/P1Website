@@ -21,7 +21,7 @@ function Hero() {
 
       {/* Hero Logo */}
       <img
-        src={`${process.env.PUBLIC_URL}/images/Logos/TOHHLogo.png`}
+        src={`${process.env.PUBLIC_URL}/images/P1Logos/TOHHLogo.png`}
         alt="The Other-Half Hub logo"
         className={styles.heroLogo}
       />

@@ -10,7 +10,7 @@ function Header() {
       <div className={styles.leftToolbar}>
         <a href="https://parents1st.org.uk/">
           <img
-            src={`${process.env.PUBLIC_URL}/images/Logos/p1Logo.png`}
+            src={`${process.env.PUBLIC_URL}/images/P1Logos/p1Logo.png`}
             alt="Parents 1st Logo"
             className={styles.headerLogo}
           />

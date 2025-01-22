@@ -21,6 +21,7 @@ const airtableFieldIDs = {
   town: "fldzM3TmktMvZWMvE", // Add Town field ID
   localAuthority: "fldgtLzx0HcGJ7nOl", // Add Local Authority field ID
   location: "fldTQc0voyHuyXJeZ", // Add Location field ID
+  userNumber: "fld1nwuJ9CO1bacYc", // Unique User ID number generator field
 };
 
 const fetchPostcodeDetails = async (postcode) => {
@@ -99,6 +100,37 @@ const updatePostcodeDetails = async (
 const airtableURL =
   "https://api.airtable.com/v0/appESMQNwIowYCCld/Wellbeing%20Review%20request%20form";
 
+  const fetchExistingUserNumbers = async () => {
+    try {
+      const response = await fetch(airtableURL, {
+        headers: {
+          Authorization: `Bearer YOUR_AIRTABLE_API_KEY`, // Replace with your Airtable API key
+        },
+      });
+      const data = await response.json();
+      return data.records.map((record) => record.fields["User Number"] || "");
+    } catch (error) {
+      console.error("Error fetching existing user numbers:", error);
+      return [];
+    }
+  };
+
+  const generateUserNumber = async (name) => {
+    const existingNumbers = await fetchExistingUserNumbers();
+    const firstInitial = name.charAt(0).toUpperCase();
+    const lastInitial =
+      name.charAt(name.lastIndexOf(" ") + 1)?.toUpperCase() || "X";
+    let userNumber;
+  
+    do {
+      const randomNumber = Math.floor(1000 + Math.random() * 9000);
+      userNumber = `#${firstInitial}${randomNumber}${lastInitial}`;
+    } while (existingNumbers.includes(userNumber));
+  
+    return userNumber;
+  };
+  
+
 const WellbeingForm = ({ isMinimal }) => {
   // State variables
   const [eligibility, setEligibility] = useState(false); // Declare inside the component
@@ -106,6 +138,7 @@ const WellbeingForm = ({ isMinimal }) => {
   const [selectedMethods, setSelectedMethods] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
   const [otherContact, setOtherContact] = useState(""); // State for 'Other' contact input
+  const [userNumber, setUserNumber] = useState("");
   const [success, setSuccess] = useState(false); // State for success message
   const [localHub, setLocalHub] = useState(""); // State for Local Hub
   const [town, setTown] = useState("");
@@ -125,6 +158,8 @@ const WellbeingForm = ({ isMinimal }) => {
       document.getElementById("eligibility")?.focus(); // Focus on the checkbox
     }
   };
+
+
 
   // Handle postcode changes
   const handlePostcodeChange = async () => {
@@ -150,14 +185,23 @@ const WellbeingForm = ({ isMinimal }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // Fetch and validate postcode
-    // Validate and re-fetch postcode details
-    const postcode = document.querySelector("#postcode")?.value.trim();
-    if (!postcode) {
-      setErrorMessage("Postcode is required.");
-      document.querySelector("#postcode")?.focus();
-      return;
-    }
+  // Get the values of name, email, and postcode directly from the input fields
+  const name = document.querySelector("#name")?.value.trim();
+  const email = document.querySelector("#email")?.value.trim();
+  const postcode = document.querySelector("#postcode")?.value.trim();
+
+  // Ensure required fields are filled out
+  if (!name || !email || !postcode) {
+    setErrorMessage("Please fill out all required fields.");
+    return;
+  }
+
+  try {
+    // Generate a unique User Number
+    const generatedUserNumber = await generateUserNumber(name);
+    setUserNumber(generatedUserNumber);
+
+    console.log("Generated User Number:", generatedUserNumber);
 
     // Use updated regex and format
     const postcodeRegex = /^[A-Z]{1,2}\d{1,2}[A-Z]?\s?\d[A-Z]{2}$/i;
@@ -295,6 +339,8 @@ const WellbeingForm = ({ isMinimal }) => {
       );
     }
 
+    
+
     // Prepare data for Airtable submission
     const airtableData = {
       records: [
@@ -318,6 +364,8 @@ const WellbeingForm = ({ isMinimal }) => {
             [airtableFieldIDs.preferredContactMethods]: selectedMethods,
             [airtableFieldIDs.otherContactMethod]: otherContact || null,
             [airtableFieldIDs.consent]: formValues.consent,
+            [airtableFieldIDs.userNumber]: generatedUserNumber,
+            [airtableFieldIDs.confirmEligibility]: true,
           },
         },
       ],
@@ -356,7 +404,13 @@ const WellbeingForm = ({ isMinimal }) => {
         "An error occurred while submitting the form. Please try again."
       );
     }
-  };
+  } catch (error) {
+    console.error("Error during form submission:", error);
+    setErrorMessage(
+      "An unexpected error occurred during form submission. Please try again."
+    );
+  }
+};
 
   // Function to render success message
   const renderSuccessMessage = () => (
