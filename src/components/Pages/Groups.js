@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { MapContainer, TileLayer, Marker, Popup, GeoJSON } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
-import axios from "axios"; // For Postcodes.io
+import axios from "axios";
 import styles from "../../styles/groupstyle.module.css";
 import globalStyles from "../../styles/globalstyle.module.css";
-import { useRef } from "react";
 import usePopupWidth from "../../hooks/usePopupWidth";
 
 // Fix Leaflet icon paths
@@ -16,27 +15,28 @@ L.Icon.Default.mergeOptions({
   shadowUrl: require("leaflet/dist/images/marker-shadow.png"),
 });
 
-// Custom icon for markers
 const customIcon = new L.Icon({
   iconUrl: "https://cdn-icons-png.flaticon.com/512/252/252025.png",
   iconSize: [32, 32],
 });
 
 const Groups = () => {
-  const mapRef = useRef(null); // Reference to the map instance
-  const popupWidth = 450; // Define the desired popup width
-  const popupRef = usePopupWidth(popupWidth); // Use the custom hook
-  const [geoJsonData, setGeoJsonData] = useState(null); // Holds the GeoJSON data
-  const [postcode, setPostcode] = useState(""); // Holds the postcode input
-  const [userLocation, setUserLocation] = useState(null); // User's location
-  const [groups, setGroups] = useState([]); // All groups
-  const [nearbyGroups, setNearbyGroups] = useState([]); // Closest groups
+  const mapRef = useRef(null);
+  const popupWidth = 450;
+  const popupRef = usePopupWidth(popupWidth);
+  const markerRefs = useRef({});
+  const [geoJsonData, setGeoJsonData] = useState(null);
+  const [postcode, setPostcode] = useState("");
+  const [userLocation, setUserLocation] = useState(null);
+  const [groups, setGroups] = useState([]);
+  const [nearbyGroups, setNearbyGroups] = useState([]);
+  const [showSearchResults, setShowSearchResults] = useState(false);
 
-  // Load GeoJSON data from the correct path
   useEffect(() => {
+    // Fetch GeoJSON
     const fetchGeoJSON = async () => {
       try {
-        const response = await fetch("/data/essex-boundaries.geojson"); // Update the path if needed
+        const response = await fetch("/data/essex-boundaries.geojson");
         if (!response.ok) throw new Error("Failed to load GeoJSON file");
         const data = await response.json();
         setGeoJsonData(data);
@@ -45,7 +45,7 @@ const Groups = () => {
       }
     };
     fetchGeoJSON();
-  }, []);
+  }, []); // Add this to close useEffect properly
 
   // Mock group data
   const mockGroups = [
@@ -70,7 +70,7 @@ const Groups = () => {
         "The Sanctuary Men's Wellbeing Hub offers a relaxed space for men to come together, socialise, and engage in activities like fixing things, painting, and discussing various topics — all while enjoying some tea! This group provides an opportunity to meet new friends and share experiences in a comfortable and friendly environment. It’s a great place for those looking for connection, conversation, and hands-on activities. They meet every Wednesday from 10:30 a.m. to 1:00 p.m.",
       address: "Greenland Grove Animal Sanctuary, St Osyth, CO16 8JE",
       image: `${process.env.PUBLIC_URL}/images/Groups/thesanctuary.png`,
-      website: "https://greenlandgrovesanctuary.co.uk/",  
+      website: "https://greenlandgrovesanctuary.co.uk/",
       email: "contact@andysmanclub.co.uk",
     },
     {
@@ -106,7 +106,8 @@ const Groups = () => {
         "Lincewood Primary School, Berry Ln, Langdon Hills, Basildon SS16 6AZ",
       image: `${process.env.PUBLIC_URL}/images/Groups/AndysManClub.png`,
       website: "https://andysmanclub.co.uk",
-      facebook: "https://www.facebook.com/people/Andys-Man-Club-Basildon/100083331752868/",
+      facebook:
+        "https://www.facebook.com/people/Andys-Man-Club-Basildon/100083331752868/",
     },
     {
       name: "Who Let The Dads Out?",
@@ -116,7 +117,8 @@ const Groups = () => {
         "Who Let The Dads Out? Groups are for fathers, father figures and their children – places where you can have fun, form friendships and find support. They meet on the first Saturday of the month at 08:30 - 10 a.m. Children 0-5 years.",
       address: "Emmanuel Church, Laindon Road, Billericay, Essex, CM12 9LD",
       image: `${process.env.PUBLIC_URL}/images/Groups/WLTDO.png`,
-      website: "https://www.billericaychurches.org/emmanuel/church-groups/who-let-the-dads-out.html",
+      website:
+        "https://www.billericaychurches.org/emmanuel/church-groups/who-let-the-dads-out.html",
       email: "tony.wallace@billericaychurches.org",
       contactNumber: "Tony Wallace 01268 710362",
       facebook: "https://www.facebook.com/EmmanuelChurchBillericay/",
@@ -151,7 +153,8 @@ const Groups = () => {
       address: "Greensward Academy, Greensward Lane, Hockley, SS5 5HG",
       image: `${process.env.PUBLIC_URL}/images/Groups/AndysManClub.png`,
       website: "https://andysmanclub.co.uk",
-      facebook: "https://www.facebook.com/people/Andys-Man-Club-Hockley/61563610064118/",
+      facebook:
+        "https://www.facebook.com/people/Andys-Man-Club-Hockley/61563610064118/",
     },
     {
       name: "Andy's Man Club - Southend-on-Sea",
@@ -162,7 +165,8 @@ const Groups = () => {
       address: "Writtle University Centre, Chelmsford",
       image: `${process.env.PUBLIC_URL}/images/Groups/AndysManClub.png`,
       website: "https://andysmanclub.co.uk",
-      facebook: "https://www.facebook.com/people/Andys-Man-Club-Southend-on-Sea/100067854443238/",
+      facebook:
+        "https://www.facebook.com/people/Andys-Man-Club-Southend-on-Sea/100067854443238/",
     },
     {
       name: "Who Let The Dads Out?",
@@ -172,10 +176,11 @@ const Groups = () => {
         "Who Let The Dads Out? Groups are for fathers, father figures and their children – places where you can have fun, form friendships and find support. They meet on the 1st Saturday of the month 08:30-10:30 a.m. Children 0-6 years.",
       address: "45 Fobbing Rd, Corringham, Stanford-le-Hope SS17 9BN",
       image: `${process.env.PUBLIC_URL}/images/Groups/WLTDO.png`,
-      website: "https://www.corringhamchurch.co.uk/clubs-groups/who-let-the-dads-out/",
+      website:
+        "https://www.corringhamchurch.co.uk/clubs-groups/who-let-the-dads-out/",
       facebook: "https://www.facebook.com/wltdocorringham",
       email: "chris@corringhamevangelical.co.uk",
-      contactNumber: "Chris Mayers 07809 758596"
+      contactNumber: "Chris Mayers 07809 758596",
     },
     {
       name: "Who Let The Dads Out?",
@@ -189,7 +194,7 @@ const Groups = () => {
       website: "https://www.salway.org/",
       facebook: "https://www.facebook.com/salwayec",
       email: "ann4salway@gmail.com",
-      contactNumber: "Ann Burgess 07802 821556"
+      contactNumber: "Ann Burgess 07802 821556",
     },
     {
       name: "Who Let The Dads Out?",
@@ -202,12 +207,12 @@ const Groups = () => {
       website: "https://www.asww.org.uk/kids",
       facebook: "https://www.facebook.com/WLTDOasww",
       email: "wltdo@asww.org.uk",
-      contactNumber: "Rob Santer 020 8504 0266"
+      contactNumber: "Rob Santer 020 8504 0266",
     },
   ];
 
   useEffect(() => {
-    setGroups(mockGroups); // Load mock data
+    setGroups(mockGroups.sort((a, b) => a.name.localeCompare(b.name))); // Sort alphabetically
   }, []);
 
   const handleSearch = async () => {
@@ -218,21 +223,20 @@ const Groups = () => {
       const { latitude, longitude } = response.data.result;
       setUserLocation({ lat: latitude, lng: longitude });
 
-      // Calculate distances and sort by closest
-      const sortedGroups = mockGroups
-        .map((group) => {
-          const distance = getDistance(
-            latitude,
-            longitude,
-            group.lat,
-            group.lng
-          );
-          return { ...group, distance };
-        })
+      const sortedGroups = groups
+        .map((group) => ({
+          ...group,
+          distance: getDistance(latitude, longitude, group.lat, group.lng),
+        }))
         .sort((a, b) => a.distance - b.distance)
         .slice(0, 5);
 
       setNearbyGroups(sortedGroups);
+      setShowSearchResults(true);
+
+      if (mapRef.current) {
+        mapRef.current.setView([latitude, longitude], 12, { animate: true });
+      }
     } catch (error) {
       console.error("Error fetching postcode data:", error);
       alert("Invalid postcode. Please try again.");
@@ -241,7 +245,7 @@ const Groups = () => {
 
   const getDistance = (lat1, lon1, lat2, lon2) => {
     const toRad = (value) => (value * Math.PI) / 180;
-    const R = 6371; // Earth's radius in km
+    const R = 6371;
     const dLat = toRad(lat2 - lat1);
     const dLon = toRad(lon2 - lon1);
     const a =
@@ -251,7 +255,7 @@ const Groups = () => {
         Math.sin(dLon / 2) *
         Math.sin(dLon / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return R * c; // Distance in km
+    return R * c;
   };
 
   // Style for Essex area
@@ -265,14 +269,14 @@ const Groups = () => {
     <div className={`${styles.groupsPage} ${globalStyles.container}`}>
       <h1 className={`${globalStyles.h1} text-center`}>Find a Support Group</h1>
       <div className={`${styles.searchContainer} flex justify-center my-4`}>
-      <input
-  type="text"
-  className="border-2 border-gray-300 rounded-lg p-2 mr-2"
-  placeholder="Enter postcode"
-  value={postcode}
-  onChange={(e) => setPostcode(e.target.value)}
-  onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-/>
+        <input
+          type="text"
+          className="border-2 border-gray-300 rounded-lg p-2 mr-2"
+          placeholder="Enter postcode"
+          value={postcode}
+          onChange={(e) => setPostcode(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+        />
         <button
           className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
           onClick={handleSearch}
@@ -280,122 +284,129 @@ const Groups = () => {
           Search
         </button>
       </div>
+
       <MapContainer
-  center={[51.735, 0.469]}
-  zoom={10}
-  style={{ height: "400px", width: "100%" }}
-  whenCreated={(map) => {
-    mapRef.current = map;
-  }}
->
+        center={[51.735, 0.469]}
+        zoom={10}
+        style={{ height: "400px", width: "100%" }}
+        whenCreated={(map) => {
+          mapRef.current = map;
+        }}
+      >
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         />
-        {geoJsonData && <GeoJSON data={geoJsonData} style={() => essexStyle} />}
-        {/* Add Markers */}
+        {geoJsonData && <GeoJSON data={geoJsonData} style={essexStyle} />}
         {groups.map((group, index) => (
-         <Marker
-         key={index}
-         position={[group.lat, group.lng]}
-         icon={customIcon}
-         eventHandlers={{
-          click: () => {
-            setNearbyGroups((prev) => {
-              // If the group isn't already in the list, add it
-              const updatedList = [group, ...prev.filter((item) => item.name !== group.name)];
-              return updatedList.length ? updatedList : [group];
-            });
-          },
-        }}
-        
-       >
-       
+          <Marker
+            key={index}
+            position={[group.lat, group.lng]}
+            icon={customIcon}
+            eventHandlers={{
+              click: () => {
+                setNearbyGroups((prev) => {
+                  const updatedList = [
+                    group,
+                    ...prev.filter((item) => item.name !== group.name),
+                  ];
+                  return updatedList.length ? updatedList : [group];
+                });
+              },
+            }}
+            ref={(ref) => {
+              markerRefs.current[group.name] = ref;
+            }}
+          >
             <Popup ref={popupRef} maxWidth={450} minWidth={450}>
-  <div className={styles["leaflet-popup-content"]}>
-    {/* Main content: Image and Information */}
-    <div className={styles["popup-main-content"]}>
-      <div className={styles["popup-image"]}>
-        <img
-          src={group.image}
-          alt={`${group.name} logo`}
-        />
-      </div>
-      <div className={styles["popup-text"]}>
-        <h3 className={styles["popupHeading"]}>{group.name}</h3>
-        <p className={styles["popupText"]}>{group.description}</p>
-        <p className={styles["popupAddress"]}>{group.address}</p>
-      </div>
-    </div>
-
-    {/* Footer: Contact Information */}
-    <div className={styles["popup-footer"]}>
-      {group.website && (
-        <a
-          href={group.website}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={styles["popup-footer-item"]}
-        >
-          🌐 <span>Website</span>
-        </a>
-      )}
-      {group.facebook && (
-        <a
-          href={group.facebook}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={styles["popup-footer-item"]}
-        >
-          <img
-            src={`${process.env.PUBLIC_URL}/images/icons/facebook-icon.png`}
-            alt="Facebook"
-          />
-          <span>Facebook</span>
-        </a>
-      )}
-      {group.contactNumber && (
-        <a href={`tel:${group.contactNumber}`} className={styles["popup-footer-item"]}>
-          📞 <span>{group.contactNumber}</span>
-        </a>
-      )}
-      {group.email && (
-        <a href={`mailto:${group.email}`} className={styles["popup-footer-item"]}>
-          ✉️ <span>Email</span>
-        </a>
-      )}
-    </div>
-  </div>
-</Popup>
+              <div className={styles["leaflet-popup-content"]}>
+                <div className={styles["popup-main-content"]}>
+                  <div className={styles["popup-image"]}>
+                    <img src={group.image} alt={`${group.name} logo`} />
+                  </div>
+                  <div className={styles["popup-text"]}>
+                    <h3 className={styles["popupHeading"]}>{group.name}</h3>
+                    <p className={styles["popupText"]}>{group.description}</p>
+                    <p className={styles["popupAddress"]}>{group.address}</p>
+                  </div>
+                </div>
+                <div className={styles["popup-footer"]}>
+                  {group.website && (
+                    <a
+                      href={group.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={styles["popup-footer-item"]}
+                    >
+                      🌐 <span>Website</span>
+                    </a>
+                  )}
+                  {group.facebook && (
+                    <a
+                      href={group.facebook}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={styles["popup-footer-item"]}
+                    >
+                      <img
+                        src={`${process.env.PUBLIC_URL}/images/icons/facebook-icon.png`}
+                        alt="Facebook"
+                      />
+                      <span>Facebook</span>
+                    </a>
+                  )}
+                  {group.contactNumber && (
+                    <a
+                      href={`tel:${group.contactNumber}`}
+                      className={styles["popup-footer-item"]}
+                    >
+                      📞 <span>{group.contactNumber}</span>
+                    </a>
+                  )}
+                  {group.email && (
+                    <a
+                      href={`mailto:${group.email}`}
+                      className={styles["popup-footer-item"]}
+                    >
+                      ✉️ <span>Email</span>
+                    </a>
+                  )}
+                </div>
+              </div>
+            </Popup>
           </Marker>
         ))}
       </MapContainer>
-      {userLocation && (
-        <div className={`${styles.nearbyGroups}`}>
-          <h2 className={`${globalStyles.h2} text-center mb-4`}>
-            Top 5 Closest Groups
-          </h2>
+
+      <div className="relative">
+        <div
+          className={`transition-all duration-500 ${
+            showSearchResults ? "w-1/2" : "w-full"
+          }`}
+          style={{
+            float: showSearchResults ? "left" : "none",
+            overflow: "hidden",
+          }}
+        >
+          <h2 className={`${globalStyles.h2} text-center`}>Groups</h2>
           <ul>
-            {nearbyGroups.map((group, index) => (
-             <li
-             key={index}
-             className="border p-4 rounded-lg mb-2 shadow-lg flex justify-between items-center"
-             onClick={() => {
-              if (mapRef.current) {
-                mapRef.current.setView([group.lat, group.lng], 15, { animate: true });
-              }
-            }}
-            
-           >
-           
+            {groups.map((group) => (
+              <li
+                key={group.name}
+                className="border p-4 rounded-lg mb-2 shadow-lg flex justify-between items-center cursor-pointer"
+                onClick={() => {
+                  if (mapRef.current && markerRefs.current[group.name]) {
+                    mapRef.current.setView([group.lat, group.lng], 15, {
+                      animate: true,
+                    });
+                    markerRefs.current[group.name].openPopup();
+                  }
+                }}
+              >
                 <div>
                   <h3 className={`${globalStyles.h3}`}>{group.name}</h3>
                   <p>{group.description}</p>
                   <p>{group.address}</p>
-                  <p className="text-gray-600">
-  {group.distance ? `Distance: ${group.distance.toFixed(2)} km` : ""}
-</p>
-
                 </div>
                 <img
                   src={group.image}
@@ -406,7 +417,53 @@ const Groups = () => {
             ))}
           </ul>
         </div>
-      )}
+
+        {showSearchResults && (
+          <div
+            className="transition-all duration-500 w-1/2"
+            style={{
+              float: "left",
+              overflow: "hidden",
+            }}
+          >
+            <h2 className={`${globalStyles.h2} text-center`}>
+              Top 5 Closest Groups
+            </h2>
+            <ul>
+              {nearbyGroups.map((group, index) => (
+                <li
+                  key={index}
+                  className="border p-4 rounded-lg mb-2 shadow-lg flex justify-between items-center cursor-pointer"
+                  onClick={() => {
+                    if (mapRef.current && markerRefs.current[group.name]) {
+                      mapRef.current.setView([group.lat, group.lng], 15, {
+                        animate: true,
+                      });
+                      markerRefs.current[group.name].openPopup();
+                    }
+                  }}
+                >
+                  <div>
+                    <h3 className={`${globalStyles.h3}`}>{group.name}</h3>
+                    <p>{group.description}</p>
+                    <p>{group.address}</p>
+                    <p className="text-gray-600">
+                      {group.distance
+                        ? `Distance: ${group.distance.toFixed(2)} km`
+                        : ""}
+                    </p>
+                  </div>
+                  <img
+                    src={group.image}
+                    alt={`${group.name} logo`}
+                    className="w-16 h-16 object-contain ml-4"
+                  />
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
