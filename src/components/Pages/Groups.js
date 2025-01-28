@@ -7,6 +7,22 @@ import styles from "../../styles/groupstyle.module.css";
 import globalStyles from "../../styles/globalstyle.module.css";
 import usePopupWidth from "../../hooks/usePopupWidth";
 
+const greenIcon = new L.Icon({
+  iconUrl: `${process.env.PUBLIC_URL}/images/icons/GreenMapMarker.png`,
+  iconSize: [25, 32],
+});
+
+const yellowIcon = new L.Icon({
+  iconUrl: `${process.env.PUBLIC_URL}/images/icons/YellowMapMarker.png`, // Replace with a yellow marker icon
+  iconSize: [25, 32],
+});
+
+const redIcon = new L.Icon({
+  iconUrl: `${process.env.PUBLIC_URL}/images/icons/RedMapMarker.png`, // Replace with a red marker icon 
+  iconSize: [25, 32],
+});
+
+
 // Fix Leaflet icon paths
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -222,27 +238,38 @@ const Groups = () => {
       alert("Please enter a valid postcode.");
       return;
     }
-
+  
     try {
       const response = await axios.get(
         `https://api.postcodes.io/postcodes/${postcode}`
       );
-
+  
       const { latitude, longitude } = response.data.result;
       setUserLocation({ lat: latitude, lng: longitude });
-
+  
       // Sort groups by proximity to user location
       const sortedGroups = groups
         .map((group) => ({
           ...group,
           distance: getDistance(latitude, longitude, group.lat, group.lng),
         }))
-        .sort((a, b) => a.distance - b.distance)
-        .slice(0, 5); // Get top 5 closest groups
-
-      setNearbyGroups(sortedGroups);
+        .sort((a, b) => a.distance - b.distance);
+  
+      // Assign marker color based on proximity
+      const updatedGroups = sortedGroups.map((group, index) => {
+        if (index < 3) {
+          return { ...group, markerColor: "green" };
+        } else if (index < 6) {
+          return { ...group, markerColor: "yellow" };
+        } else {
+          return { ...group, markerColor: "red" };
+        }
+      });
+  
+      setGroups(updatedGroups); // Update groups with marker colors
+      setNearbyGroups(updatedGroups.slice(0, 5));
       setShowSearchResults(true);
-
+  
       // Move the map to the user's location
       if (mapRef.current) {
         mapRef.current.setView([latitude, longitude], 12, { animate: true });
@@ -252,6 +279,7 @@ const Groups = () => {
       alert("Invalid postcode. Please try again.");
     }
   };
+  
 
   // Haversine formula to calculate distances
   const getDistance = (lat1, lon1, lat2, lon2) => {
@@ -316,13 +344,17 @@ const Groups = () => {
           <Marker
             key={index}
             position={[group.lat, group.lng]}
-            icon={customIcon}
+            icon={
+              group.markerColor === "green"
+                ? greenIcon
+                : group.markerColor === "yellow"
+                ? yellowIcon
+                : redIcon
+            }
             eventHandlers={{
               click: () => {
                 if (mapRef.current && markerRefs.current[group.name]) {
-                  mapRef.current.setView([group.lat, group.lng], 15, {
-                    animate: true,
-                  });
+                  mapRef.current.setView([group.lat, group.lng], 15, { animate: true });
                   markerRefs.current[group.name].openPopup();
                 }
               },
