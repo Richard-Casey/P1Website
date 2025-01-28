@@ -9,14 +9,14 @@ import reportWebVitals from './reportWebVitals';
 const loadAnalytics = () => {
   const script = document.createElement('script');
   script.async = true;
-  script.src = "https://www.googletagmanager.com/gtag/js?id=G-XXXXXXX"; // Replace with your GA4 ID
+  script.src = "https://www.googletagmanager.com/gtag/js?id=G-0K5HQ646TK"; // Replace with your GA4 ID
   document.head.appendChild(script);
 
   script.onload = () => {
     window.dataLayer = window.dataLayer || [];
     function gtag() { window.dataLayer.push(arguments); }
     gtag('js', new Date());
-    gtag('config', 'G-XXXXXXX'); // Replace with your GA4 ID
+    gtag('config', 'G-0K5HQ646TK'); // Replace with your GA4 ID
   };
 };
 
@@ -32,11 +32,16 @@ root.render(
 // Check for cookie consent
 document.addEventListener('DOMContentLoaded', () => {
   const cookieConsent = window.cookieconsent;
-  if (cookieConsent) {
+
+  if (cookieConsent && typeof cookieConsent.getUserPreferences === 'function') {
+    // Safely get user preferences
     const consent = cookieConsent.getUserPreferences();
+
     if (consent && consent.includes('tracking-and-performance')) {
-      loadAnalytics(); // Load GA4 only if user accepts tracking cookies
+      loadAnalytics(); // Load Google Analytics if user consents to tracking
     }
+  } else {
+    console.error("Cookie Consent API not available or 'getUserPreferences' not defined.");
   }
 });
 
