@@ -17,6 +17,11 @@ const yellowIcon = new L.Icon({
   iconSize: [25, 32],
 });
 
+const BlueIcon = new L.Icon({
+  iconUrl: `${process.env.PUBLIC_URL}/images/icons/BlueMapMarker.png`, // Replace with a yellow marker icon
+  iconSize: [25, 32],
+});
+
 const redIcon = new L.Icon({
   iconUrl: `${process.env.PUBLIC_URL}/images/icons/RedMapMarker.png`, // Replace with a red marker icon 
   iconSize: [25, 32],
@@ -47,6 +52,9 @@ const Groups = () => {
   const [groups, setGroups] = useState([]);
   const [nearbyGroups, setNearbyGroups] = useState([]); // Track search results separately
   const [showSearchResults, setShowSearchResults] = useState(false); // Toggle search result view
+  const [selectedGroup, setSelectedGroup] = useState(null);
+  const [searchedLocation, setSearchedLocation] = useState(null);
+
 
   // Fetch GeoJSON for Essex boundaries
   useEffect(() => {
@@ -246,31 +254,24 @@ const Groups = () => {
   
       const { latitude, longitude } = response.data.result;
       setUserLocation({ lat: latitude, lng: longitude });
+      setSearchedLocation({ lat: latitude, lng: longitude }); // Store the searched location
   
-      // Sort groups by proximity to user location
-      const sortedGroups = groups
+      // Sort all groups by distance
+      const updatedGroups = mockGroups
         .map((group) => ({
           ...group,
           distance: getDistance(latitude, longitude, group.lat, group.lng),
         }))
-        .sort((a, b) => a.distance - b.distance);
+        .sort((a, b) => a.distance - b.distance)
+        .map((group, index) => ({
+          ...group,
+          markerColor: index < 3 ? "green" : index < 6 ? "yellow" : "red",
+        }));
   
-      // Assign marker color based on proximity
-      const updatedGroups = sortedGroups.map((group, index) => {
-        if (index < 3) {
-          return { ...group, markerColor: "green" };
-        } else if (index < 6) {
-          return { ...group, markerColor: "yellow" };
-        } else {
-          return { ...group, markerColor: "red" };
-        }
-      });
-  
-      setGroups(updatedGroups); // Update groups with marker colors
-      setNearbyGroups(updatedGroups.slice(0, 5));
+      setGroups(updatedGroups);
       setShowSearchResults(true);
   
-      // Move the map to the user's location
+      // Move the map to the searched location
       if (mapRef.current) {
         mapRef.current.setView([latitude, longitude], 12, { animate: true });
       }
@@ -280,9 +281,14 @@ const Groups = () => {
     }
   };
   
+  
+  
+  
+  
 
   // Haversine formula to calculate distances
   const getDistance = (lat1, lon1, lat2, lon2) => {
+    if (!lat1 || !lon1 || !lat2 || !lon2) return Infinity; // Default to a large value
     const toRad = (value) => (value * Math.PI) / 180;
     const R = 6371; // Earth's radius in km
     const dLat = toRad(lat2 - lat1);
@@ -296,6 +302,7 @@ const Groups = () => {
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return R * c;
   };
+  
 
   // Style for Essex boundaries
   const essexStyle = {
@@ -335,11 +342,20 @@ const Groups = () => {
         style={{ height: "400px", width: "100%" }}
         whenCreated={(map) => (mapRef.current = map)}
       >
+        
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         />
         {geoJsonData && <GeoJSON data={geoJsonData} style={essexStyle} />}
+
+ {/* Render Blue Marker for Searched Location */}
+ {searchedLocation && (
+    <Marker position={[searchedLocation.lat, searchedLocation.lng]} icon={BlueIcon}>
+      <Popup>Searched Location</Popup>
+    </Marker>
+  )}
+
         {groups.map((group, index) => (
           <Marker
             key={index}
@@ -424,51 +440,24 @@ const Groups = () => {
       </MapContainer>
 
       <div>
-  {showSearchResults ? (
-    <div>
-      <h2 className={`${globalStyles.h2} text-center`}>Search Results</h2>
-      <ul>
-        {nearbyGroups.map((group, index) => (
-          <li
-            key={index}
-            className="border p-4 rounded-lg mb-2 shadow-lg flex justify-between items-center cursor-pointer"
-            onClick={() => {
-              if (mapRef.current && markerRefs.current[group.name]) {
-                mapRef.current.setView([group.lat, group.lng], 15, {
-                  animate: true,
-                });
-                markerRefs.current[group.name].openPopup();
-              }
-            }}
-          >
-            <div>
-              <h3 className={`${globalStyles.h3}`}>{group.name}</h3>
-              <p>{group.description}</p>
-              <p>{group.address}</p>
-              <p>Distance: {group.distance.toFixed(2)} km</p>
-            </div>
-            <img
-              src={group.image}
-              alt={`${group.name} logo`}
-              className="w-16 h-16 object-contain ml-4"
-            />
-          </li>
-        ))}
-      </ul>
-    </div>
-  ) : (
-    <div>
-      <h2 className={`${globalStyles.h2} text-center`}>All Groups</h2>
+      {showSearchResults ? (
+  <div>
+    <h2 className={`${globalStyles.h2} text-center`}>Search Results</h2>
+    {groups.length === 0 ? (
+      <p>No results found. Try another postcode.</p>
+    ) : (
       <ul>
         {groups.map((group, index) => (
           <li
             key={index}
-            className="border p-4 rounded-lg mb-2 shadow-lg flex justify-between items-center cursor-pointer"
+            className={`border p-4 rounded-lg mb-2 shadow-lg flex justify-between items-center cursor-pointer`}
+            style={{
+              backgroundColor: selectedGroup === group.name ? "#b8d7ee" : "white",
+            }}
             onClick={() => {
+              setSelectedGroup(group.name);
               if (mapRef.current && markerRefs.current[group.name]) {
-                mapRef.current.setView([group.lat, group.lng], 15, {
-                  animate: true,
-                });
+                mapRef.current.setView([group.lat, group.lng], 15, { animate: true });
                 markerRefs.current[group.name].openPopup();
               }
             }}
@@ -477,6 +466,7 @@ const Groups = () => {
               <h3 className={`${globalStyles.h3}`}>{group.name}</h3>
               <p>{group.description}</p>
               <p>{group.address}</p>
+              <p>Distance: {group.distance ? `${group.distance.toFixed(2)} km` : "N/A"}</p>
             </div>
             <img
               src={group.image}
@@ -486,8 +476,44 @@ const Groups = () => {
           </li>
         ))}
       </ul>
-    </div>
-  )}
+    )}
+  </div>
+) : (
+  <div>
+    <h2 className={`${globalStyles.h2} text-center`}>All Groups</h2>
+    <ul>
+      {groups.map((group, index) => (
+        <li
+          key={index}
+          className={`border p-4 rounded-lg mb-2 shadow-lg flex justify-between items-center cursor-pointer`}
+          style={{
+            backgroundColor: selectedGroup === group.name ? "#b8d7ee" : "white",
+          }}
+          onClick={() => {
+            setSelectedGroup(group.name);
+            if (mapRef.current && markerRefs.current[group.name]) {
+              mapRef.current.setView([group.lat, group.lng], 15, { animate: true });
+              markerRefs.current[group.name].openPopup();
+            }
+          }}
+        >
+          <div>
+            <h3 className={`${globalStyles.h3}`}>{group.name}</h3>
+            <p>{group.description}</p>
+            <p>{group.address}</p>
+            <p>Distance: {group.distance ? `${group.distance.toFixed(2)} km` : "N/A"}</p>
+          </div>
+          <img
+            src={group.image}
+            alt={`${group.name} logo`}
+            className="w-16 h-16 object-contain ml-4"
+          />
+        </li>
+      ))}
+    </ul>
+  </div>
+)}
+
 </div>
 
     </div>
