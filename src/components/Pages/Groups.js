@@ -97,9 +97,9 @@ const Groups = () => {
       email: "contact@andysmanclub.co.uk",
     },
     {
-      name: "Who Let The Dads Out?",
-      lat: 51.72497629708332,
-      lng: 0.49350432168396113,
+      name: "Who Let The Dads Out? - Chelmsford",
+      lat: 51.72497297416121,
+      lng: 0.49309662607086907,
       description:
         "Who Let The Dads Out? Groups are for fathers, father figures and their children – places where you can have fun, form friendships and find support. They meet on the last Saturday of the month at 08:30 - 11 a.m. Children 0-11 years.",
       address: "The Orchards Cafe, Mascalls way, Chelmsford, CM2 7NS",
@@ -133,7 +133,7 @@ const Groups = () => {
         "https://www.facebook.com/people/Andys-Man-Club-Basildon/100083331752868/",
     },
     {
-      name: "Who Let The Dads Out?",
+      name: "Who Let The Dads Out? - Billericay",
       lat: 51.6205379330216,
       lng: 0.4158009970802278,
       description:
@@ -157,7 +157,7 @@ const Groups = () => {
       facebook: "https://www.facebook.com/TheDadsCafe",
     },
     {
-      name: "Who Let The Dads Out?",
+      name: "Who Let The Dads Out? - Brentwood",
       lat: 51.62592618390134,
       lng: 0.3301512756482639,
       description:
@@ -192,7 +192,7 @@ const Groups = () => {
         "https://www.facebook.com/people/Andys-Man-Club-Southend-on-Sea/100067854443238/",
     },
     {
-      name: "Who Let The Dads Out?",
+      name: "Who Let The Dads Out? - Stanford-le-Hope",
       lat: 51.526996048118136,
       lng: 0.46674726764930224,
       description:
@@ -206,7 +206,7 @@ const Groups = () => {
       contactNumber: "Chris Mayers 07809 758596",
     },
     {
-      name: "Who Let The Dads Out?",
+      name: "Who Let The Dads Out? - Woodford Green - IG8 9BW",
       lat: 51.603250591412746,
       lng: 0.020251938871371458,
       description:
@@ -220,7 +220,7 @@ const Groups = () => {
       contactNumber: "Ann Burgess 07802 821556",
     },
     {
-      name: "Who Let The Dads Out?",
+      name: "Who Let The Dads Out? - Woodford Green - IG8 0NH",
       lat: 51.61429107511141,
       lng: 0.02678943517019749,
       description:
@@ -241,13 +241,19 @@ const Groups = () => {
 
   const centerAndZoomMap = (latitude, longitude, zoomLevel = 14) => {
     if (mapRef.current) {
-      console.log("Centering map to:", latitude, longitude, "with zoom:", zoomLevel);
-      
+      console.log(
+        "Centering map to:",
+        latitude,
+        longitude,
+        "with zoom:",
+        zoomLevel
+      );
+
       mapRef.current.flyTo([latitude, longitude], zoomLevel, {
         animate: true,
         duration: 1.5, // Smooth zoom transition
       });
-  
+
       setTimeout(() => {
         if (searchedLocationMarkerRef.current) {
           console.log("Opening popup at:", latitude, longitude);
@@ -258,8 +264,31 @@ const Groups = () => {
       console.error("Map reference is null. Cannot center and zoom.");
     }
   };
-  
-  
+
+  const adjustZoomForPopup = (lat, lng) => {
+    if (mapRef.current) {
+      const bounds = mapRef.current.getBounds();
+
+      // Check if the selected point is within the visible bounds of the map
+      if (!bounds.contains([lat, lng])) {
+        // If it's outside, zoom out gradually until it's visible
+        let zoomLevel = mapRef.current.getZoom();
+        while (zoomLevel > 10 && !bounds.contains([lat, lng])) {
+          zoomLevel -= 1;
+          mapRef.current.setZoom(zoomLevel);
+        }
+      } else {
+        // If it's visible but too far zoomed out, zoom in slightly
+        mapRef.current.setView(
+          [lat, lng],
+          Math.min(mapRef.current.getZoom() + 2, 15),
+          {
+            animate: true,
+          }
+        );
+      }
+    }
+  };
 
   // Handle postcode search
   const handleSearch = async () => {
@@ -267,36 +296,46 @@ const Groups = () => {
       alert("Please enter a valid postcode.");
       return;
     }
-  
+
     try {
       const response = await axios.get(
         `https://api.postcodes.io/postcodes/${postcode}`
       );
-  
       const { latitude, longitude } = response.data.result;
-  
+
       setUserLocation({ lat: latitude, lng: longitude });
-      
       setSearchedLocation({ lat: latitude, lng: longitude });
-  
-      // Ensure `mapRef.current` is available before attempting to zoom
-      const waitForMap = setInterval(() => {
-        if (mapRef.current) {
-          console.log("Map reference is now available. Centering and zooming...");
-          centerAndZoomMap(latitude, longitude);
-          clearInterval(waitForMap);
-        } else {
-          console.warn("Waiting for mapRef to be available...");
-        }
-      }, 200); // Check every 200ms until mapRef is ready
-  
+
+      // Sort all groups by distance from searched location
+      const sortedGroups = [...groups]
+        .map((group) => ({
+          ...group,
+          distance: getDistance(latitude, longitude, group.lat, group.lng),
+        }))
+        .sort((a, b) => a.distance - b.distance); // Closest first
+
+      // Assign colors to the top 3, next 3, and the rest
+      const updatedGroups = sortedGroups.map((group, index) => ({
+        ...group,
+        markerColor: index < 3 ? "green" : index < 6 ? "yellow" : "red",
+      }));
+
+      setGroups(updatedGroups); // Keep all groups with correct colors
+      setNearbyGroups(updatedGroups); // Keep all groups in sorted order for display
+      setShowSearchResults(true); // Toggle to show search results
+
+      if (mapRef.current) {
+        console.log("✅ Map reference is available. Centering and zooming...");
+        centerAndZoomMap(latitude, longitude);
+      } else {
+        console.error("🚨 mapRef is still null, skipping zoom.");
+      }
     } catch (error) {
       console.error("Error fetching postcode data:", error);
       alert("Invalid postcode. Please try again.");
     }
   };
-  
-  
+
   // Haversine formula to calculate distances
   const getDistance = (lat1, lon1, lat2, lon2) => {
     if (!lat1 || !lon1 || !lat2 || !lon2) return Infinity; // Default to a large value
@@ -346,14 +385,12 @@ const Groups = () => {
         </button>
       </div>
 
-<MapContainer
-  center={[51.735, 0.469]}
-  zoom={10}
-  style={{ height: "400px", width: "100%" }}
-  ref={mapRef} // Ensure mapRef is attached directly
->
-
-
+      <MapContainer
+        center={[51.735, 0.469]}
+        zoom={10}
+        style={{ height: "400px", width: "100%" }}
+        ref={mapRef} // Ensure mapRef is attached directly
+      >
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -362,23 +399,21 @@ const Groups = () => {
 
         {/* Render Blue Marker for Searched Location */}
         {searchedLocation && (
-  <Marker
-    position={[searchedLocation.lat, searchedLocation.lng]}
-    icon={BlueIcon}
-    ref={(ref) => {
-      if (ref) {
-        console.log("Setting searchedLocationMarkerRef:", ref);
-        searchedLocationMarkerRef.current = ref;
-      } else {
-        console.warn("searchedLocationMarkerRef is null");
-      }
-    }}
-  >
-    <Popup>Searched Location</Popup>
-  </Marker>
-)}
-
-
+          <Marker
+            position={[searchedLocation.lat, searchedLocation.lng]}
+            icon={BlueIcon}
+            ref={(ref) => {
+              if (ref) {
+                console.log("Setting searchedLocationMarkerRef:", ref);
+                searchedLocationMarkerRef.current = ref;
+              } else {
+                console.warn("searchedLocationMarkerRef is null");
+              }
+            }}
+          >
+            <Popup>Searched Location</Popup>
+          </Marker>
+        )}
 
         {groups.map((group, index) => (
           <Marker
@@ -393,10 +428,35 @@ const Groups = () => {
             }
             eventHandlers={{
               click: () => {
-                if (mapRef.current && markerRefs.current[group.name]) {
-                  mapRef.current.setView([group.lat, group.lng], 15, {
+                setSelectedGroup(group.name);
+
+                // Prevent scrolling away from the map by checking viewport position
+                const searchResultElement = document.getElementById(
+                  `group-${group.name.replace(/\s+/g, "-")}`
+                );
+
+                if (searchResultElement) {
+                  const rect = searchResultElement.getBoundingClientRect();
+                  const isInViewport =
+                    rect.top >= 0 && rect.bottom <= window.innerHeight;
+
+                  if (!isInViewport) {
+                    searchResultElement.scrollIntoView({
+                      behavior: "smooth",
+                      block: "center",
+                    });
+                  }
+                }
+
+                // Adjust the map center slightly lower to avoid cutting off popup
+                if (mapRef.current) {
+                  const offsetLat = group.lat - 0.002; // Moves the map slightly down
+                  mapRef.current.setView([offsetLat, group.lng], 14, {
                     animate: true,
                   });
+                }
+
+                if (markerRefs.current[group.name]) {
                   markerRefs.current[group.name].openPopup();
                 }
               },
@@ -469,54 +529,8 @@ const Groups = () => {
         {showSearchResults ? (
           <div>
             <h2 className={`${globalStyles.h2} text-center`}>Search Results</h2>
-            {groups.length === 0 ? (
-              <p>No results found. Try another postcode.</p>
-            ) : (
-              <ul>
-                {groups.map((group, index) => (
-                  <li
-                    key={index}
-                    className={`border p-4 rounded-lg mb-2 shadow-lg flex justify-between items-center cursor-pointer`}
-                    style={{
-                      backgroundColor:
-                        selectedGroup === group.name ? "#b8d7ee" : "white",
-                    }}
-                    onClick={() => {
-                      setSelectedGroup(group.name);
-                      if (mapRef.current && markerRefs.current[group.name]) {
-                        mapRef.current.setView([group.lat, group.lng], 15, {
-                          animate: true,
-                        });
-                        markerRefs.current[group.name].openPopup();
-                      }
-                    }}
-                  >
-                    <div>
-                      <h3 className={`${globalStyles.h3}`}>{group.name}</h3>
-                      <p>{group.description}</p>
-                      <p>{group.address}</p>
-                      <p>
-                        Distance:{" "}
-                        {group.distance
-                          ? `${group.distance.toFixed(2)} km`
-                          : "N/A"}
-                      </p>
-                    </div>
-                    <img
-                      src={group.image}
-                      alt={`${group.name} logo`}
-                      className="w-16 h-16 object-contain ml-4"
-                    />
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-        ) : (
-          <div>
-            <h2 className={`${globalStyles.h2} text-center`}>All Groups</h2>
             <ul>
-              {groups.map((group, index) => (
+              {nearbyGroups.map((group, index) => (
                 <li
                   key={index}
                   className={`border p-4 rounded-lg mb-2 shadow-lg flex justify-between items-center cursor-pointer`}
@@ -526,6 +540,56 @@ const Groups = () => {
                   }}
                   onClick={() => {
                     setSelectedGroup(group.name);
+                    if (mapRef.current && markerRefs.current[group.name]) {
+                      mapRef.current.setView([group.lat, group.lng], 15, {
+                        animate: true,
+                      });
+                      markerRefs.current[group.name].openPopup();
+                    }
+                  }}
+                >
+                  <div>
+                    <h3 className={`${globalStyles.h3}`}>
+                      {group.markerColor === "green" && "🟢 "}
+                      {group.markerColor === "yellow" && "🟡 "}
+                      {group.markerColor === "red" && "🔴 "}
+                      {group.name}
+                    </h3>
+
+                    <p>{group.description}</p>
+                    <p>{group.address}</p>
+                    <p>
+                      Distance:{" "}
+                      {group.distance
+                        ? `${group.distance.toFixed(2)} km`
+                        : "N/A"}
+                    </p>
+                  </div>
+                  <img
+                    src={group.image}
+                    alt={`${group.name} logo`}
+                    className="w-16 h-16 object-contain ml-4"
+                  />
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : (
+          <div>
+            <h2 className={`${globalStyles.h2} text-center`}>All Groups</h2>
+            <ul>
+              {groups.map((group, index) => (
+                <li
+                  key={index}
+                  id={`group-${group.name.replace(/\s+/g, "-")}`} // Assign unique ID
+                  className={`border p-4 rounded-lg mb-2 shadow-lg flex justify-between items-center cursor-pointer`}
+                  style={{
+                    backgroundColor:
+                      selectedGroup === group.name ? "#b8d7ee" : "white",
+                  }}
+                  onClick={() => {
+                    setSelectedGroup(group.name);
+
                     if (mapRef.current && markerRefs.current[group.name]) {
                       mapRef.current.setView([group.lat, group.lng], 15, {
                         animate: true,
