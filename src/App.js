@@ -16,6 +16,8 @@ import LGBTQIA from "./components/Pages/LGBTQIA";
 import Podcasts from "./components/Pages/Podcasts";
 import Youtube from "./components/Pages/Youtube";
 import Groups from "./components/Pages/Groups";
+import globalStyles from "./styles/globalstyle.module.css";
+
 import "./App.css";
 import "./index.css";
 
@@ -60,6 +62,27 @@ const App = () => {
           <Route path="*" element={<div>Page Not Found</div>} />
         </Routes>
       </main>
+
+{/* Centered Update Cookies Preferences Link */}
+<div className={globalStyles.updateCookiesContainer}>
+  <a
+    href="#"
+    id="open_preferences_center"
+    className={globalStyles.updateCookiesTag}
+    onClick={(e) => {
+      e.preventDefault();
+      if (window.cookieconsent) {
+        window.cookieconsent.openPreferencesCenter();
+      } else {
+        console.error("Cookie consent script not loaded.");
+      }
+    }}
+  >
+    Update cookies preferences
+  </a>
+</div>
+
+
 
       {/* Conditionally render Footer */}
       {!isMinimalRoute && <Footer />}

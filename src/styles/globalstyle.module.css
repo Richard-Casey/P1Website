@@ -120,7 +120,57 @@ body, html {
     justify-content: space-between;
   }
   
+/* Style for Update Cookies Preferences Link */
+.updateCookiesTag {
+  display: block;
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: "Sana Sans Alt W00 Regular", sans-serif;
+  color: #03969b;
+  margin: auto; /* Centers it horizontally */
+  padding: 0.4em 0;
+  cursor: pointer;
+  position: relative; /* Needed for underline animation */
+  width: fit-content;
+}
 
+/* Change color on hover */
+.updateCookiesTag:hover {
+  color: #d27a14;
+  text-decoration: none;
+}
 
+/* Orange underline effect */
+.updateCookiesTag::before,
+.updateCookiesTag::after {
+  content: '';
+  position: absolute;
+  bottom: 0.18em; /* Slightly below text */
+  height: 2px;
+  background-color: #d27a14;
+  transition: width 0.3s ease;
+  width: 0;
+}
 
-  
+.updateCookiesTag::before {
+  left: 50%;
+}
+
+.updateCookiesTag::after {
+  right: 50%;
+}
+
+.updateCookiesTag:hover::before,
+.updateCookiesTag:hover::after {
+  width: 50%;
+}
+
+/* Center the button at the bottom middle of the page */
+.updateCookiesContainer {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 0.5rem; /* Adds spacing before footer */
+}
+

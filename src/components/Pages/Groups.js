@@ -48,12 +48,11 @@ const Groups = () => {
   const [geoJsonData, setGeoJsonData] = useState(null);
   const [postcode, setPostcode] = useState("");
   const [userLocation, setUserLocation] = useState(null);
-  const [groups, setGroups] = useState([]);
-  const [nearbyGroups, setNearbyGroups] = useState([]); // Track search results separately
   const [showSearchResults, setShowSearchResults] = useState(false); // Toggle search result view
   const [selectedGroup, setSelectedGroup] = useState(null);
   const [searchedLocation, setSearchedLocation] = useState(null);
   const searchedLocationMarkerRef = useRef(null);
+  const [displayedGroups, setDisplayedGroups] = useState([]); // Single list for groups
 
   // Fetch GeoJSON for Essex boundaries
   useEffect(() => {
@@ -236,7 +235,9 @@ const Groups = () => {
 
   // Initialize group data
   useEffect(() => {
-    setGroups(mockGroups.sort((a, b) => a.name.localeCompare(b.name))); // Alphabetically sort groups
+    setDisplayedGroups(
+      [...mockGroups].sort((a, b) => a.name.localeCompare(b.name))
+    );
   }, []);
 
   const centerAndZoomMap = (latitude, longitude, zoomLevel = 14) => {
@@ -306,29 +307,22 @@ const Groups = () => {
       setUserLocation({ lat: latitude, lng: longitude });
       setSearchedLocation({ lat: latitude, lng: longitude });
 
-      // Sort all groups by distance from searched location
-      const sortedGroups = [...groups]
+      const sortedGroups = [...displayedGroups]
         .map((group) => ({
           ...group,
           distance: getDistance(latitude, longitude, group.lat, group.lng),
         }))
-        .sort((a, b) => a.distance - b.distance); // Closest first
+        .sort((a, b) => a.distance - b.distance);
 
-      // Assign colors to the top 3, next 3, and the rest
       const updatedGroups = sortedGroups.map((group, index) => ({
         ...group,
         markerColor: index < 3 ? "green" : index < 6 ? "yellow" : "red",
       }));
 
-      setGroups(updatedGroups); // Keep all groups with correct colors
-      setNearbyGroups(updatedGroups); // Keep all groups in sorted order for display
-      setShowSearchResults(true); // Toggle to show search results
+      setDisplayedGroups(updatedGroups); // Updates the single list dynamically
 
       if (mapRef.current) {
-        console.log("✅ Map reference is available. Centering and zooming...");
         centerAndZoomMap(latitude, longitude);
-      } else {
-        console.error("🚨 mapRef is still null, skipping zoom.");
       }
     } catch (error) {
       console.error("Error fetching postcode data:", error);
@@ -415,7 +409,7 @@ const Groups = () => {
           </Marker>
         )}
 
-        {groups.map((group, index) => (
+        {displayedGroups.map((group, index) => (
           <Marker
             key={index}
             position={[group.lat, group.lng]}
@@ -430,28 +424,9 @@ const Groups = () => {
               click: () => {
                 setSelectedGroup(group.name);
 
-                // Prevent scrolling away from the map by checking viewport position
-                const searchResultElement = document.getElementById(
-                  `group-${group.name.replace(/\s+/g, "-")}`
-                );
-
-                if (searchResultElement) {
-                  const rect = searchResultElement.getBoundingClientRect();
-                  const isInViewport =
-                    rect.top >= 0 && rect.bottom <= window.innerHeight;
-
-                  if (!isInViewport) {
-                    searchResultElement.scrollIntoView({
-                      behavior: "smooth",
-                      block: "center",
-                    });
-                  }
-                }
-
-                // Adjust the map center slightly lower to avoid cutting off popup
                 if (mapRef.current) {
-                  const offsetLat = group.lat - 0.002; // Moves the map slightly down
-                  mapRef.current.setView([offsetLat, group.lng], 14, {
+                  const popupOffsetLat = group.lat - 0.005; // Move map down to show popup properly
+                  mapRef.current.setView([popupOffsetLat, group.lng], 14, {
                     animate: true,
                   });
                 }
@@ -526,99 +501,49 @@ const Groups = () => {
       </MapContainer>
 
       <div>
-        {showSearchResults ? (
-          <div>
-            <h2 className={`${globalStyles.h2} text-center`}>Search Results</h2>
-            <ul>
-              {nearbyGroups.map((group, index) => (
-                <li
-                  key={index}
-                  className={`border p-4 rounded-lg mb-2 shadow-lg flex justify-between items-center cursor-pointer`}
-                  style={{
-                    backgroundColor:
-                      selectedGroup === group.name ? "#b8d7ee" : "white",
-                  }}
-                  onClick={() => {
-                    setSelectedGroup(group.name);
-                    if (mapRef.current && markerRefs.current[group.name]) {
-                      mapRef.current.setView([group.lat, group.lng], 15, {
-                        animate: true,
-                      });
-                      markerRefs.current[group.name].openPopup();
-                    }
-                  }}
-                >
-                  <div>
-                    <h3 className={`${globalStyles.h3}`}>
-                      {group.markerColor === "green" && "🟢 "}
-                      {group.markerColor === "yellow" && "🟡 "}
-                      {group.markerColor === "red" && "🔴 "}
-                      {group.name}
-                    </h3>
+        <div>
+          <h2 className={`${globalStyles.h2} text-center`}>Groups</h2>
+          <ul>
+            {displayedGroups.map((group, index) => (
+              <li
+                key={index}
+                className={`border p-4 rounded-lg mb-2 shadow-lg flex justify-between items-center cursor-pointer`}
+                style={{
+                  backgroundColor:
+                    selectedGroup === group.name ? "#b8d7ee" : "white",
+                }}
+                onClick={() => {
+                  setSelectedGroup(group.name);
 
-                    <p>{group.description}</p>
-                    <p>{group.address}</p>
-                    <p>
-                      Distance:{" "}
-                      {group.distance
-                        ? `${group.distance.toFixed(2)} km`
-                        : "N/A"}
-                    </p>
-                  </div>
-                  <img
-                    src={group.image}
-                    alt={`${group.name} logo`}
-                    className="w-16 h-16 object-contain ml-4"
-                  />
-                </li>
-              ))}
-            </ul>
-          </div>
-        ) : (
-          <div>
-            <h2 className={`${globalStyles.h2} text-center`}>All Groups</h2>
-            <ul>
-              {groups.map((group, index) => (
-                <li
-                  key={index}
-                  id={`group-${group.name.replace(/\s+/g, "-")}`} // Assign unique ID
-                  className={`border p-4 rounded-lg mb-2 shadow-lg flex justify-between items-center cursor-pointer`}
-                  style={{
-                    backgroundColor:
-                      selectedGroup === group.name ? "#b8d7ee" : "white",
-                  }}
-                  onClick={() => {
-                    setSelectedGroup(group.name);
+                  if (mapRef.current && markerRefs.current[group.name]) {
+                    const popupOffsetLat = group.lat - 0.01; // More offset for better positioning
 
-                    if (mapRef.current && markerRefs.current[group.name]) {
-                      mapRef.current.setView([group.lat, group.lng], 15, {
-                        animate: true,
-                      });
-                      markerRefs.current[group.name].openPopup();
-                    }
-                  }}
-                >
-                  <div>
-                    <h3 className={`${globalStyles.h3}`}>{group.name}</h3>
-                    <p>{group.description}</p>
-                    <p>{group.address}</p>
-                    <p>
-                      Distance:{" "}
-                      {group.distance
-                        ? `${group.distance.toFixed(2)} km`
-                        : "N/A"}
-                    </p>
-                  </div>
-                  <img
-                    src={group.image}
-                    alt={`${group.name} logo`}
-                    className="w-16 h-16 object-contain ml-4"
-                  />
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+                    mapRef.current.setView([popupOffsetLat, group.lng], 14, {
+                      animate: true,
+                    });
+
+                    markerRefs.current[group.name].openPopup();
+                  }
+                }}
+              >
+                <div>
+                  <h3 className={`${globalStyles.h3}`}>{group.name}</h3>
+                  <p>{group.description}</p>
+                  <p>{group.address}</p>
+                  <p>
+                    Distance:{" "}
+                    {group.distance ? `${group.distance.toFixed(2)} km` : "N/A"}
+                  </p>
+                </div>
+                <img
+                  src={group.image}
+                  alt={`${group.name} logo`}
+                  className="w-16 h-16 object-contain ml-4"
+                />
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </div>
   );
