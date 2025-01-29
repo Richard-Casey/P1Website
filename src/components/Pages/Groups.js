@@ -23,10 +23,9 @@ const BlueIcon = new L.Icon({
 });
 
 const redIcon = new L.Icon({
-  iconUrl: `${process.env.PUBLIC_URL}/images/icons/RedMapMarker.png`, // Replace with a red marker icon 
+  iconUrl: `${process.env.PUBLIC_URL}/images/icons/RedMapMarker.png`, // Replace with a red marker icon
   iconSize: [25, 32],
 });
-
 
 // Fix Leaflet icon paths
 delete L.Icon.Default.prototype._getIconUrl;
@@ -54,7 +53,7 @@ const Groups = () => {
   const [showSearchResults, setShowSearchResults] = useState(false); // Toggle search result view
   const [selectedGroup, setSelectedGroup] = useState(null);
   const [searchedLocation, setSearchedLocation] = useState(null);
-
+  const searchedLocationMarkerRef = useRef(null);
 
   // Fetch GeoJSON for Essex boundaries
   useEffect(() => {
@@ -240,6 +239,28 @@ const Groups = () => {
     setGroups(mockGroups.sort((a, b) => a.name.localeCompare(b.name))); // Alphabetically sort groups
   }, []);
 
+  const centerAndZoomMap = (latitude, longitude, zoomLevel = 14) => {
+    if (mapRef.current) {
+      console.log("Centering map to:", latitude, longitude, "with zoom:", zoomLevel);
+      
+      mapRef.current.flyTo([latitude, longitude], zoomLevel, {
+        animate: true,
+        duration: 1.5, // Smooth zoom transition
+      });
+  
+      setTimeout(() => {
+        if (searchedLocationMarkerRef.current) {
+          console.log("Opening popup at:", latitude, longitude);
+          searchedLocationMarkerRef.current.openPopup();
+        }
+      }, 1000); // Delay to ensure smooth transition
+    } else {
+      console.error("Map reference is null. Cannot center and zoom.");
+    }
+  };
+  
+  
+
   // Handle postcode search
   const handleSearch = async () => {
     if (!postcode.trim()) {
@@ -253,28 +274,22 @@ const Groups = () => {
       );
   
       const { latitude, longitude } = response.data.result;
+  
       setUserLocation({ lat: latitude, lng: longitude });
-      setSearchedLocation({ lat: latitude, lng: longitude }); // Store the searched location
+      
+      setSearchedLocation({ lat: latitude, lng: longitude });
   
-      // Sort all groups by distance
-      const updatedGroups = mockGroups
-        .map((group) => ({
-          ...group,
-          distance: getDistance(latitude, longitude, group.lat, group.lng),
-        }))
-        .sort((a, b) => a.distance - b.distance)
-        .map((group, index) => ({
-          ...group,
-          markerColor: index < 3 ? "green" : index < 6 ? "yellow" : "red",
-        }));
+      // Ensure `mapRef.current` is available before attempting to zoom
+      const waitForMap = setInterval(() => {
+        if (mapRef.current) {
+          console.log("Map reference is now available. Centering and zooming...");
+          centerAndZoomMap(latitude, longitude);
+          clearInterval(waitForMap);
+        } else {
+          console.warn("Waiting for mapRef to be available...");
+        }
+      }, 200); // Check every 200ms until mapRef is ready
   
-      setGroups(updatedGroups);
-      setShowSearchResults(true);
-  
-      // Move the map to the searched location
-      if (mapRef.current) {
-        mapRef.current.setView([latitude, longitude], 12, { animate: true });
-      }
     } catch (error) {
       console.error("Error fetching postcode data:", error);
       alert("Invalid postcode. Please try again.");
@@ -282,10 +297,6 @@ const Groups = () => {
   };
   
   
-  
-  
-  
-
   // Haversine formula to calculate distances
   const getDistance = (lat1, lon1, lat2, lon2) => {
     if (!lat1 || !lon1 || !lat2 || !lon2) return Infinity; // Default to a large value
@@ -302,7 +313,6 @@ const Groups = () => {
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return R * c;
   };
-  
 
   // Style for Essex boundaries
   const essexStyle = {
@@ -336,25 +346,39 @@ const Groups = () => {
         </button>
       </div>
 
-      <MapContainer
-        center={[51.735, 0.469]}
-        zoom={10}
-        style={{ height: "400px", width: "100%" }}
-        whenCreated={(map) => (mapRef.current = map)}
-      >
-        
+<MapContainer
+  center={[51.735, 0.469]}
+  zoom={10}
+  style={{ height: "400px", width: "100%" }}
+  ref={mapRef} // Ensure mapRef is attached directly
+>
+
+
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         />
         {geoJsonData && <GeoJSON data={geoJsonData} style={essexStyle} />}
 
- {/* Render Blue Marker for Searched Location */}
- {searchedLocation && (
-    <Marker position={[searchedLocation.lat, searchedLocation.lng]} icon={BlueIcon}>
-      <Popup>Searched Location</Popup>
-    </Marker>
-  )}
+        {/* Render Blue Marker for Searched Location */}
+        {searchedLocation && (
+  <Marker
+    position={[searchedLocation.lat, searchedLocation.lng]}
+    icon={BlueIcon}
+    ref={(ref) => {
+      if (ref) {
+        console.log("Setting searchedLocationMarkerRef:", ref);
+        searchedLocationMarkerRef.current = ref;
+      } else {
+        console.warn("searchedLocationMarkerRef is null");
+      }
+    }}
+  >
+    <Popup>Searched Location</Popup>
+  </Marker>
+)}
+
+
 
         {groups.map((group, index) => (
           <Marker
@@ -370,7 +394,9 @@ const Groups = () => {
             eventHandlers={{
               click: () => {
                 if (mapRef.current && markerRefs.current[group.name]) {
-                  mapRef.current.setView([group.lat, group.lng], 15, { animate: true });
+                  mapRef.current.setView([group.lat, group.lng], 15, {
+                    animate: true,
+                  });
                   markerRefs.current[group.name].openPopup();
                 }
               },
@@ -440,82 +466,96 @@ const Groups = () => {
       </MapContainer>
 
       <div>
-      {showSearchResults ? (
-  <div>
-    <h2 className={`${globalStyles.h2} text-center`}>Search Results</h2>
-    {groups.length === 0 ? (
-      <p>No results found. Try another postcode.</p>
-    ) : (
-      <ul>
-        {groups.map((group, index) => (
-          <li
-            key={index}
-            className={`border p-4 rounded-lg mb-2 shadow-lg flex justify-between items-center cursor-pointer`}
-            style={{
-              backgroundColor: selectedGroup === group.name ? "#b8d7ee" : "white",
-            }}
-            onClick={() => {
-              setSelectedGroup(group.name);
-              if (mapRef.current && markerRefs.current[group.name]) {
-                mapRef.current.setView([group.lat, group.lng], 15, { animate: true });
-                markerRefs.current[group.name].openPopup();
-              }
-            }}
-          >
-            <div>
-              <h3 className={`${globalStyles.h3}`}>{group.name}</h3>
-              <p>{group.description}</p>
-              <p>{group.address}</p>
-              <p>Distance: {group.distance ? `${group.distance.toFixed(2)} km` : "N/A"}</p>
-            </div>
-            <img
-              src={group.image}
-              alt={`${group.name} logo`}
-              className="w-16 h-16 object-contain ml-4"
-            />
-          </li>
-        ))}
-      </ul>
-    )}
-  </div>
-) : (
-  <div>
-    <h2 className={`${globalStyles.h2} text-center`}>All Groups</h2>
-    <ul>
-      {groups.map((group, index) => (
-        <li
-          key={index}
-          className={`border p-4 rounded-lg mb-2 shadow-lg flex justify-between items-center cursor-pointer`}
-          style={{
-            backgroundColor: selectedGroup === group.name ? "#b8d7ee" : "white",
-          }}
-          onClick={() => {
-            setSelectedGroup(group.name);
-            if (mapRef.current && markerRefs.current[group.name]) {
-              mapRef.current.setView([group.lat, group.lng], 15, { animate: true });
-              markerRefs.current[group.name].openPopup();
-            }
-          }}
-        >
+        {showSearchResults ? (
           <div>
-            <h3 className={`${globalStyles.h3}`}>{group.name}</h3>
-            <p>{group.description}</p>
-            <p>{group.address}</p>
-            <p>Distance: {group.distance ? `${group.distance.toFixed(2)} km` : "N/A"}</p>
+            <h2 className={`${globalStyles.h2} text-center`}>Search Results</h2>
+            {groups.length === 0 ? (
+              <p>No results found. Try another postcode.</p>
+            ) : (
+              <ul>
+                {groups.map((group, index) => (
+                  <li
+                    key={index}
+                    className={`border p-4 rounded-lg mb-2 shadow-lg flex justify-between items-center cursor-pointer`}
+                    style={{
+                      backgroundColor:
+                        selectedGroup === group.name ? "#b8d7ee" : "white",
+                    }}
+                    onClick={() => {
+                      setSelectedGroup(group.name);
+                      if (mapRef.current && markerRefs.current[group.name]) {
+                        mapRef.current.setView([group.lat, group.lng], 15, {
+                          animate: true,
+                        });
+                        markerRefs.current[group.name].openPopup();
+                      }
+                    }}
+                  >
+                    <div>
+                      <h3 className={`${globalStyles.h3}`}>{group.name}</h3>
+                      <p>{group.description}</p>
+                      <p>{group.address}</p>
+                      <p>
+                        Distance:{" "}
+                        {group.distance
+                          ? `${group.distance.toFixed(2)} km`
+                          : "N/A"}
+                      </p>
+                    </div>
+                    <img
+                      src={group.image}
+                      alt={`${group.name} logo`}
+                      className="w-16 h-16 object-contain ml-4"
+                    />
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
-          <img
-            src={group.image}
-            alt={`${group.name} logo`}
-            className="w-16 h-16 object-contain ml-4"
-          />
-        </li>
-      ))}
-    </ul>
-  </div>
-)}
-
-</div>
-
+        ) : (
+          <div>
+            <h2 className={`${globalStyles.h2} text-center`}>All Groups</h2>
+            <ul>
+              {groups.map((group, index) => (
+                <li
+                  key={index}
+                  className={`border p-4 rounded-lg mb-2 shadow-lg flex justify-between items-center cursor-pointer`}
+                  style={{
+                    backgroundColor:
+                      selectedGroup === group.name ? "#b8d7ee" : "white",
+                  }}
+                  onClick={() => {
+                    setSelectedGroup(group.name);
+                    if (mapRef.current && markerRefs.current[group.name]) {
+                      mapRef.current.setView([group.lat, group.lng], 15, {
+                        animate: true,
+                      });
+                      markerRefs.current[group.name].openPopup();
+                    }
+                  }}
+                >
+                  <div>
+                    <h3 className={`${globalStyles.h3}`}>{group.name}</h3>
+                    <p>{group.description}</p>
+                    <p>{group.address}</p>
+                    <p>
+                      Distance:{" "}
+                      {group.distance
+                        ? `${group.distance.toFixed(2)} km`
+                        : "N/A"}
+                    </p>
+                  </div>
+                  <img
+                    src={group.image}
+                    alt={`${group.name} logo`}
+                    className="w-16 h-16 object-contain ml-4"
+                  />
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
