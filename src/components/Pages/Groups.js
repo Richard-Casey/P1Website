@@ -6,6 +6,7 @@ import axios from "axios";
 import styles from "../../styles/groupstyle.module.css";
 import globalStyles from "../../styles/globalstyle.module.css";
 import usePopupWidth from "../../hooks/usePopupWidth";
+import SubmitGroup from "../SubmitGroup"; 
 
 const greenIcon = new L.Icon({
   iconUrl: `${process.env.PUBLIC_URL}/images/icons/GreenMapMarker.png`,
@@ -366,7 +367,6 @@ const Groups = () => {
           onChange={(e) => setPostcode(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === "Enter") {
-              console.log("Enter key pressed");
               handleSearch();
             }
           }}
@@ -499,6 +499,8 @@ const Groups = () => {
           </Marker>
         ))}
       </MapContainer>
+
+      <SubmitGroup />
 
       <div>
         <div>
