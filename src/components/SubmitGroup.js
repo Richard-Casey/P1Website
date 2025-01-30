@@ -70,48 +70,92 @@ const SubmitGroup = () => {
   return (
     <div className={styles.container}>
       <div className={styles.bar} onClick={toggleForm}>
-        <p>Submit a group to this map</p>
+        <p>Click here to submit a group to this map</p>
       </div>
 
       <form className={`${styles.form} ${isOpen ? styles.show : ""}`} onSubmit={handleSubmit}>
-
         <div className={styles["form-group"]}>
           <label>Name:</label>
-          <input type="text" name="name" placeholder="Group Name" value={formData.name} onChange={handleChange} required />
+          <input
+            type="text"
+            name="name"
+            placeholder="Group Name"
+            value={formData.name}
+            onChange={handleChange}
+            required
+          />
         </div>
 
         <div className={styles["form-group"]}>
           <label>Address:</label>
-          <input type="text" name="address" placeholder="Address of Group/Meetings" value={formData.address} onChange={handleChange} required />
+          <input
+            type="text"
+            name="address"
+            placeholder="Address of Group/Meetings"
+            value={formData.address}
+            onChange={handleChange}
+            required
+          />
         </div>
 
         <div className={styles["form-group"]}>
           <label>Phone Number:</label>
-          <input type="tel" name="phone" placeholder="Contact Number" value={formData.phone} onChange={handleChange} />
+          <input
+            type="tel"
+            name="phone"
+            placeholder="Contact Number"
+            value={formData.phone}
+            onChange={handleChange}
+          />
         </div>
 
         <div className={styles["form-group"]}>
           <label>Email Address:</label>
-          <input type="email" name="email" placeholder="Contact Email" value={formData.email} onChange={handleChange} />
+          <input
+            type="email"
+            name="email"
+            placeholder="Contact Email"
+            value={formData.email}
+            onChange={handleChange}
+          />
         </div>
 
         <div className={styles["form-group"]}>
           <label>Website:</label>
-          <input type="url" name="website" placeholder="Group Website (if applicable)" value={formData.website} onChange={handleChange} />
+          <input
+            type="url"
+            name="website"
+            placeholder="Group Website (if applicable)"
+            value={formData.website}
+            onChange={handleChange}
+          />
         </div>
 
         <div className={styles["form-group"]}>
           <label>Social Media Link:</label>
-          <input type="text" name="socialMedia" placeholder="Facebook, LinkedIn, etc. (if applicable)" value={formData.socialMedia} onChange={handleChange} />
+          <input
+            type="text"
+            name="socialMedia"
+            placeholder="Facebook, LinkedIn, etc. (if applicable)"
+            value={formData.socialMedia}
+            onChange={handleChange}
+          />
         </div>
 
         <div className={styles["form-group"]}>
           <label>Additional Info:</label>
-          <textarea name="additionalInfo" placeholder="Any additional information" value={formData.additionalInfo} onChange={handleChange} />
+          <textarea
+            name="additionalInfo"
+            placeholder="Any additional information"
+            value={formData.additionalInfo}
+            onChange={handleChange}
+          />
         </div>
 
         <p className={styles.disclaimer}>Group submissions will only appear on the map once validated.</p>
-        <button type="submit" className={styles.submitButton}>Submit</button>
+        <button type="submit" className={styles.submitButton}>
+          Submit
+        </button>
       </form>
     </div>
   );

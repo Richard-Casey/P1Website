@@ -27,21 +27,20 @@
   
   .form {
     background-color: #f9f9f9;
-    padding: 15px;
+    padding: 0 15px;
     border-radius: 5px;
     margin-top: 10px;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
     max-height: 0;
     opacity: 0;
     overflow: hidden;
-    transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out, padding 0.3s ease-in-out;
-    padding: 0px 15px; /* Start with no padding */
+    transition: max-height 0.7s ease-in-out, opacity 0.7s ease-in-out;
+
 }
 
 .form.show {
-    max-height: none; /* Adjust based on content size */
-    opacity: 1;
-    padding: 15px;
+  max-height: 1000px; /* Large enough to handle content size */
+  opacity: 1;
 }
 
   
@@ -95,8 +94,8 @@
   
   /* Initial state (hidden) */
 .slide-enter {
-    max-height: 0;
-    opacity: 0;
+    max-height: 800px;
+    opacity: 1;
     overflow: hidden;
 }
 
@@ -109,8 +108,8 @@
 
 /* Exiting state */
 .slide-exit {
-    max-height: 500px;
-    opacity: 1;
+    max-height: 0;
+    opacity: 0;
     overflow: hidden;
 }
 

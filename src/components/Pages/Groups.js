@@ -6,7 +6,7 @@ import axios from "axios";
 import styles from "../../styles/groupstyle.module.css";
 import globalStyles from "../../styles/globalstyle.module.css";
 import usePopupWidth from "../../hooks/usePopupWidth";
-import SubmitGroup from "../SubmitGroup"; 
+import SubmitGroup from "../SubmitGroup";
 
 const greenIcon = new L.Icon({
   iconUrl: `${process.env.PUBLIC_URL}/images/icons/GreenMapMarker.png`,
@@ -357,7 +357,7 @@ const Groups = () => {
 
   return (
     <div className={`${styles.groupsPage} ${globalStyles.container}`}>
-      <h1 className={`${globalStyles.h1} text-center`}>Find a Support Group</h1>
+      <h1 className={`${globalStyles.h1} text-center`}>Groups</h1>
       <div className={`${styles.searchContainer} flex justify-center my-4`}>
         <input
           type="text"
@@ -425,7 +425,7 @@ const Groups = () => {
                 setSelectedGroup(group.name);
 
                 if (mapRef.current) {
-                  const popupOffsetLat = group.lat - 0.005; // Move map down to show popup properly
+                  const popupOffsetLat = group.lat - 0.01;
                   mapRef.current.setView([popupOffsetLat, group.lng], 14, {
                     animate: true,
                   });
@@ -529,7 +529,13 @@ const Groups = () => {
                 }}
               >
                 <div>
-                  <h3 className={`${globalStyles.h3}`}>{group.name}</h3>
+                  <h3 className={`${globalStyles.h3}`}>
+                    {group.markerColor === "green" && "🟢 "}
+                    {group.markerColor === "yellow" && "🟡 "}
+                    {group.markerColor === "red" && "🔴 "}
+                    {group.name}
+                  </h3>
+
                   <p>{group.description}</p>
                   <p>{group.address}</p>
                   <p>
