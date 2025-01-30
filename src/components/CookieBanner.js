@@ -13,7 +13,8 @@ const CookieBanner = () => {
 
   const handleConsent = (status) => {
     // Store the consent and hide the banner
-    localStorage.setItem("cookie_choices", status);
+    document.cookie = `cookie_choices=${status}; SameSite=None; Secure; path=/;`;
+
     setShowBanner(false);
 
     // Redirect to propagate the consent across URL

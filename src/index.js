@@ -50,7 +50,7 @@ const urlParams = new URLSearchParams(window.location.search);
 const consentStatus = urlParams.get('cookieConsent');
 
 if (consentStatus) {
-  localStorage.setItem('cookie_choices', consentStatus);
+  document.cookie = `cookie_choices=${consentStatus}; SameSite=None; Secure; path=/;`;
 
   if (consentStatus === 'accepted') {
     console.log('Cookies accepted and stored.');
@@ -59,7 +59,15 @@ if (consentStatus) {
   }
 }
 
-const storedConsent = localStorage.getItem('cookie_choices');
+const getCookie = (name) => {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(';').shift();
+  return null;
+};
+
+const storedConsent = getCookie('cookie_choices');
+
 const currentParams = new URLSearchParams(window.location.search);
 if (!currentParams.has('cookieConsent') && storedConsent) {
   // Redirect to the correct URL with consent
