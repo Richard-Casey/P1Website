@@ -31,26 +31,33 @@ root.render(
 
 // Check for cookie consent
 document.addEventListener('DOMContentLoaded', () => {
-  const cookieConsent = window.cookieconsent;
+  const isMinimalPage = window.location.pathname.startsWith("/minimal-");
 
-  if (cookieConsent && typeof cookieConsent.getUserPreferences === 'function') {
-    // Safely get user preferences
-    const consent = cookieConsent.getUserPreferences();
-
-    if (consent && consent.includes('tracking-and-performance')) {
-      loadAnalytics(); // Load Google Analytics if user consents to tracking
+  if (!isMinimalPage) {
+    const cookieConsent = window.cookieconsent;
+    if (cookieConsent && typeof cookieConsent.getUserPreferences === 'function') {
+      const consent = cookieConsent.getUserPreferences();
+      if (consent && consent.includes('tracking-and-performance')) {
+        loadAnalytics(); // Load Google Analytics if user consents to tracking
+      }
+    } else {
+      console.error("Cookie Consent API not available or 'getUserPreferences' not defined.");
     }
   } else {
-    console.error("Cookie Consent API not available or 'getUserPreferences' not defined.");
+    console.log("Minimal route detected. Skipping cookie consent and analytics.");
   }
 });
+
 
 // Detect cookie consent from URL
 const urlParams = new URLSearchParams(window.location.search);
 const consentStatus = urlParams.get('cookieConsent');
 
 if (consentStatus) {
-  document.cookie = `cookie_choices=${consentStatus}; SameSite=None; Secure; path=/;`;
+  if (!window.location.pathname.startsWith("/minimal-")) {
+    document.cookie = `cookie_choices=${consentStatus}; SameSite=None; Secure; path=/;`;
+  }
+  
 
   if (consentStatus === 'accepted') {
     console.log('Cookies accepted and stored.');

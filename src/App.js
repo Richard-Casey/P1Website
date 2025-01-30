@@ -31,6 +31,10 @@ const App = () => {
   return (
     <div className={`${styles.App} ${isMinimalRoute ? "minimal" : ""}`}>
       <ScrollToTop />
+
+ {/* Exclude Cookie Banner for Minimal Routes */}
+ {!isMinimalRoute && <CookieBanner />}
+
       {!isMinimalRoute && <Header />}
       {!isMinimalRoute && isHeroVisible && <Hero />}
       {!isMinimalRoute && <NavBar />}

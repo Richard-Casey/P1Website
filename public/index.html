@@ -12,7 +12,6 @@
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
 
     <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-0K5HQ646TK"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
@@ -36,19 +35,26 @@
 <script type="text/javascript" src="https://www.termsfeed.com/public/cookie-consent/4.2.0/cookie-consent.js" charset="UTF-8"></script>
 <script type="text/javascript">
   document.addEventListener("DOMContentLoaded", function () {
-    window.cookieconsent?.run({
-      notice_banner_type: "interstitial",
-      consent_type: "express",
-      palette: "light",
-      language: "en",
-      page_load_consent_levels: ["strictly-necessary"],
-      notice_banner_reject_button_hide: false,
-      preferences_center_close_button_hide: false,
-      page_refresh_confirmation_buttons: false,
-      website_privacy_policy_url: "https://parents1st.org.uk/privacy-policy",
-    });
+    const isMinimalPage = window.location.pathname.startsWith("/minimal-");
+
+    if (!isMinimalPage) {
+      window.cookieconsent?.run({
+        notice_banner_type: "interstitial",
+        consent_type: "express",
+        palette: "light",
+        language: "en",
+        page_load_consent_levels: ["strictly-necessary"],
+        notice_banner_reject_button_hide: false,
+        preferences_center_close_button_hide: false,
+        page_refresh_confirmation_buttons: false,
+        website_privacy_policy_url: "https://parents1st.org.uk/privacy-policy",
+      });
+    } else {
+      console.log("Skipping cookie consent banner on minimal routes.");
+    }
   });
 </script>
+
 
 
 <noscript>Free cookie consent management tool by <a href="https://www.termsfeed.com/">TermsFeed</a></noscript>
