@@ -159,19 +159,19 @@ const NationalResources = () => {
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        {resource.website}
+                        <strong>{resource.website}</strong>
                       </a>
                     </p>
                     <p>
                       <strong>Focus Area:</strong>
                       <div>
                         {resource.category.map((cat) => (
-                          <button
+                          <span
                             key={cat}
                             className={styles.focusAreaButton}
                           >
                             {cat}
-                          </button>
+                          </span>
                         ))}
                       </div>
                     </p>
@@ -179,9 +179,9 @@ const NationalResources = () => {
                       <strong>Tags:</strong>
                       <div>
                         {resource.tags.map((tag) => (
-                          <button key={tag} className={styles.tagsButton}>
+                          <span key={tag} className={styles.tagsButton}>
                             {tag}
-                          </button>
+                          </span>
                         ))}
                       </div>
                     </p>
