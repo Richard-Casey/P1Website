@@ -45,6 +45,27 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
+// Detect cookie consent from URL
+const urlParams = new URLSearchParams(window.location.search);
+const consentStatus = urlParams.get('cookieConsent');
+
+if (consentStatus) {
+  localStorage.setItem('cookie_choices', consentStatus);
+
+  if (consentStatus === 'accepted') {
+    console.log('Cookies accepted and stored.');
+  } else {
+    console.log('Cookies declined.');
+  }
+}
+
+const storedConsent = localStorage.getItem('cookie_choices');
+const currentParams = new URLSearchParams(window.location.search);
+if (!currentParams.has('cookieConsent') && storedConsent) {
+  // Redirect to the correct URL with consent
+  window.location.href = `${window.location.pathname}?cookieConsent=${storedConsent}`;
+}
+
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
