@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { CSSTransition } from "react-transition-group";
 import styles from "../../styles/NationalResources.module.css";
-import resources from "../nationalinputs";  // Importing the resources data
+import resources from "../nationalinputs"; // Importing the resources data
 
 const NationalResources = () => {
-  const [expandedCategory, setExpandedCategory] = useState(null);
+  const [expandedCategories, setExpandedCategories] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
 
   const getCategoriesWithResources = () => {
@@ -55,7 +55,26 @@ const NationalResources = () => {
     return [...focusAreaResources, ...tagBasedResources];
   };
 
+  const toggleCategory = (category) => {
+    setExpandedCategories((prev) =>
+      prev.includes(category)
+        ? prev.filter((c) => c !== category) // Close category
+        : [...prev, category] // Open category
+    );
+  };
+
   const categoriesWithResources = getCategoriesWithResources();
+
+  // Excluded fields we don't want to render automatically (can be customized)
+  const excludedFields = [
+    "name",
+    "image",
+    "description",
+    "website",
+    "category",
+    "tags",
+    "extraInfo",
+  ];
 
   return (
     <div className={styles.container}>
@@ -71,19 +90,16 @@ const NationalResources = () => {
 
       {categoriesWithResources.map(([category]) => (
         <div key={category} className={styles.categoryContainer}>
-          <button
-            className={styles.categoryButton}
-            onClick={() =>
-              setExpandedCategory(
-                expandedCategory === category ? null : category
-              )
-            }
-          >
-            {category}
-          </button>
+<button
+  className={styles.categoryButton}
+  onClick={() => toggleCategory(category)}
+>
+  <span>{category}</span>
+</button>
+
 
           <CSSTransition
-            in={expandedCategory === category}
+            in={expandedCategories.includes(category)}
             timeout={400}
             classNames={{
               enter: styles["slide-enter"],
@@ -107,15 +123,35 @@ const NationalResources = () => {
                       <strong>{resource.name}</strong>
                     </h3>
                     <p>{resource.description}</p>
+
                     {resource.extraInfo && (
                       <p>
                         <strong>Additional Info:</strong> {resource.extraInfo}
                       </p>
                     )}
-                    <p>
-                      <strong>Email:</strong>{" "}
-                      <a href={`mailto:${resource.email}`}>{resource.email}</a>
-                    </p>
+
+                    {/* Automatically render all fields except excluded ones */}
+                    {Object.entries(resource)
+                      .filter(([key]) => !excludedFields.includes(key))
+                      .map(([key, value], index) => (
+                        <p key={index}>
+                          <strong>{key.charAt(0).toUpperCase() + key.slice(1)}:</strong>{" "}
+                          {key.toLowerCase().includes("email") ? (
+                            <a href={`mailto:${value}`}>{value}</a>
+                          ) : key.toLowerCase().includes("website") ? (
+                            <a
+                              href={value}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              {value}
+                            </a>
+                          ) : (
+                            value
+                          )}
+                        </p>
+                      ))}
+
                     <p>
                       <strong>Website:</strong>{" "}
                       <a
@@ -127,11 +163,27 @@ const NationalResources = () => {
                       </a>
                     </p>
                     <p>
-                      <strong>Focus Area:</strong>{" "}
-                      {resource.category.join(", ")}
+                      <strong>Focus Area:</strong>
+                      <div>
+                        {resource.category.map((cat) => (
+                          <button
+                            key={cat}
+                            className={styles.focusAreaButton}
+                          >
+                            {cat}
+                          </button>
+                        ))}
+                      </div>
                     </p>
                     <p>
-                      <strong>Tags:</strong> {resource.tags.join(", ")}
+                      <strong>Tags:</strong>
+                      <div>
+                        {resource.tags.map((tag) => (
+                          <button key={tag} className={styles.tagsButton}>
+                            {tag}
+                          </button>
+                        ))}
+                      </div>
                     </p>
                   </div>
                 </div>
