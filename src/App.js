@@ -16,7 +16,7 @@ import LGBTQIA from "./components/Pages/LGBTQIA";
 import Podcasts from "./components/Pages/Podcasts";
 import Youtube from "./components/Pages/Youtube";
 import Groups from "./components/Pages/Groups";
-import CookieBanner from "./components/CookieBanner";
+import NationalResources from "./components/Pages/NationalResources";
 import globalStyles from "./styles/globalstyle.module.css";
 
 import "./App.css";
@@ -25,16 +25,11 @@ import "./index.css";
 const App = () => {
   const location = useLocation();
   const isMinimalRoute = location.pathname.startsWith("/minimal-");
-  //const isMinimalRoute = location.pathname === "/minimal-form";
   const isHeroVisible = location.pathname === "/";
 
   return (
     <div className={`${styles.App} ${isMinimalRoute ? "minimal" : ""}`}>
       <ScrollToTop />
-
- {/* Exclude Cookie Banner for Minimal Routes */}
- {!isMinimalRoute && <CookieBanner />}
-
       {!isMinimalRoute && <Header />}
       {!isMinimalRoute && isHeroVisible && <Hero />}
       {!isMinimalRoute && <NavBar />}
@@ -56,6 +51,8 @@ const App = () => {
           <Route path="/podcasts" element={<Podcasts isMinimal={false} />} />
           <Route path="/youtube" element={<Youtube isMinimal={false} />} />
           <Route path="/groups" element={<Groups isMinimal={false} />} />
+          <Route path="/national-resources" element={<NationalResources isMinimal={false} />} />
+
 
           {/* Minimal Routes */}
           <Route
@@ -91,30 +88,13 @@ const App = () => {
             element={<Youtube isMinimal={true} />}
           />
           <Route path="/minimal-groups" element={<Groups isMinimal={true} />} />
+          <Route path="/minimal-national-resources" element={<NationalResources isMinimal={true} />} />
+
 
           {/* 404 Fallback */}
           <Route path="*" element={<div>Page Not Found</div>} />
         </Routes>
       </main>
-
-      {/* Centered Update Cookies Preferences Link */}
-      <div className={globalStyles.updateCookiesContainer}>
-        <a
-          href="#"
-          id="open_preferences_center"
-          className={globalStyles.updateCookiesTag}
-          onClick={(e) => {
-            e.preventDefault();
-            if (window.cookieconsent) {
-              window.cookieconsent.openPreferencesCenter();
-            } else {
-              console.error("Cookie consent script not loaded.");
-            }
-          }}
-        >
-          Update cookies preferences
-        </a>
-      </div>
 
       {/* Conditionally render Footer */}
       {!isMinimalRoute && <Footer />}
