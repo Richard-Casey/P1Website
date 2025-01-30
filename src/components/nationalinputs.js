@@ -23,7 +23,7 @@ const resources = [
     },
     {
       name: "Acacia - Family Support",
-      image: `${process.env.PUBLIC_URL}/images/National/acacia.png`,
+      image: `${process.env.PUBLIC_URL}/images/National/Acacia.png`,
       description: "Acacia Family Support provides specialised services for families dealing with depression.",
       website: "https://www.acacia.org.uk/",
       phone: "0121 301 5990",
@@ -33,7 +33,7 @@ const resources = [
     },
     {
         name: "Acacia - LGBTQ",
-        image: `${process.env.PUBLIC_URL}/images/National/acacialgbtq.png`,
+        image: `${process.env.PUBLIC_URL}/images/National/Acacialgbtq.png`,
         description: "The Acacia LGBTQ+ service focuses on providing support for LGBTQ+ parents who are navigating depression.",
         website: "https://www.acacia.org.uk/dads-partners/lgbtq",
         phone: "0121 301 5990",
@@ -43,7 +43,7 @@ const resources = [
     },
     {
         name: "Acacia - Dads & Partners",
-        image: `${process.env.PUBLIC_URL}/images/National/acaciadadspartners.png`,
+        image: `${process.env.PUBLIC_URL}/images/National/Acaciadadspartners.png`,
         description: "Acacia Family Support provides specialised services for families dealing with depression.",
         website: "https://www.acacia.org.uk/dads-partners/",
         phone: "0121 301 5990",
