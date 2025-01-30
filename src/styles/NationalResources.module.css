@@ -131,6 +131,12 @@ h1 {
     background-color: #fcfcfc;
     border-radius: 20px;
     margin-bottom: 5px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.resourceCard:hover {
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.6);
 }
 
 .resourceImage {
@@ -164,10 +170,32 @@ h1 {
 }
 
 /* Link hover underline effect */
+/* Link hover effect */
 .resourceDetails a {
-    position: relative;
     color: #0093a2;
     text-decoration: none;
+}
+
+.resourceDetails a:hover {
+    color: #d27a14;
+}
+
+/* Responsive styles for smaller screens */
+@media (max-width: 768px) {
+    .resourceCard {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .resourceImage {
+        width: 100%;
+        height: auto;
+        margin-bottom: 15px;
+    }
+
+    .resourceDetails {
+        width: 100%;
+    }
 }
 
 .resourceDetails a:hover {
