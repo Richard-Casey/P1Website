@@ -3,6 +3,15 @@ import { CSSTransition } from "react-transition-group";
 import styles from "../../styles/NationalResources.module.css";
 import resources from "../nationalinputs";
 
+// Helper function to capitalize field names
+const capitalizeField = (field) => {
+  return field
+    .replace(/([A-Z])/g, " $1")  // Split camelCase into words
+    .replace(/_/g, " ")          // Replace underscores with spaces
+    .replace(/^./, (str) => str.toUpperCase()); // Capitalize first letter
+};
+
+
 const NationalResources = () => {
   const [expandedCategories, setExpandedCategories] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -149,41 +158,56 @@ const NationalResources = () => {
                   />
                   <div className={styles.divider}></div>
                   <div className={styles.resourceDetails}>
-                    <h3>
-                      <strong>{resource.name}</strong>
-                    </h3>
-                    <p>{resource.description}</p>
-                    <p>
-                      <strong>Website:</strong>{" "}
-                      <a
-                        href={resource.website}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <strong>{resource.website}</strong>
-                      </a>
-                    </p>
-                    <p>
-                      <strong>Focus Area: </strong>
-                      <div className={styles.tagContainer}>
-                        {resource.category.map((cat) => (
-                          <span key={cat} className={styles.tagBox}>
-                            {cat.toUpperCase()}
-                          </span>
-                        ))}
-                      </div>
-                    </p>
-                    <p>
-                      <strong>Tags:</strong>
-                      <div className={styles.tagContainer}>
-                        {resource.tags.map((tag) => (
-                          <span key={tag} className={styles.tagBox}>
-                            {tag.toUpperCase()}
-                          </span>
-                        ))}
-                      </div>
-                    </p>
-                  </div>
+  <h3>
+    <strong>{resource.name}</strong>
+  </h3>
+  <p>{resource.description}</p>
+
+  <p>
+    <strong>Website:</strong>{" "}
+    <a href={resource.website} target="_blank" rel="noopener noreferrer">
+      <strong>{resource.website}</strong>
+    </a>
+  </p>
+
+  {/* Dynamically render all additional fields */}
+  {Object.entries(resource)
+    .filter(([key, value]) => 
+      !excludedFields.includes(key) && value) // Exclude core fields and empty values
+    .map(([key, value]) => (
+      <p key={key}>
+        <strong>{capitalizeField(key)}:</strong>{" "}
+        {key.toLowerCase() === "email" ? (
+          <a href={`mailto:${value}`}>{value}</a>
+        ) : (
+          value
+        )}
+      </p>
+    ))}
+
+  <p>
+    <strong>Focus Area:</strong>
+    <div className={styles.tagContainer}>
+      {resource.category.map((cat) => (
+        <span key={cat} className={styles.tagBox}>
+          {cat.toUpperCase()}
+        </span>
+      ))}
+    </div>
+  </p>
+
+  <p>
+    <strong>Tags:</strong>
+    <div className={styles.tagContainer}>
+      {resource.tags.map((tag) => (
+        <span key={tag} className={styles.tagBox}>
+          {tag.toUpperCase()}
+        </span>
+      ))}
+    </div>
+  </p>
+</div>
+
                 </div>
               ))}
             </div>

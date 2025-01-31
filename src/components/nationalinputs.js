@@ -4,11 +4,11 @@ const resources = [
       image: `${process.env.PUBLIC_URL}/images/National/cruse.png`,
       description: "Provides support and counseling for those experiencing loss.",
       website: "https://www.cruse.org.uk",
+      phone: "0808 808 1677",
       email: "info@cruse.org.uk",
       category: ["Bereavement"],
       tags: ["Mental Health", "Counselling", "Peer Support"],
-      extraInfo: "Specializes in helping families and children cope with grief.",
-      testimonial: "Cruse helped me find hope after a devastating loss."
+      extraInfo: "Specialises in helping families and children cope with grief.",
     },
     {
       name: "PANDAS Foundation",
@@ -21,7 +21,6 @@ const resources = [
       category: ["Mental Health"],
       tags: ["Perinatal", "Support Groups", "Counselling"],
       extraInfo: "",
-      testimonial: "PANDAS provided incredible support during my postnatal depression."
     },
     {
       name: "Acacia - Family Support",
