@@ -8,6 +8,7 @@ const resources = [
       category: ["Bereavement"],
       tags: ["Mental Health", "Counselling", "Peer Support"],
       extraInfo: "Specializes in helping families and children cope with grief.",
+      testimonial: "Cruse helped me find hope after a devastating loss."
     },
     {
       name: "PANDAS Foundation",
@@ -20,6 +21,7 @@ const resources = [
       category: ["Mental Health"],
       tags: ["Perinatal", "Support Groups", "Counselling"],
       extraInfo: "",
+      testimonial: "PANDAS provided incredible support during my postnatal depression."
     },
     {
       name: "Acacia - Family Support",

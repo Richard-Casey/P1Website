@@ -1,5 +1,9 @@
 .container {
     padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* Centers vertically if needed */
 }
 
 h1 {
@@ -23,8 +27,6 @@ h1 {
     color: #d27a14;
 }
 
-
-
 .searchBar {
     width: 100%;
     padding: 10px;
@@ -40,8 +42,10 @@ h1 {
     position: relative;
     overflow: hidden;
     height: 3rem;
-    width: 300px; /* Fixed width for larger screens */
-    max-width: 90%; /* Dynamic for smaller screens */
+    width: 100%;
+    /* Let it adjust based on parent width */
+    max-width: 400px;
+    /* Adjust maximum width as necessary */
     padding: 0 2rem;
     border-radius: 1.5rem;
     background: #3d3a4e;
@@ -77,11 +81,9 @@ h1 {
     width: 100%;
     height: 100%;
     border-radius: inherit;
-    background: linear-gradient(
-      82.3deg,
-      #0093a2 10.8%,
-      rgba(3, 150, 155, 1) 94.3%
-    );
+    background: linear-gradient(82.3deg,
+            #0093a2 10.8%,
+            rgba(3, 150, 155, 1) 94.3%);
     transition: all 0.875s;
 }
 
@@ -94,7 +96,8 @@ h1 {
 
 /* Entering state (transition applied) */
 .slide-enter-active {
-    max-height: 800px; /* Match actual content height */
+    max-height: 800px;
+    /* Match actual content height */
     opacity: 1;
     transition: max-height 0.8s ease-in-out, opacity 0.8s ease-in-out;
 }
@@ -104,14 +107,16 @@ h1 {
     max-height: 800px;
     opacity: 1;
     overflow: hidden;
-    padding-bottom: 10px; /* Buffer to prevent snapping */
+    padding-bottom: 10px;
+    /* Buffer to prevent snapping */
 }
 
 /* Exiting transition */
 .slide-exit-active {
     max-height: 0;
     opacity: 0;
-    padding-bottom: 0; /* Remove padding smoothly */
+    padding-bottom: 0;
+    /* Remove padding smoothly */
     transition: max-height 1s ease, opacity 0.8s ease;
 }
 
@@ -143,8 +148,8 @@ h1 {
     color: #d27a14;
     font-weight: 600;
     margin-left: 8px;
-  }
-  
+}
+
 
 /* Add a dark overlay for text readability */
 .overlay {
@@ -195,8 +200,10 @@ h1 {
 .resourceDetails a {
     color: #03969b;
     text-decoration: none;
-    position: relative; /* Ensure pseudo-elements position relative to this link */
-    display: inline-block; /* Ensure the link is treated as an inline block */
+    position: relative;
+    /* Ensure pseudo-elements position relative to this link */
+    display: inline-block;
+    /* Ensure the link is treated as an inline block */
 }
 
 .resourceDetails a:hover {
@@ -231,9 +238,11 @@ h1 {
 .tagContainer {
     display: inline-flex;
     flex-wrap: wrap;
-    gap: 6px; /* Spacing between tags */
+    gap: 6px;
+    /* Spacing between tags */
     margin-left: 5px;
-    align-items: center; /* Ensures proper vertical alignment with the label */
+    align-items: center;
+    /* Ensures proper vertical alignment with the label */
 }
 
 
@@ -247,8 +256,11 @@ h1 {
     font-size: 0.75rem;
     font-weight: 600;
     color: #0093a2;
-    border-radius: 10px; /* Optional: rounded corners */
+    border-radius: 10px;
+    /* Optional: rounded corners */
 }
+
+
 
 
 /* Responsive styles for smaller screens */

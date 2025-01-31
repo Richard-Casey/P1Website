@@ -1,16 +1,37 @@
 import React, { useState } from "react";
 import { CSSTransition } from "react-transition-group";
 import styles from "../../styles/NationalResources.module.css";
-import resources from "../nationalinputs"; // Importing the resources data
+import resources from "../nationalinputs";
 
 const NationalResources = () => {
   const [expandedCategories, setExpandedCategories] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [randomTestimonial, setRandomTestimonial] = useState("Support is always just a click away.");
 
   const toggleCategory = (category) => {
     setExpandedCategories((prev) =>
       prev.includes(category) ? prev.filter((c) => c !== category) : [...prev, category]
     );
+    setTestimonialForCategory(category);
+  };
+
+  const setTestimonialForCategory = (category) => {
+    const categoryResources = resources.filter(
+      (resource) =>
+        resource.category.map((c) => c.toLowerCase()).includes(category.toLowerCase()) ||
+        resource.tags.map((t) => t.toLowerCase()).includes(category.toLowerCase())
+    );
+
+    const testimonials = categoryResources
+      .map((resource) => resource.testimonial)
+      .filter((testimonial) => testimonial); // Ignore empty testimonials
+
+    if (testimonials.length > 0) {
+      const randomIndex = Math.floor(Math.random() * testimonials.length);
+      setRandomTestimonial(testimonials[randomIndex]);
+    } else {
+      setRandomTestimonial("Support is always just a click away.");
+    }
   };
 
   const getCategoriesWithResources = () => {
