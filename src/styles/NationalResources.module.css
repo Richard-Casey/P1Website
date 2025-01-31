@@ -137,6 +137,15 @@ h1 {
     overflow: hidden;
 }
 
+.resourceCount {
+    font-family: "Century Gothic";
+    font-size: 0.9rem;
+    color: #d27a14;
+    font-weight: 600;
+    margin-left: 8px;
+  }
+  
+
 /* Add a dark overlay for text readability */
 .overlay {
     position: absolute;

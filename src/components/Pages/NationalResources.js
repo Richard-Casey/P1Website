@@ -78,10 +78,10 @@ const NationalResources = () => {
     "extraInfo",
   ];
 
-return (
+  return (
     <div className={styles.container}>
       <h1>National Resources Directory</h1>
-
+  
       <input
         type="text"
         placeholder="Search by keyword..."
@@ -89,16 +89,17 @@ return (
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
       />
-
-      {categoriesWithResources.map(([category]) => (
+  
+      {categoriesWithResources.map(([category, categoryResources]) => (
         <div key={category} className={styles.categoryContainer}>
           <button
             className={styles.categoryButton}
             onClick={() => toggleCategory(category)}
           >
             <span>{category}</span>
+            <span className={styles.resourceCount}>({categoryResources.length})</span>
           </button>
-
+  
           <CSSTransition
             in={expandedCategories.includes(category)}
             timeout={400}
@@ -111,7 +112,7 @@ return (
             unmountOnExit
           >
             <div className={styles.resourceList}>
-              {resources.map((resource) => (
+              {getPrioritizedResources(category).map((resource) => (
                 <div
                   key={resource.name}
                   className={styles.resourceCard}
@@ -142,28 +143,25 @@ return (
                       </a>
                     </p>
                     <p>
-  <strong>Focus Area: </strong>
-  <div className={styles.tagContainer}>
-    {resource.category.map((cat) => (
-      <span key={cat} className={styles.tagBox}>
-        {cat.toUpperCase()}
-      </span>
-    ))}
-  </div>
-</p>
-
-
-<p>
-  <strong>Tags:</strong>
-  <div className={styles.tagContainer}>
-    {resource.tags.map((tag) => (
-      <span key={tag} className={styles.tagBox}>
-        {tag.toUpperCase()}
-      </span>
-    ))}
-  </div>
-</p>
-
+                      <strong>Focus Area: </strong>
+                      <div className={styles.tagContainer}>
+                        {resource.category.map((cat) => (
+                          <span key={cat} className={styles.tagBox}>
+                            {cat.toUpperCase()}
+                          </span>
+                        ))}
+                      </div>
+                    </p>
+                    <p>
+                      <strong>Tags:</strong>
+                      <div className={styles.tagContainer}>
+                        {resource.tags.map((tag) => (
+                          <span key={tag} className={styles.tagBox}>
+                            {tag.toUpperCase()}
+                          </span>
+                        ))}
+                      </div>
+                    </p>
                   </div>
                 </div>
               ))}
@@ -173,6 +171,6 @@ return (
       ))}
     </div>
   );
-};
+}
 
 export default NationalResources;
