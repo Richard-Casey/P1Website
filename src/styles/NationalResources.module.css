@@ -85,8 +85,6 @@ h1 {
     transition: all 0.875s;
 }
 
-
-
 /* Initial state (hidden) */
 .slide-enter {
     max-height: 0;
@@ -124,19 +122,34 @@ h1 {
 }
 
 .resourceCard {
+    position: relative;
     display: flex;
     align-items: center;
     border: 2px solid #999;
-    padding: 10px;
-    background-color: #fcfcfc;
+    padding: 20px;
     border-radius: 20px;
-    margin-bottom: 5px;
+    margin-bottom: 20px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    background-size: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
+}
+
+/* Add a dark overlay for text readability */
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #f8f9face;
+    z-index: 1;
 }
 
 .resourceCard:hover {
-    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.6);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.8);
 }
 
 .resourceImage {
@@ -144,64 +157,42 @@ h1 {
     height: 160px;
     object-fit: cover;
     border-radius: 8px;
-}
-
-.divider {
-    border-left: 3px solid #999;
-    height: auto;
-    align-self: stretch;
-    margin: 0 10px;
+    z-index: 2;
+    margin-right: 20px;
 }
 
 .resourceDetails {
     flex: 1;
+    z-index: 2;
 }
 
 .resourceDetails h3 {
-    color: #0093a2;
+    color: #03969b;
     margin: 0;
-    font-size: 1rem;
-    line-height: 1.2;
+    font-size: 1.2rem;
 }
 
 .resourceDetails p {
     font-size: 0.9rem;
-    margin: 5px 0;
+    color: #333;
 }
 
-/* Link hover underline effect */
-/* Link hover effect */
+.divider {
+    display: none;
+}
+
 .resourceDetails a {
-    color: #0093a2;
+    color: #03969b;
     text-decoration: none;
+    position: relative; /* Ensure pseudo-elements position relative to this link */
+    display: inline-block; /* Ensure the link is treated as an inline block */
 }
 
 .resourceDetails a:hover {
     color: #d27a14;
 }
 
-/* Responsive styles for smaller screens */
-@media (max-width: 768px) {
-    .resourceCard {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .resourceImage {
-        width: 100%;
-        height: auto;
-        margin-bottom: 15px;
-    }
-
-    .resourceDetails {
-        width: 100%;
-    }
-}
-
-.resourceDetails a:hover {
-    color: #d27a14;
-}
-
+/* Fix the animated underline effect */
 .resourceDetails a::before,
 .resourceDetails a::after {
     content: '';
@@ -224,4 +215,24 @@ h1 {
 .resourceDetails a:hover::before,
 .resourceDetails a:hover::after {
     width: 50%;
+}
+
+
+
+/* Responsive styles for smaller screens */
+@media (max-width: 768px) {
+    .resourceCard {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .resourceImage {
+        width: 100%;
+        height: auto;
+        margin-bottom: 15px;
+    }
+
+    .resourceDetails {
+        width: 100%;
+    }
 }

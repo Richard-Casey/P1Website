@@ -7,6 +7,12 @@ const NationalResources = () => {
   const [expandedCategories, setExpandedCategories] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
 
+  const toggleCategory = (category) => {
+    setExpandedCategories((prev) =>
+      prev.includes(category) ? prev.filter((c) => c !== category) : [...prev, category]
+    );
+  };
+
   const getCategoriesWithResources = () => {
     const categoryMap = {};
     resources.forEach((resource) => {
@@ -28,6 +34,8 @@ const NationalResources = () => {
       ])
       .sort(([a], [b]) => a.localeCompare(b));
   };
+
+  const categoriesWithResources = getCategoriesWithResources();
 
   const getPrioritizedResources = (category) => {
     const focusAreaResources = [];
@@ -55,15 +63,9 @@ const NationalResources = () => {
     return [...focusAreaResources, ...tagBasedResources];
   };
 
-  const toggleCategory = (category) => {
-    setExpandedCategories((prev) =>
-      prev.includes(category)
-        ? prev.filter((c) => c !== category) // Close category
-        : [...prev, category] // Open category
-    );
+  const getRandomRotation = () => {
+    return `${Math.floor(Math.random() * 90 - 45)}deg`; // Random rotation between -45 and 45 degrees
   };
-
-  const categoriesWithResources = getCategoriesWithResources();
 
   // Excluded fields we don't want to render automatically (can be customized)
   const excludedFields = [
@@ -76,7 +78,7 @@ const NationalResources = () => {
     "extraInfo",
   ];
 
-  return (
+return (
     <div className={styles.container}>
       <h1>National Resources Directory</h1>
 
@@ -90,13 +92,12 @@ const NationalResources = () => {
 
       {categoriesWithResources.map(([category]) => (
         <div key={category} className={styles.categoryContainer}>
-<button
-  className={styles.categoryButton}
-  onClick={() => toggleCategory(category)}
->
-  <span>{category}</span>
-</button>
-
+          <button
+            className={styles.categoryButton}
+            onClick={() => toggleCategory(category)}
+          >
+            <span>{category}</span>
+          </button>
 
           <CSSTransition
             in={expandedCategories.includes(category)}
@@ -110,8 +111,15 @@ const NationalResources = () => {
             unmountOnExit
           >
             <div className={styles.resourceList}>
-              {getPrioritizedResources(category).map((resource) => (
-                <div key={resource.name} className={styles.resourceCard}>
+              {resources.map((resource) => (
+                <div
+                  key={resource.name}
+                  className={styles.resourceCard}
+                  style={{
+                    backgroundImage: `url(${resource.image})`,
+                  }}
+                >
+                  <div className={styles.overlay}></div>
                   <img
                     src={resource.image}
                     alt={resource.name}
@@ -123,35 +131,6 @@ const NationalResources = () => {
                       <strong>{resource.name}</strong>
                     </h3>
                     <p>{resource.description}</p>
-
-                    {resource.extraInfo && (
-                      <p>
-                        <strong>Additional Info:</strong> {resource.extraInfo}
-                      </p>
-                    )}
-
-                    {/* Automatically render all fields except excluded ones */}
-                    {Object.entries(resource)
-                      .filter(([key]) => !excludedFields.includes(key))
-                      .map(([key, value], index) => (
-                        <p key={index}>
-                          <strong>{key.charAt(0).toUpperCase() + key.slice(1)}:</strong>{" "}
-                          {key.toLowerCase().includes("email") ? (
-                            <a href={`mailto:${value}`}>{value}</a>
-                          ) : key.toLowerCase().includes("website") ? (
-                            <a
-                              href={value}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              {value}
-                            </a>
-                          ) : (
-                            value
-                          )}
-                        </p>
-                      ))}
-
                     <p>
                       <strong>Website:</strong>{" "}
                       <a
@@ -163,27 +142,11 @@ const NationalResources = () => {
                       </a>
                     </p>
                     <p>
-                      <strong>Focus Area:</strong>
-                      <div>
-                        {resource.category.map((cat) => (
-                          <span
-                            key={cat}
-                            className={styles.focusAreaButton}
-                          >
-                            {cat}
-                          </span>
-                        ))}
-                      </div>
+                      <strong>Focus Area:</strong>{" "}
+                      {resource.category.join(", ")}
                     </p>
                     <p>
-                      <strong>Tags:</strong>
-                      <div>
-                        {resource.tags.map((tag) => (
-                          <span key={tag} className={styles.tagsButton}>
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
+                      <strong>Tags:</strong> {resource.tags.join(", ")}
                     </p>
                   </div>
                 </div>
