@@ -172,18 +172,27 @@ const NationalResources = () => {
 
   {/* Dynamically render all additional fields */}
   {Object.entries(resource)
-    .filter(([key, value]) => 
-      !excludedFields.includes(key) && value) // Exclude core fields and empty values
-    .map(([key, value]) => (
+  .filter(([key, value]) => 
+    !excludedFields.includes(key) && value) // Exclude core fields and empty values
+  .map(([key, value]) => {
+    // Check if the value is an email or a URL
+    const isEmail = value.includes("@");
+    const isLink = value.startsWith("http");
+
+    return (
       <p key={key}>
         <strong>{capitalizeField(key)}:</strong>{" "}
-        {key.toLowerCase() === "email" ? (
+        {isEmail ? (
           <a href={`mailto:${value}`}>{value}</a>
+        ) : isLink ? (
+          <a href={value} target="_blank" rel="noopener noreferrer">{value}</a>
         ) : (
           value
         )}
       </p>
-    ))}
+    );
+  })}
+
 
   <p>
     <strong>Focus Area:</strong>
