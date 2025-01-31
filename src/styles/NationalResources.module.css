@@ -126,7 +126,7 @@ h1 {
     display: flex;
     align-items: center;
     border: 2px solid #999;
-    padding: 20px;
+    padding: 10px;
     border-radius: 20px;
     margin-bottom: 20px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
@@ -174,7 +174,9 @@ h1 {
 
 .resourceDetails p {
     font-size: 0.9rem;
+    font-weight: 600;
     color: #333;
+    margin-bottom: 0.8rem;
 }
 
 .divider {
@@ -217,6 +219,27 @@ h1 {
     width: 50%;
 }
 
+.tagContainer {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 6px; /* Spacing between tags */
+    margin-left: 5px;
+    align-items: center; /* Ensures proper vertical alignment with the label */
+}
+
+
+.tagBox {
+    background-color: #f7f7f7;
+    padding: 2px 8px;
+    border-top: 2px solid #d27a14;
+    border-bottom: 2px solid #d27a14;
+    border-left: 3px solid #d27a14;
+    border-right: 3px solid #d27a14;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #0093a2;
+    border-radius: 10px; /* Optional: rounded corners */
+}
 
 
 /* Responsive styles for smaller screens */

@@ -142,12 +142,28 @@ return (
                       </a>
                     </p>
                     <p>
-                      <strong>Focus Area:</strong>{" "}
-                      {resource.category.join(", ")}
-                    </p>
-                    <p>
-                      <strong>Tags:</strong> {resource.tags.join(", ")}
-                    </p>
+  <strong>Focus Area: </strong>
+  <div className={styles.tagContainer}>
+    {resource.category.map((cat) => (
+      <span key={cat} className={styles.tagBox}>
+        {cat.toUpperCase()}
+      </span>
+    ))}
+  </div>
+</p>
+
+
+<p>
+  <strong>Tags:</strong>
+  <div className={styles.tagContainer}>
+    {resource.tags.map((tag) => (
+      <span key={tag} className={styles.tagBox}>
+        {tag.toUpperCase()}
+      </span>
+    ))}
+  </div>
+</p>
+
                   </div>
                 </div>
               ))}
