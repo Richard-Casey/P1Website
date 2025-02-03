@@ -32,6 +32,8 @@ h1 {
     padding: 10px;
     margin: 10px 0;
     font-size: 16px;
+    border: 1px solid #333;
+    border-radius: 60px;
 }
 
 .highlight {
@@ -50,14 +52,13 @@ h1 {
     overflow: hidden;
     height: 3rem;
     width: 100%;
-    /* Let it adjust based on parent width */
     max-width: 400px;
-    /* Adjust maximum width as necessary */
     padding: 0 2rem;
     border-radius: 1.5rem;
     background: #3d3a4e;
     color: #fff;
-    border: none;
+    border: 2px solid #ffffff; /* Inner white border */
+    box-shadow: 0 0 0 4px #555; /* Outer shadow (adjust thickness as needed) */
     cursor: pointer;
     font-family: "Century Gothic";
     font-size: 1rem;
@@ -67,7 +68,14 @@ h1 {
     display: flex;
     justify-content: center;
     align-items: center;
+    transition: all 0.3s ease;
 }
+
+.categoryButton:hover {
+    box-shadow: 0 0 0 4px #d27a14, 0 0 10px rgba(0, 0, 0, 0.5); /* Add color effect on hover */
+    background: #555;
+}
+
 
 .categoryButton:hover::before {
     transform: scaleX(1);
