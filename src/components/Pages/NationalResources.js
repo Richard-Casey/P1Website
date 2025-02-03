@@ -6,42 +6,31 @@ import resources from "../nationalinputs";
 // Helper function to capitalize field names
 const capitalizeField = (field) => {
   return field
-    .replace(/([A-Z])/g, " $1")  // Split camelCase into words
-    .replace(/_/g, " ")          // Replace underscores with spaces
+    .replace(/([A-Z])/g, " $1") // Split camelCase into words
+    .replace(/_/g, " ") // Replace underscores with spaces
     .replace(/^./, (str) => str.toUpperCase()); // Capitalize first letter
 };
-
 
 const NationalResources = () => {
   const [expandedCategories, setExpandedCategories] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [randomTestimonial, setRandomTestimonial] = useState("Support is always just a click away.");
 
   const toggleCategory = (category) => {
     setExpandedCategories((prev) =>
       prev.includes(category) ? prev.filter((c) => c !== category) : [...prev, category]
     );
-    setTestimonialForCategory(category);
   };
 
-  const setTestimonialForCategory = (category) => {
-    const categoryResources = resources.filter(
-      (resource) =>
-        resource.category.map((c) => c.toLowerCase()).includes(category.toLowerCase()) ||
-        resource.tags.map((t) => t.toLowerCase()).includes(category.toLowerCase())
+  // Filter resources by search term
+  const filteredResources = resources.filter((resource) => {
+    const lowerSearchTerm = searchTerm.toLowerCase();
+    return (
+      resource.name.toLowerCase().includes(lowerSearchTerm) ||
+      resource.description.toLowerCase().includes(lowerSearchTerm) ||
+      resource.tags.some((tag) => tag.toLowerCase().includes(lowerSearchTerm)) ||
+      resource.category.some((cat) => cat.toLowerCase().includes(lowerSearchTerm))
     );
-
-    const testimonials = categoryResources
-      .map((resource) => resource.testimonial)
-      .filter((testimonial) => testimonial); // Ignore empty testimonials
-
-    if (testimonials.length > 0) {
-      const randomIndex = Math.floor(Math.random() * testimonials.length);
-      setRandomTestimonial(testimonials[randomIndex]);
-    } else {
-      setRandomTestimonial("Support is always just a click away.");
-    }
-  };
+  });
 
   const getCategoriesWithResources = () => {
     const categoryMap = {};
@@ -67,51 +56,81 @@ const NationalResources = () => {
 
   const categoriesWithResources = getCategoriesWithResources();
 
-  const getPrioritizedResources = (category) => {
-    const focusAreaResources = [];
-    const tagBasedResources = [];
+  const excludedFields = ["name", "image", "description", "website", "category", "tags", "extraInfo"];
 
-    resources.forEach((resource) => {
-      const lowerCategory = category.toLowerCase();
-      const isFocusArea = resource.category.some(
-        (cat) => cat.toLowerCase() === lowerCategory
-      );
-      const isTag = resource.tags.some(
-        (tag) => tag.toLowerCase() === lowerCategory
-      );
+  // Function to render resource cards (used for both search results and category listings)
+  const renderResourceCard = (resource) => (
+    <div key={resource.name} className={styles.resourceCard}>
+      <div className={styles.overlay}></div>
+      <img
+        src={resource.image}
+        alt={resource.name}
+        className={styles.resourceImage}
+      />
+      <div className={styles.resourceDetails}>
+        <h3>
+          <strong>{resource.name}</strong>
+        </h3>
+        <p>{resource.description}</p>
+        <p>
+          <strong>Website:</strong>{" "}
+          <a href={resource.website} target="_blank" rel="noopener noreferrer">
+            {resource.website}
+          </a>
+        </p>
 
-      if (isFocusArea) {
-        focusAreaResources.push(resource);
-      } else if (isTag) {
-        tagBasedResources.push(resource);
-      }
-    });
+        {/* Dynamically render additional fields */}
+        {Object.entries(resource)
+          .filter(([key, value]) => !excludedFields.includes(key) && value)
+          .map(([key, value]) => {
+            const isEmail = value.includes("@");
+            const isLink = value.startsWith("http");
+            return (
+              <p key={key}>
+                <strong>{capitalizeField(key)}:</strong>{" "}
+                {isEmail ? (
+                  <a href={`mailto:${value}`}>{value}</a>
+                ) : isLink ? (
+                  <a href={value} target="_blank" rel="noopener noreferrer">
+                    {value}
+                  </a>
+                ) : (
+                  value
+                )}
+              </p>
+            );
+          })}
 
-    focusAreaResources.sort((a, b) => a.name.localeCompare(b.name));
-    tagBasedResources.sort((a, b) => a.name.localeCompare(b.name));
+        <p>
+          <strong>Focus Area:</strong>
+          <div className={styles.tagContainer}>
+            {resource.category.map((cat) => (
+              <span key={cat} className={styles.tagBox}>
+                {cat.toUpperCase()}
+              </span>
+            ))}
+          </div>
+        </p>
 
-    return [...focusAreaResources, ...tagBasedResources];
-  };
-
-  const getRandomRotation = () => {
-    return `${Math.floor(Math.random() * 90 - 45)}deg`; // Random rotation between -45 and 45 degrees
-  };
-
-  // Excluded fields we don't want to render automatically (can be customized)
-  const excludedFields = [
-    "name",
-    "image",
-    "description",
-    "website",
-    "category",
-    "tags",
-    "extraInfo",
-  ];
+        <p>
+          <strong>Tags:</strong>
+          <div className={styles.tagContainer}>
+            {resource.tags.map((tag) => (
+              <span key={tag} className={styles.tagBox}>
+                {tag.toUpperCase()}
+              </span>
+            ))}
+          </div>
+        </p>
+      </div>
+    </div>
+  );
 
   return (
     <div className={styles.container}>
       <h1>National Resources Directory</h1>
-  
+
+      {/* Search Input */}
       <input
         type="text"
         placeholder="Search by keyword..."
@@ -119,7 +138,22 @@ const NationalResources = () => {
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
       />
-  
+
+      {/* Search Results Section */}
+      {searchTerm && filteredResources.length > 0 && (
+        <div className={styles.categoryContainer}>
+          <h2>Search Results for "{searchTerm}"</h2>
+          <div className={styles.resourceList}>
+            {filteredResources.map((resource) => renderResourceCard(resource))}
+          </div>
+        </div>
+      )}
+
+      {searchTerm && filteredResources.length === 0 && (
+        <p>No resources found for the search term "{searchTerm}".</p>
+      )}
+
+      {/* Category List */}
       {categoriesWithResources.map(([category, categoryResources]) => (
         <div key={category} className={styles.categoryContainer}>
           <button
@@ -129,7 +163,7 @@ const NationalResources = () => {
             <span>{category}</span>
             <span className={styles.resourceCount}>({categoryResources.length})</span>
           </button>
-  
+
           <CSSTransition
             in={expandedCategories.includes(category)}
             timeout={400}
@@ -142,89 +176,13 @@ const NationalResources = () => {
             unmountOnExit
           >
             <div className={styles.resourceList}>
-              {getPrioritizedResources(category).map((resource) => (
-                <div
-                  key={resource.name}
-                  className={styles.resourceCard}
-                  style={{
-                    backgroundImage: `url(${resource.image})`,
-                  }}
-                >
-                  <div className={styles.overlay}></div>
-                  <img
-                    src={resource.image}
-                    alt={resource.name}
-                    className={styles.resourceImage}
-                  />
-                  <div className={styles.divider}></div>
-                  <div className={styles.resourceDetails}>
-  <h3>
-    <strong>{resource.name}</strong>
-  </h3>
-  <p>{resource.description}</p>
-
-  <p>
-    <strong>Website:</strong>{" "}
-    <a href={resource.website} target="_blank" rel="noopener noreferrer">
-      <strong>{resource.website}</strong>
-    </a>
-  </p>
-
-  {/* Dynamically render all additional fields */}
-  {Object.entries(resource)
-  .filter(([key, value]) => 
-    !excludedFields.includes(key) && value) // Exclude core fields and empty values
-  .map(([key, value]) => {
-    // Check if the value is an email or a URL
-    const isEmail = value.includes("@");
-    const isLink = value.startsWith("http");
-
-    return (
-      <p key={key}>
-        <strong>{capitalizeField(key)}:</strong>{" "}
-        {isEmail ? (
-          <a href={`mailto:${value}`}>{value}</a>
-        ) : isLink ? (
-          <a href={value} target="_blank" rel="noopener noreferrer">{value}</a>
-        ) : (
-          value
-        )}
-      </p>
-    );
-  })}
-
-
-  <p>
-    <strong>Focus Area:</strong>
-    <div className={styles.tagContainer}>
-      {resource.category.map((cat) => (
-        <span key={cat} className={styles.tagBox}>
-          {cat.toUpperCase()}
-        </span>
-      ))}
-    </div>
-  </p>
-
-  <p>
-    <strong>Tags:</strong>
-    <div className={styles.tagContainer}>
-      {resource.tags.map((tag) => (
-        <span key={tag} className={styles.tagBox}>
-          {tag.toUpperCase()}
-        </span>
-      ))}
-    </div>
-  </p>
-</div>
-
-                </div>
-              ))}
+              {categoryResources.map((resource) => renderResourceCard(resource))}
             </div>
           </CSSTransition>
         </div>
       ))}
     </div>
   );
-}
+};
 
 export default NationalResources;

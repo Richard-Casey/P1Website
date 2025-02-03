@@ -260,6 +260,31 @@ h1 {
     /* Optional: rounded corners */
 }
 
+.pagination {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin: 10px 0;
+  }
+  
+  .paginationButton {
+    background-color: #3d3a4e;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .paginationButton:hover {
+    background-color: #0093a2;
+  }
+  
+  .active {
+    background-color: #d27a14;
+  }
+  
+
 
 
 
