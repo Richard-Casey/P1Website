@@ -61,8 +61,21 @@ const NationalResources = () => {
 
   // Function to render resource cards (used for both search results and category listings)
   const renderResourceCard = (resource) => (
-    <div key={resource.name} className={styles.resourceCard}>
+    <div
+      key={resource.name}
+      className={styles.resourceCard}
+      style={{ position: "relative" }} // Ensure correct layering
+    >
+      {/* Blurred background using pseudo-element */}
+      <div
+        className={styles.backgroundBlur}
+        style={{
+          backgroundImage: `url(${resource.image})`,
+        }}
+      ></div>
+  
       <div className={styles.overlay}></div>
+  
       <img
         src={resource.image}
         alt={resource.name}
@@ -79,7 +92,7 @@ const NationalResources = () => {
             {resource.website}
           </a>
         </p>
-
+  
         {/* Dynamically render additional fields */}
         {Object.entries(resource)
           .filter(([key, value]) => !excludedFields.includes(key) && value)
@@ -101,7 +114,7 @@ const NationalResources = () => {
               </p>
             );
           })}
-
+  
         <p>
           <strong>Focus Area:</strong>
           <div className={styles.tagContainer}>
@@ -112,7 +125,7 @@ const NationalResources = () => {
             ))}
           </div>
         </p>
-
+  
         <p>
           <strong>Tags:</strong>
           <div className={styles.tagContainer}>
@@ -126,6 +139,7 @@ const NationalResources = () => {
       </div>
     </div>
   );
+  
 
   return (
     <div className={styles.container}>
