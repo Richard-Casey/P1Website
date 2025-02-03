@@ -1,0 +1,178 @@
+.container {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    text-align: center;
+  }
+
+  .new-field-container {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+  }
+  
+  .newFieldInput {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    margin-right: 10px;
+  }
+  
+  .addFieldButton {
+    background-color: #0093a2;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  .addFieldButton:hover {
+    background-color: #007984;
+  }
+  
+  .removeButton {
+    background-color: #ff9327;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    margin-left: 10px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  
+  .removeButton:hover {
+    background-color: #0093a2;
+  }
+  
+
+  .fieldNameInput {
+    flex: 1;
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+  
+  
+  
+  .bar {
+    background-color: #f8f9fa; /* Light grey background */
+    color: #0093a2; /* Text color */
+    font-size: 16px; /* Reduce font size */
+    cursor: pointer;
+    border-radius: 5px;
+    font-weight: bold;
+    border: 1px solid #999; /* Grey border */
+    margin-bottom: 0 !important; /* Remove unwanted margin */
+}
+
+.bar p {
+    margin: 0; /* Ensure no extra margin is applied */
+}
+  
+  .bar:hover {
+    color:#d87f23;
+    background-color: #f9f9f9;
+  }
+  
+  .form {
+    background-color: #f9f9f9;
+    padding: 0 15px;
+    border-radius: 5px;
+    margin-top: 10px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height 0.7s ease-in-out, opacity 0.7s ease-in-out;
+
+}
+
+.form.show {
+  max-height: 1000px; /* Large enough to handle content size */
+  opacity: 1;
+}
+
+  
+.form-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.form-group label {
+    width: 150px; /* Adjust width as needed */
+    font-weight: bold;
+    text-align: right;
+    margin-right: 10px;
+}
+
+.form-group input,
+.form-group textarea {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+  
+  .form textarea {
+    height: 80px;
+    resize: none;
+  }
+  
+  .disclaimer {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 10px;
+  }
+  
+  .submitButton {
+    background-color: #d87f23;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  .submitButton:hover {
+    background-color: #b3641b;
+  }
+  
+  /* Initial state (hidden) */
+.slide-enter {
+    max-height: 800px;
+    opacity: 1;
+    overflow: hidden;
+}
+
+/* Entering state (transition applied) */
+.slide-enter-active {
+    max-height: 500px; /* Adjust as needed */
+    opacity: 1;
+    transition: max-height 0.4s ease-in-out, opacity 0.4s ease-in-out;
+}
+
+/* Exiting state */
+.slide-exit {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+}
+
+/* Exiting transition */
+.slide-exit-active {
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 0.4s ease-in-out, opacity 0.4s ease-in-out;
+}

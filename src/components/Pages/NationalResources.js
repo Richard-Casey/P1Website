@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { CSSTransition } from "react-transition-group";
 import styles from "../../styles/NationalResources.module.css";
 import resources from "../nationalinputs";
+import InputNational from "../inputnational"; 
 
 // Helper function to capitalize field names
 const capitalizeField = (field) => {
@@ -129,6 +130,9 @@ const NationalResources = () => {
   return (
     <div className={styles.container}>
       <h1>National Resources Directory</h1>
+
+      {/* Group Submission Form */}
+      <InputNational />
 
       {/* Search Input */}
       <input
