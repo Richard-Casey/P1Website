@@ -12,6 +12,19 @@ const capitalizeField = (field) => {
     .replace(/^./, (str) => str.toUpperCase()); // Capitalize first letter
 };
 
+// Highlight matching text with a yellow background
+const highlightMatch = (text, searchTerm) => {
+  if (!searchTerm) return text;
+  const regex = new RegExp(`(${searchTerm})`, "gi");
+  return text.split(regex).map((part, index) =>
+    part.toLowerCase() === searchTerm.toLowerCase() ? (
+      <span key={index} className={styles.highlight}>{part}</span>
+    ) : (
+      part
+    )
+  );
+};
+
 const NationalResources = () => {
   const [expandedCategories, setExpandedCategories] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -22,16 +35,19 @@ const NationalResources = () => {
     );
   };
 
-  // Filter resources by search term
-  const filteredResources = resources.filter((resource) => {
-    const lowerSearchTerm = searchTerm.toLowerCase();
-    return (
-      resource.name.toLowerCase().includes(lowerSearchTerm) ||
-      resource.description.toLowerCase().includes(lowerSearchTerm) ||
-      resource.tags.some((tag) => tag.toLowerCase().includes(lowerSearchTerm)) ||
-      resource.category.some((cat) => cat.toLowerCase().includes(lowerSearchTerm))
-    );
-  });
+  // Filter resources by search term with a minimum character check
+  const filteredResources =
+    searchTerm.length >= 2
+      ? resources.filter((resource) => {
+          const lowerSearchTerm = searchTerm.toLowerCase();
+          return (
+            resource.name.toLowerCase().includes(lowerSearchTerm) ||
+            resource.description.toLowerCase().includes(lowerSearchTerm) ||
+            resource.tags.some((tag) => tag.toLowerCase().includes(lowerSearchTerm)) ||
+            resource.category.some((cat) => cat.toLowerCase().includes(lowerSearchTerm))
+          );
+        })
+      : [];
 
   const getCategoriesWithResources = () => {
     const categoryMap = {};
@@ -59,23 +75,19 @@ const NationalResources = () => {
 
   const excludedFields = ["name", "image", "description", "website", "category", "tags", "extraInfo"];
 
-  // Function to render resource cards (used for both search results and category listings)
+  // Function to render resource cards (with highlighted matches)
   const renderResourceCard = (resource) => (
     <div
       key={resource.name}
       className={styles.resourceCard}
-      style={{ position: "relative" }} // Ensure correct layering
+      style={{ position: "relative" }}
     >
-      {/* Blurred background using pseudo-element */}
       <div
         className={styles.backgroundBlur}
-        style={{
-          backgroundImage: `url(${resource.image})`,
-        }}
+        style={{ backgroundImage: `url(${resource.image})` }}
       ></div>
-  
       <div className={styles.overlay}></div>
-  
+
       <img
         src={resource.image}
         alt={resource.name}
@@ -83,17 +95,16 @@ const NationalResources = () => {
       />
       <div className={styles.resourceDetails}>
         <h3>
-          <strong>{resource.name}</strong>
+          <strong>{highlightMatch(resource.name, searchTerm)}</strong>
         </h3>
-        <p>{resource.description}</p>
+        <p>{highlightMatch(resource.description, searchTerm)}</p>
         <p>
           <strong>Website:</strong>{" "}
           <a href={resource.website} target="_blank" rel="noopener noreferrer">
             {resource.website}
           </a>
         </p>
-  
-        {/* Dynamically render additional fields */}
+
         {Object.entries(resource)
           .filter(([key, value]) => !excludedFields.includes(key) && value)
           .map(([key, value]) => {
@@ -103,35 +114,35 @@ const NationalResources = () => {
               <p key={key}>
                 <strong>{capitalizeField(key)}:</strong>{" "}
                 {isEmail ? (
-                  <a href={`mailto:${value}`}>{value}</a>
+                  <a href={`mailto:${value}`}>{highlightMatch(value, searchTerm)}</a>
                 ) : isLink ? (
                   <a href={value} target="_blank" rel="noopener noreferrer">
-                    {value}
+                    {highlightMatch(value, searchTerm)}
                   </a>
                 ) : (
-                  value
+                  highlightMatch(value, searchTerm)
                 )}
               </p>
             );
           })}
-  
+
         <p>
           <strong>Focus Area:</strong>
           <div className={styles.tagContainer}>
             {resource.category.map((cat) => (
               <span key={cat} className={styles.tagBox}>
-                {cat.toUpperCase()}
+                {highlightMatch(cat.toUpperCase(), searchTerm)}
               </span>
             ))}
           </div>
         </p>
-  
+
         <p>
           <strong>Tags:</strong>
           <div className={styles.tagContainer}>
             {resource.tags.map((tag) => (
               <span key={tag} className={styles.tagBox}>
-                {tag.toUpperCase()}
+                {highlightMatch(tag.toUpperCase(), searchTerm)}
               </span>
             ))}
           </div>
@@ -139,7 +150,6 @@ const NationalResources = () => {
       </div>
     </div>
   );
-  
 
   return (
     <div className={styles.container}>
@@ -158,7 +168,7 @@ const NationalResources = () => {
       />
 
       {/* Search Results Section */}
-      {searchTerm && filteredResources.length > 0 && (
+      {searchTerm.length >= 2 && filteredResources.length > 0 && (
         <div className={styles.categoryContainer}>
           <h2>Search Results for "{searchTerm}"</h2>
           <div className={styles.resourceList}>
@@ -167,7 +177,7 @@ const NationalResources = () => {
         </div>
       )}
 
-      {searchTerm && filteredResources.length === 0 && (
+      {searchTerm.length >= 2 && filteredResources.length === 0 && (
         <p>No resources found for the search term "{searchTerm}".</p>
       )}
 

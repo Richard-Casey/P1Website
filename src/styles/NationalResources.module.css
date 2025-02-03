@@ -34,6 +34,13 @@ h1 {
     font-size: 16px;
 }
 
+.highlight {
+    background-color: rgb(255, 255, 0);
+    color: black;
+    font-weight: bold;
+  }
+  
+
 .categoryContainer {
     margin-bottom: 5px;
 }

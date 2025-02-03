@@ -165,7 +165,7 @@ const resources = [
     ],
   },
   {
-    name: "Dad Unlimited",
+    name: "Dads Unlimited",
     image: `${process.env.PUBLIC_URL}/images/National/dadsunlimited.png`,
     description:
       "Dads Unlimited supports the emotional safety of men and those they care about through three key areas; supporting male victims of domestic abuse, supporting men with family separation, and supporting men’s mental health. All of our services use an evidence-based, trauma-informed, person-centred approach.",
