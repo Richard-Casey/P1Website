@@ -139,11 +139,21 @@ const NavBar = ({ onNavigate }) => {
             </button>
           </div>
           </li>
+          <li className={styles.navItem}>
+          <div className={styles.navItemWrapper}>
+            <button
+              className={styles.navLink}
+              onClick={() => (window.location.href = "/Website/#/national-resources")}
+            >
+              Directory
+            </button>
+          </div>
+          </li>
         <li className={styles.navItem}>
           <div className={styles.navItemWrapper}>
             <button
               className={styles.navLink}
-              onClick={() => onNavigate("wellbeingForm")}
+              onClick={() => (window.location.href = "/Website/#/wellbeing-review-form")}
             >
               Wellbeing Review Form
             </button>
