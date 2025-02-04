@@ -7,21 +7,23 @@ const BASE_URL = "https://www.googleapis.com/youtube/v3";
 export const getYoutubeChannelDetails = async (channelId) => {
   const response = await axios.get(`${BASE_URL}/channels`, {
     params: {
-      part: "snippet,contentDetails,statistics",
+      part: "snippet,brandingSettings,statistics", // Include brandingSettings for banner image
       id: channelId,
       key: API_KEY,
     },
   });
+  
   return response.data.items[0];
 };
 
 // Fetch videos from a channel
-export const getYoutubeVideos = async (channelId) => {
+export const getYoutubeVideos = async (channelId, options = {}) => {
+  const { maxResults = 5 } = options;
   const response = await axios.get(`${BASE_URL}/search`, {
     params: {
       part: "snippet",
       channelId: channelId,
-      maxResults: 50, // Fetch up to 50 videos
+      maxResults: maxResults,
       type: "video",
       key: API_KEY,
     },
