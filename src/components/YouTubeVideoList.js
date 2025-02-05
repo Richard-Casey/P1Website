@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { IconBrandYoutubeFilled } from "@tabler/icons-react";
 import { motion, AnimatePresence } from "framer-motion";
 import styles from "../styles/customscrollbar.module.css";
-
+import buttonStyles from "../styles/buttonstyles.module.css"; 
 
 const YouTubeVideoList = ({ videos, isLoading, channelBanner }) => {
   const [sortType, setSortType] = useState("newest");
@@ -10,6 +10,8 @@ const YouTubeVideoList = ({ videos, isLoading, channelBanner }) => {
   const [activeVideoIndex, setActiveVideoIndex] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const videosPerPage = 10;
+  const [hoveredIndex, setHoveredIndex] = useState(null);
+
 
   useEffect(() => {
     let sortedArray = [...videos];
@@ -220,20 +222,30 @@ const YouTubeVideoList = ({ videos, isLoading, channelBanner }) => {
               }}
             >
               <a
-                href={video.youtubeUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  color: "#fff",
-                  textDecoration: "none",
-                  gap: "5px",
-                  zIndex: 10, // Ensure it is clickable
-                }}
-              >
-                <IconBrandYoutubeFilled /> Watch on YouTube
-              </a>
+  href={video.youtubeUrl}
+  target="_blank"
+  rel="noopener noreferrer"
+  onMouseEnter={() => setHoveredIndex(index)}
+  onMouseLeave={() => setHoveredIndex(null)}
+  style={{
+    display: "flex",
+    alignItems: "center",
+    color: hoveredIndex === index ? "#fff" : "#d92727",
+    backgroundColor: hoveredIndex === index ? "#d92727" : "#000000",
+    fontWeight: hoveredIndex === index ? "600" : "600",
+    textDecoration: "none",
+    gap: "0.5rem",
+    borderRadius: "8px",
+    paddingLeft: "0.5rem",
+    paddingRight: "0.5rem",
+    border: "2px solid #d3d3d3",
+    zIndex: 10, // Ensure it is clickable
+    transition: "color 0.2s ease", // Fades color change over 0.3 seconds
+  }}
+>
+  <IconBrandYoutubeFilled /> Watch on YouTube
+</a>
+
             </div>
           </motion.div>
 
