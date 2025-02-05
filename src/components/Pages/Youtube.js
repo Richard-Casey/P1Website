@@ -196,6 +196,7 @@ const ChannelHeader = ({ channels, activeChannel, onSelect, channelDetails }) =>
         border: "3px solid rgb(0, 0, 0)",
         borderRadius: "44px",
         position: "relative",
+        marginBottom: "2rem",
       }}
     >
       {/* Left Arrow */}
@@ -281,7 +282,10 @@ const ChannelVideos = ({ videos }) => (
   <div>
     {videos.map((video, index) => (
       <div key={index} className={styles.videoCard}>
-        <img src={video.thumbnail} alt={video.title} />
+        <img src={video.thumbnail} alt={video.title}
+        style={{
+          marginTop: "0.5rem",
+        }} />
         <h3>{video.title}</h3>
         <p>{video.description}</p>
         <a href={video.youtubeUrl} target="_blank" rel="noopener noreferrer">
