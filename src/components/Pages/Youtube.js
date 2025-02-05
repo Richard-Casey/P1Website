@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   getYoutubeChannelDetails,
   getYoutubeVideos,
@@ -162,116 +162,120 @@ const Youtube = ({ isMinimal }) => {
   );
 };
 
-const ChannelHeader = ({
-  channels,
-  activeChannel,
-  onSelect,
-  channelDetails,
-}) => {
+const ChannelHeader = ({ channels, activeChannel, onSelect, channelDetails }) => {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [isScrollbarVisible, setIsScrollbarVisible] = useState(false);
+  const descriptionRef = useRef(null);
 
   useEffect(() => {
     onSelect(activeIndex);
   }, [activeIndex, onSelect]);
 
-  const handleNext = () =>
-    setActiveIndex((prev) => (prev + 1) % channels.length);
-  const handlePrev = () =>
-    setActiveIndex((prev) => (prev - 1 + channels.length) % channels.length);
+  useEffect(() => {
+    if (descriptionRef.current) {
+      const isOverflowing = descriptionRef.current.scrollHeight > descriptionRef.current.clientHeight;
+      setIsScrollbarVisible(isOverflowing);
+    }
+  }, [channelDetails.description]);
+
+  const handleNext = () => setActiveIndex((prev) => (prev + 1) % channels.length);
+  const handlePrev = () => setActiveIndex((prev) => (prev - 1 + channels.length) % channels.length);
 
   return (
-<div
-  className="relative w-full max-w-6xl mx-auto py-6 rounded-3xl shadow-lg"
-  style={{
-    backdropFilter: "blur(16px) saturate(180%)",
-    WebkitBackdropFilter: "blur(16px) saturate(180%)",
-    backgroundColor: "rgba(17, 25, 40, 0.75)",
-    backgroundImage: `url(${activeChannel.bannerSrc})`,
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    height: "400px",
-    boxShadow: "0 10px 30px rgba(0, 0, 0, 0.5)",
-    paddingTop: "0rem",
-    marginBottom: "0.5rem",
-    border: "3px solid rgb(0, 0, 0)",
-    borderRadius: "44px",
-    position: "relative",  // Ensure relative positioning for the arrows
-  }}
->
-  {/* Left Arrow */}
-  <button
-    onClick={handlePrev}
-    className="absolute left-6 top-1/2 transform -translate-y-1/2 h-14 w-14 rounded-full bg-gray-100 flex items-center justify-center"
-    style={{ outline: "3px solid rgb(255, 0, 0)", zIndex: 9999 }}
-  >
-    <IconArrowBigLeftLinesFilled className="h-9 w-9 text-red-600" />
-  </button>
-
-  {/* Inner Content */}
-  <div className="relative flex flex-col items-center justify-center gap-4">
-    <img
-      src={activeChannel.imgSrc}
-      onError={(e) => {
-        e.target.onerror = null;
-        e.target.src = activeChannel.imgSrc;
-      }}
-      alt={activeChannel.title}
-      style={{
-        width: "13.875rem",
-        height: "13.813rem",
-        borderRadius: "36px",
-        border: "4px solid #d92727",
-        objectFit: "cover",
-        marginTop: "0.3rem",
-      }}
-    />
-
-    {/* Title and Description */}
     <div
+      className="relative w-full max-w-6xl mx-auto py-6 rounded-3xl shadow-lg"
       style={{
-        width: "90%",
-        maxWidth: "800px",
-        backgroundColor: "rgba(255, 255, 255, 0.5)",
-        backdropFilter: "blur(10px)",
-        WebkitBackdropFilter: "blur(10px)",
-        borderRadius: "36px",
-        padding: "0.1rem 0.2rem",
-        border: "2px solid rgb(255, 0, 0)",
-        boxShadow: "0 8px 24px rgba(0, 0, 0, 0.2)",
-        textAlign: "center",
-        overflow: "hidden",
+        backdropFilter: "blur(16px) saturate(180%)",
+        WebkitBackdropFilter: "blur(16px) saturate(180%)",
+        backgroundColor: "rgba(17, 25, 40, 0.75)",
+        backgroundImage: `url(${activeChannel.bannerSrc})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        height: "400px",
+        boxShadow: "0 10px 30px rgba(0, 0, 0, 0.5)",
+        border: "3px solid rgb(0, 0, 0)",
+        borderRadius: "44px",
+        position: "relative",
       }}
     >
-      <h3 style={{ color: "#000", fontSize: "1.5rem", paddingBottom: "0rem", margin: "0.2rem", textAlign: "center" }}>
-        <strong><u>{activeChannel.title}</u></strong>
-      </h3>
-
-      <div
-        className={`${styles.customScrollbarRed}`} // Custom scrollbar for this section
-        style={{
-          maxHeight: "150px",
-          overflowY: "auto",
-          padding: "0 1rem",
-        }}
+      {/* Left Arrow */}
+      <button
+        onClick={handlePrev}
+        className="absolute left-6 top-1/2 transform -translate-y-1/2 h-14 w-14 rounded-full bg-gray-100 flex items-center justify-center"
+        style={{ outline: "3px solid rgb(255, 0, 0)", zIndex: 9999 }}
       >
-        <p style={{ color: "#000", fontSize: "0.9rem", paddingBottom: "0.5rem", margin: "0.2rem", lineHeight: "1.4" }}>
-          {channelDetails.description}
-        </p>
-      </div>
-    </div>
-  </div>
+        <IconArrowBigLeftLinesFilled className="h-9 w-9 text-red-600" />
+      </button>
 
-  {/* Right Arrow */}
-  <button
-    onClick={handleNext}
-    className="absolute right-6 top-1/2 transform -translate-y-1/2 h-14 w-14 rounded-full bg-gray-100 flex items-center justify-center"
-    style={{ outline: "3px solid rgb(255, 0, 0)", zIndex: 9999 }}
-  >
-    <IconArrowBigRightLinesFilled className="h-9 w-9 text-red-600" />
-  </button>
-</div>
+      {/* Content Section */}
+      <div className="relative flex flex-col items-center justify-center gap-4">
+        <img
+          src={activeChannel.imgSrc}
+          onError={(e) => {
+            e.target.onerror = null;
+            e.target.src = activeChannel.imgSrc;
+          }}
+          alt={activeChannel.title}
+          style={{
+            width: "13.875rem",
+            height: "13.813rem",
+            borderRadius: "36px",
+            border: "4px solid #d92727",
+            objectFit: "cover",
+            marginTop: "0.3rem",
+          }}
+        />
+
+        {/* Title and Description Container */}
+        <div
+          style={{
+            height: "7.7rem",
+            width: "90%",
+            maxWidth: "800px",
+            backgroundColor: "rgba(255, 255, 255, 0.5)",
+            backdropFilter: "blur(10px)",
+            WebkitBackdropFilter: "blur(10px)",
+            borderRadius: "36px",
+            padding: "0.2rem",
+            border: "2px solid rgb(255, 0, 0)",
+            boxShadow: "0 8px 24px rgba(0, 0, 0, 0.2)",
+            textAlign: "center",
+          }}
+        >
+          {/* Title Section */}
+          <h3 style={{ color: "#000", fontSize: "1.2rem", margin: "0rem", textAlign: "center", }}>
+            <strong><u>{activeChannel.title}</u></strong>
+          </h3>
+
+          {/* Scrollable Description Section */}
+          <div
+            ref={descriptionRef}
+            className={`${styles.customScrollbarRed}`}
+            style={{
+              maxHeight: "4.5rem", // Constrain to fit within the 8.8rem container
+              overflowY: isScrollbarVisible ? "auto" : "hidden",
+              padding: "0 1rem",
+            }}
+          >
+            <p style={{ color: "#000", fontSize: "0.9rem", lineHeight: "1.4", marginBottom: "0rem", }}>
+            {channelDetails.description}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Right Arrow */}
+      <button
+        onClick={handleNext}
+        className="absolute right-6 top-1/2 transform -translate-y-1/2 h-14 w-14 rounded-full bg-gray-100 flex items-center justify-center"
+        style={{ outline: "3px solid rgb(255, 0, 0)", zIndex: 9999 }}
+      >
+        <IconArrowBigRightLinesFilled className="h-9 w-9 text-red-600" />
+      </button>
+    </div>
   );
 };
+
 
 const ChannelVideos = ({ videos }) => (
   <div>
