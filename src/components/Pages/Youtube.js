@@ -3,152 +3,81 @@ import {
   getYoutubeChannelDetails,
   getYoutubeVideos,
 } from "../../services/youtubeservice";
-import globalStyles from "../../styles/globalstyle.module.css";
 import styles from "../../styles/customscrollbar.module.css";
-import {
-  IconArrowBigLeftLinesFilled,
-  IconArrowBigRightLinesFilled,
-  IconBrandYoutube,
-} from "@tabler/icons-react";
-
-// YouTube channel data
-const youtubeChannels = [
-  {
-    title: "ANDY'S MAN CLUB",
-    description: "",
-    imgSrc: `${process.env.PUBLIC_URL}/images/yt/profile/AndysManClub.png`,
-    bannerSrc: `${process.env.PUBLIC_URL}/images/yt/banner/andysmanclubbanner.png`,
-    channelId: "UC8mJx0-NFRJerTgTreJ2U7w",
-  },
-  {
-    title: "Developing Dads",
-    description: "",
-    imgSrc: `${process.env.PUBLIC_URL}/images/yt/profile/developing-dads.png`,
-    bannerSrc: `${process.env.PUBLIC_URL}/images/yt/banner/devdadsbanner.png`,
-    channelId: "UCqhvC4YTuK9OWkIGrlrZ4dA",
-  },
-  {
-    title: "Dope Black Dads",
-    description: "",
-    imgSrc: `${process.env.PUBLIC_URL}/images/yt/profile/dopeblackdads.png`,
-    bannerSrc: `${process.env.PUBLIC_URL}/images/yt/banner/dopeblackdadsban.png`,
-    channelId: "UCfCiQnkjxUgg4G2WkVnX7qQ",
-  },
-  {
-    title: "Dad Matters UK",
-    description: "",
-    imgSrc: `${process.env.PUBLIC_URL}/images/tileimages/developing-dads.png`,
-    channelId: "UCB94in41rWboL3ejwRHo6DQ",
-  },
-  {
-    title: "Fatherhood Institute",
-    description: "",
-    imgSrc: `${process.env.PUBLIC_URL}/images/tileimages/developing-dads.png`,
-    channelId: "UCzi2TdZ2ANuGie8G82P8M3A",
-  },
-  {
-    title: "DigiDad",
-    description: "",
-    imgSrc: `${process.env.PUBLIC_URL}/images/tileimages/developing-dads.png`,
-    channelId: "UCkAeSuiuO3JJpef71p7uxhA",
-  },
-  {
-    title: "MFF: Music Football Fatherhood",
-    description: "",
-    imgSrc: `${process.env.PUBLIC_URL}/images/tileimages/developing-dads.png`,
-    channelId: "UCliRtN3_P96BnwHRn2r6L4A",
-  },
-  {
-    title: "DadsNet",
-    description: "",
-    imgSrc: `${process.env.PUBLIC_URL}/images/tileimages/developing-dads.png`,
-    channelId: "UCF6ULfwMzELbu7WsIUKwXcA",
-  },
-];
+import globalStyles from "../../styles/globalstyle.module.css";
+import youtubeChannels from "../youtubechannels";
+import YouTubeVideoList from "../YouTubeVideoList";
+import { IconArrowBigLeftLinesFilled, IconArrowBigRightLinesFilled } from "@tabler/icons-react";
 
 const Youtube = ({ isMinimal }) => {
   const [activeChannel, setActiveChannel] = useState(youtubeChannels[0]);
   const [channelDetails, setChannelDetails] = useState({});
   const [videos, setVideos] = useState([]);
   const [fetchedChannelsData, setFetchedChannelsData] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Debounced channel data fetching with caching
+  // Fetch YouTube data when channel changes
   useEffect(() => {
     const fetchChannelData = async () => {
+      setIsLoading(true);
       if (fetchedChannelsData[activeChannel.channelId]) {
         setChannelDetails(fetchedChannelsData[activeChannel.channelId].details);
         setVideos(fetchedChannelsData[activeChannel.channelId].videos);
+        setIsLoading(false);
         return;
       }
 
       try {
-        console.log("Fetching data for channel:", activeChannel.channelId);
-
         const details = await getYoutubeChannelDetails(activeChannel.channelId);
         const fetchedVideos = await getYoutubeVideos(activeChannel.channelId, {
-          maxResults: 5,
+          maxResults: 10,
         });
 
         const channelData = {
           details: {
-            description:
-              details.snippet?.description || "No description available.",
-            logo:
-              details.snippet?.thumbnails?.high?.url ||
-              details.snippet?.thumbnails?.default?.url ||
-              activeChannel.imgSrc,
-            bannerImage:
-              details.brandingSettings?.image?.bannerExternalUrl ||
-              activeChannel.imgSrc,
+            description: details.snippet?.description || "No description available.",
+            logo: details.snippet?.thumbnails?.high?.url || activeChannel.imgSrc,
+            bannerImage: details.brandingSettings?.image?.bannerExternalUrl || activeChannel.bannerSrc,
             youtubeUrl: `https://www.youtube.com/channel/${activeChannel.channelId}`,
           },
           videos: fetchedVideos.map((video) => ({
             title: video.snippet?.title || "Untitled Video",
-            description: video.snippet?.description || "",
+            description: video.snippet?.description || "", // full description now
             date: video.snippet?.publishedAt || "Unknown Date",
+            durationSeconds: video.contentDetails?.duration || 0,
+            duration: formatDuration(video.contentDetails?.duration),
             thumbnail: video.snippet?.thumbnails?.medium?.url || "",
-            youtubeUrl: `https://www.youtube.com/watch?v=${video.id.videoId}`,
+            // Note: update the URL construction based on the new structure
+            youtubeUrl: `https://www.youtube.com/watch?v=${video.id}`,
           })),
         };
+        
 
         setFetchedChannelsData((prev) => ({
           ...prev,
           [activeChannel.channelId]: channelData,
         }));
 
-        // Check if the images are already the same to prevent unnecessary updates
-        if (
-          channelDetails.logo !== channelData.details.logo ||
-          channelDetails.bannerImage !== channelData.details.bannerImage
-        ) {
-          setChannelDetails(channelData.details);
-        }
-
+        setChannelDetails(channelData.details);
         setVideos(channelData.videos);
       } catch (error) {
         console.error("Error fetching YouTube data:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
-    const debounceTimer = setTimeout(fetchChannelData, 500);
-    return () => clearTimeout(debounceTimer);
-  }, [activeChannel, fetchedChannelsData, channelDetails]);
+    fetchChannelData();
+  }, [activeChannel]);
 
   const handleChannelSelect = (index) => {
     setActiveChannel(youtubeChannels[index]);
   };
 
   return (
-    <div
-      className={
-        isMinimal ? globalStyles["container-minimal"] : globalStyles.container
-      }
-    >
-      <h1 className={isMinimal ? globalStyles["h1-minimal"] : globalStyles.h1}>
-        YouTube Channels
-      </h1>
+    <div className={isMinimal ? globalStyles["container-minimal"] : globalStyles.container}>
+      <h1 className={isMinimal ? globalStyles["h1-minimal"] : globalStyles.h1}>YouTube Channels</h1>
 
-      {/* Channel Header */}
       <ChannelHeader
         channels={youtubeChannels}
         activeChannel={activeChannel}
@@ -156,8 +85,9 @@ const Youtube = ({ isMinimal }) => {
         channelDetails={channelDetails}
       />
 
-      {/* Videos Section */}
-      <ChannelVideos videos={videos} />
+      {/* Render video list */}
+      <YouTubeVideoList videos={videos} isLoading={isLoading} channelBanner={activeChannel.bannerSrc} />
+
     </div>
   );
 };
@@ -193,9 +123,9 @@ const ChannelHeader = ({ channels, activeChannel, onSelect, channelDetails }) =>
         backgroundPosition: "center",
         height: "400px",
         boxShadow: "0 10px 30px rgba(0, 0, 0, 0.5)",
-        border: "3px solid rgb(0, 0, 0)",
+        border: "3px solid #d92727",
         borderRadius: "44px",
-        position: "relative",
+        paddingTop: "0rem",
         marginBottom: "2rem",
       }}
     >
@@ -203,31 +133,25 @@ const ChannelHeader = ({ channels, activeChannel, onSelect, channelDetails }) =>
       <button
         onClick={handlePrev}
         className="absolute left-6 top-1/2 transform -translate-y-1/2 h-14 w-14 rounded-full bg-gray-100 flex items-center justify-center"
-        style={{ outline: "3px solid rgb(255, 0, 0)", zIndex: 9999 }}
+        style={{ outline: "3px solid #d92727", zIndex: 9999 }}
       >
         <IconArrowBigLeftLinesFilled className="h-9 w-9 text-red-600" />
       </button>
 
-      {/* Content Section */}
+      {/* Channel Information */}
       <div className="relative flex flex-col items-center justify-center gap-4">
         <img
           src={activeChannel.imgSrc}
-          onError={(e) => {
-            e.target.onerror = null;
-            e.target.src = activeChannel.imgSrc;
-          }}
           alt={activeChannel.title}
           style={{
             width: "13.875rem",
             height: "13.813rem",
             borderRadius: "36px",
-            border: "4px solid #d92727",
+            border: "3px solid #d92727",
             objectFit: "cover",
             marginTop: "0.3rem",
           }}
         />
-
-        {/* Title and Description Container */}
         <div
           style={{
             height: "7.7rem",
@@ -238,28 +162,27 @@ const ChannelHeader = ({ channels, activeChannel, onSelect, channelDetails }) =>
             WebkitBackdropFilter: "blur(10px)",
             borderRadius: "36px",
             padding: "0.2rem",
-            border: "2px solid rgb(255, 0, 0)",
+            border: "2px solid #d92727",
             boxShadow: "0 8px 24px rgba(0, 0, 0, 0.2)",
             textAlign: "center",
           }}
         >
-          {/* Title Section */}
-          <h3 style={{ color: "#000", fontSize: "1.2rem", margin: "0rem", textAlign: "center", }}>
+          <h3 style={{ color: "#000", fontSize: "1.2rem", margin: "0rem", textAlign: "center" }}>
             <strong><u>{activeChannel.title}</u></strong>
           </h3>
 
           {/* Scrollable Description Section */}
           <div
             ref={descriptionRef}
-            className={`${styles.customScrollbarRed}`}
+            className={styles.customScrollbarRed}
             style={{
-              maxHeight: "4.5rem", // Constrain to fit within the 8.8rem container
+              maxHeight: "4.5rem",
               overflowY: isScrollbarVisible ? "auto" : "hidden",
               padding: "0 1rem",
             }}
           >
-            <p style={{ color: "#000", fontSize: "0.9rem", lineHeight: "1.4", marginBottom: "0rem", }}>
-            {channelDetails.description}
+            <p style={{ color: "#000", fontSize: "0.9rem", lineHeight: "1.4", marginBottom: "0rem" }}>
+              {channelDetails.description}
             </p>
           </div>
         </div>
@@ -269,7 +192,7 @@ const ChannelHeader = ({ channels, activeChannel, onSelect, channelDetails }) =>
       <button
         onClick={handleNext}
         className="absolute right-6 top-1/2 transform -translate-y-1/2 h-14 w-14 rounded-full bg-gray-100 flex items-center justify-center"
-        style={{ outline: "3px solid rgb(255, 0, 0)", zIndex: 9999 }}
+        style={{ outline: "3px solid #d92727", zIndex: 9999 }}
       >
         <IconArrowBigRightLinesFilled className="h-9 w-9 text-red-600" />
       </button>
@@ -277,24 +200,16 @@ const ChannelHeader = ({ channels, activeChannel, onSelect, channelDetails }) =>
   );
 };
 
+const formatDuration = (isoDuration) => {
+  if (!isoDuration) return "Unknown Duration";
 
-const ChannelVideos = ({ videos }) => (
-  <div>
-    {videos.map((video, index) => (
-      <div key={index} className={styles.videoCard}>
-        <img src={video.thumbnail} alt={video.title}
-        style={{
-          marginTop: "0.5rem",
-        }} />
-        <h3>{video.title}</h3>
-        <p>{video.description}</p>
-        <a href={video.youtubeUrl} target="_blank" rel="noopener noreferrer">
-          <IconBrandYoutube />
-          Watch on YouTube
-        </a>
-      </div>
-    ))}
-  </div>
-);
+  const durationMatch = isoDuration.match(/PT(\d+H)?(\d+M)?(\d+S)?/);
+  const hours = durationMatch[1] ? parseInt(durationMatch[1]) : 0;
+  const minutes = durationMatch[2] ? parseInt(durationMatch[2]) : 0;
+  const seconds = durationMatch[3] ? parseInt(durationMatch[3]) : 0;
+
+  return `${hours ? `${hours}:` : ""}${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+};
+
 
 export default Youtube;

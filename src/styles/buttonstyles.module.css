@@ -1,0 +1,36 @@
+.youtubeButton {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 0.5rem 1rem;             /* Similar to px-4 py-2 */
+    font-size: 0.875rem;              /* text-sm */
+    font-weight: 600;
+    color: black;                     /* Default text color */
+    border: 2px solid white;          /* White outline */
+    border-radius: 9999px;            /* Fully rounded */
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+    transition: color 0.3s ease;
+  }
+  
+  .youtubeButton::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background-color: red;            /* Red fill */
+    transition: left 0.3s ease;
+    z-index: -1;
+  }
+  
+  .youtubeButton:hover {
+    color: white;                     /* Change text to white on hover */
+  }
+  
+  .youtubeButton:hover::before {
+    left: 0;                          /* Animate fill from left to right */
+  }
+  
