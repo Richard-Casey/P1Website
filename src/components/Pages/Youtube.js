@@ -193,21 +193,22 @@ const ChannelHeader = ({
     boxShadow: "0 10px 30px rgba(0, 0, 0, 0.5)",
     paddingTop: "0rem",
     marginBottom: "0.5rem",
-    border: "3px solid rgb(0, 0, 0)",  // Add solid border
-    borderRadius: "44px",  // Match rounded corners with container
+    border: "3px solid rgb(0, 0, 0)",
+    borderRadius: "44px",
+    position: "relative",  // Ensure relative positioning for the arrows
   }}
 >
-  <div className="relative flex flex-col items-center justify-center gap-4">
-    {/* Left Arrow */}
-    <button
-      onClick={handlePrev}
-      className="absolute left-6 top-1/2 transform -translate-y-1/2 h-14 w-14 rounded-full bg-gray-100 flex items-center justify-center"
-      style={{ outline: "3px solid rgb(255, 0, 0)", zIndex: 9999 }}
-    >
-      <IconArrowBigLeftLinesFilled className="h-9 w-9 text-red-600" />
-    </button>
+  {/* Left Arrow */}
+  <button
+    onClick={handlePrev}
+    className="absolute left-6 top-1/2 transform -translate-y-1/2 h-14 w-14 rounded-full bg-gray-100 flex items-center justify-center"
+    style={{ outline: "3px solid rgb(255, 0, 0)", zIndex: 9999 }}
+  >
+    <IconArrowBigLeftLinesFilled className="h-9 w-9 text-red-600" />
+  </button>
 
-    {/* Main Thumbnail */}
+  {/* Inner Content */}
+  <div className="relative flex flex-col items-center justify-center gap-4">
     <img
       src={activeChannel.imgSrc}
       onError={(e) => {
@@ -225,7 +226,7 @@ const ChannelHeader = ({
       }}
     />
 
-    {/* Glass Morphism for Title and Description */}
+    {/* Title and Description */}
     <div
       style={{
         width: "90%",
@@ -238,27 +239,37 @@ const ChannelHeader = ({
         border: "2px solid rgb(255, 0, 0)",
         boxShadow: "0 8px 24px rgba(0, 0, 0, 0.2)",
         textAlign: "center",
+        overflow: "hidden",
       }}
     >
-      <h3 style={{ color: "#000", fontSize: "1.5rem", paddingBottom: "0.5rem", margin: "0.2rem", textAlign: "center", }}>
+      <h3 style={{ color: "#000", fontSize: "1.5rem", paddingBottom: "0rem", margin: "0.2rem", textAlign: "center" }}>
         <strong><u>{activeChannel.title}</u></strong>
       </h3>
-      <p style={{ color: "#000", fontSize: "0.9rem", margin: "0.2rem", paddingBottom: "0.5rem", lineHeight: "1.4" }}>
-        {channelDetails.description}
-      </p>
+
+      <div
+        className={`${styles.customScrollbarRed}`} // Custom scrollbar for this section
+        style={{
+          maxHeight: "150px",
+          overflowY: "auto",
+          padding: "0 1rem",
+        }}
+      >
+        <p style={{ color: "#000", fontSize: "0.9rem", paddingBottom: "0.5rem", margin: "0.2rem", lineHeight: "1.4" }}>
+          {channelDetails.description}
+        </p>
+      </div>
     </div>
-
-    {/* Right Arrow */}
-    <button
-      onClick={handleNext}
-      className="absolute right-6 top-1/2 transform -translate-y-1/2 h-14 w-14 rounded-full bg-gray-100 flex items-center justify-center"
-      style={{ outline: "3px solid rgb(255, 0, 0)", zIndex: 9999 }}
-    >
-      <IconArrowBigRightLinesFilled className="h-9 w-9 text-red-600"/>
-    </button>
   </div>
-</div>
 
+  {/* Right Arrow */}
+  <button
+    onClick={handleNext}
+    className="absolute right-6 top-1/2 transform -translate-y-1/2 h-14 w-14 rounded-full bg-gray-100 flex items-center justify-center"
+    style={{ outline: "3px solid rgb(255, 0, 0)", zIndex: 9999 }}
+  >
+    <IconArrowBigRightLinesFilled className="h-9 w-9 text-red-600" />
+  </button>
+</div>
   );
 };
 
