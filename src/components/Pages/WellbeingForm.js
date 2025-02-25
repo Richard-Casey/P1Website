@@ -104,7 +104,7 @@ const airtableURL =
     try {
       const response = await fetch(airtableURL, {
         headers: {
-          Authorization: `Bearer YOUR_AIRTABLE_API_KEY`, // Replace with your Airtable API key
+          Authorization: `Bearer patSU10Pp0hh1NOgo.7554e4280a027e73e31574edeff1ad25a40803a6aabe8f111f34aa0721c48d80`,
         },
       });
       const data = await response.json();
