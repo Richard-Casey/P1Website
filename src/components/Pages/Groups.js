@@ -185,7 +185,7 @@ const Groups = () => {
       lng: 0.7022737370174067,
       description:
         "ANDYSMANCLUB are a men’s suicide prevention charity, offering free-to-attend peer-to-peer support groups across the United Kingdom and online. They want to end the stigma surrounding men’s mental health and help men through the power of conversation. #ITSOKAYTOTALK. They meet at 7pm on Monday's (Except Bank Holidays).",
-      address: "Writtle University Centre, Chelmsford",
+      address: "Roots Hall Stadium, Victoria Avenue, Westcliff-on-Sea, SS2 6NQ",
       image: `${process.env.PUBLIC_URL}/images/Groups/AndysManClub.png`,
       website: "https://andysmanclub.co.uk",
       facebook:
