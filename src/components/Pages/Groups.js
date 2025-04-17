@@ -185,7 +185,7 @@ const Groups = () => {
       lng: 0.7022737370174067,
       description:
         "ANDYSMANCLUB are a men’s suicide prevention charity, offering free-to-attend peer-to-peer support groups across the United Kingdom and online. They want to end the stigma surrounding men’s mental health and help men through the power of conversation. #ITSOKAYTOTALK. They meet at 7pm on Monday's (Except Bank Holidays).",
-      address: "Roots Hall Stadium, Victoria Avenue, Westcliff-on-Sea, SS2 6NQ",
+      address: "Roots Hall Stadium, Victoria Avenue, Westcliff-on-Sea, SS2",
       image: `${process.env.PUBLIC_URL}/images/Groups/AndysManClub.png`,
       website: "https://andysmanclub.co.uk",
       facebook:
@@ -283,6 +283,7 @@ const Groups = () => {
         // If it's visible but too far zoomed out, zoom in slightly
         mapRef.current.setView(
           [lat, lng],
+          
           Math.min(mapRef.current.getZoom() + 2, 15),
           {
             animate: true,

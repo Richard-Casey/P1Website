@@ -21,6 +21,7 @@ import globalStyles from "./styles/globalstyle.module.css";
 
 import "./App.css";
 import "./index.css";
+import FeedbackForm from "./components/Pages/FeedbackForm";
 
 const App = () => {
   const location = useLocation();
@@ -52,6 +53,7 @@ const App = () => {
           <Route path="/youtube" element={<Youtube isMinimal={false} />} />
           <Route path="/groups" element={<Groups isMinimal={false} />} />
           <Route path="/national-resources" element={<NationalResources isMinimal={false} />} />
+          <Route path="/feedback" element={<FeedbackForm isMinimal={false} />} />
 
 
           {/* Minimal Routes */}
@@ -89,6 +91,7 @@ const App = () => {
           />
           <Route path="/minimal-groups" element={<Groups isMinimal={true} />} />
           <Route path="/minimal-national-resources" element={<NationalResources isMinimal={true} />} />
+          <Route path="/minimal-feedback" element={<FeedbackForm isMinimal={true} />} />
 
 
           {/* 404 Fallback */}
